@@ -1,0 +1,35 @@
+{
+  "name": "stealthy",
+  "id": "stealthy",
+  "title": "Stealthy",
+  "description": "Adds perception vs stealth to vision tests",
+  "authors": [
+    {
+      "name": "rule"
+    },
+    {
+      "name": "frstrm"
+    }
+  ],
+  "version": "4.2.1",
+  "compatibility": {
+    "minimum": "10",
+    "verified": "10"
+  },
+  "system": [
+    "dnd5e"
+  ],
+  "relationships": {
+    "requires": [
+      {
+        "id": "about-time",
+        "type": "module",
+        "compatibility": {}
+      }
+    ]
+  },
+  "esmodules": [
+    "./scripts/config.js",
+    "./scripts/stealthy.js"
+  ]
+}
