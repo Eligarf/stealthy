@@ -1,5 +1,3 @@
-import { Acme } from './acme.js';
-
 Hooks.once('init', () => {
 
   game.settings.register('stealthy', 'spotVsHidden', {

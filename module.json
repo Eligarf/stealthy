@@ -1,5 +1,4 @@
 {
-  "name": "stealthy",
   "id": "stealthy",
   "title": "Stealthy",
   "description": "Adds perception vs stealth to vision tests",
@@ -11,7 +10,7 @@
       "name": "frstrm"
     }
   ],
-  "version": "4.2.1",
+  "version": "1.0.0",
   "compatibility": {
     "minimum": "10",
     "verified": "10"
@@ -22,7 +21,7 @@
   "relationships": {
     "requires": [
       {
-        "id": "about-time",
+        "id": "dfreds-convenient-effects",
         "type": "module",
         "compatibility": {}
       }

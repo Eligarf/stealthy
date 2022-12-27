@@ -8,7 +8,7 @@ export class Stealthy {
       game.settings.get(Stealthy.moduleName, 'ignoreFriendlyStealth') &&
       config.object.document?.disposition === visionSource.object.document?.disposition;
 
-    if (!ignoreFriendlyStealth && game.settings.get(Stealthy.moduleName, 'scanVsHidden')) {
+    if (!ignoreFriendlyStealth && game.settings.get(Stealthy.moduleName, 'spotVsHidden')) {
       const hidden = target?.effects.find(e => e.label === 'Hidden');
       if (hidden) {
         let stealth = hidden.flags.stealthy?.hidden ?? target.system.skills.ste.passive;
@@ -72,7 +72,7 @@ Hooks.once('setup', () => {
 });
 
 Hooks.on('dnd5e.rollSkill', async (actor, roll, skill) => {
-  if (!game.settings.get(Stealthy.moduleName, 'scanVsHidden')) return;
+  if (!game.settings.get(Stealthy.moduleName, 'spotVsHidden')) return;
 
   if (skill === 'ste') {
     let hidden = actor.effects.find(e => e.label === 'Hidden');
