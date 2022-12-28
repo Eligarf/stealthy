@@ -3,7 +3,6 @@ export class Stealthy {
   static moduleName = 'stealthy';
   static ignoreFriendlyStealth = 'ignoreFriendlyStealth';
   static ignoreFriendlyUmbralSight = 'ignoreFriendlyUmbralSight';
-  static hiddenEffect = 'hiddenEffect';
 
   static testVisionStealth(visionSource, config) {
     const target = config.object?.actor;
@@ -40,7 +39,6 @@ export class Stealthy {
       changes: [],
       flags: { convenientDescription: game.i18n.localize("stealthy-hidden-description") },
     };
-    hiddenEffect = game.settings.get(Stealthy.moduleName, Stealthy.hiddenEffect);
 
     if (typeof TokenMagic !== 'undefined') {
       hidden.changes.push({
