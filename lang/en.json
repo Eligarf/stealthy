@@ -1,0 +1,11 @@
+{
+  "stealthy-hidden": "Hidden",
+  "stealthy-hidden-description": "Requires perception check to detect",
+  "stealthy-spot": "Spot",
+  "stealthy-spot-description": "Active Perception check result",
+  "stealthy-inputBox-title": "Current Stealth",
+  "stealthy-ignoreFriendlyStealth-name": "Ignore friendly stealth",
+  "stealthy-ignoreFriendlyStealth-hint": "Perception vs Stealth tests will be ignored for tokens of the same disposition",
+  "stealthy-ignoreFriendlyUmbralSight-name": "Ignore friendly Umbral Sight",
+  "stealthy-ignoreFriendlyUmbralSight-hint": "In darkvision mode, ignore the Umbral Sight feature for tokens of the same disposition"
+}

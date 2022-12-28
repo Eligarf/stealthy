@@ -1,7 +1,7 @@
 {
   "id": "stealthy",
   "title": "Stealthy",
-  "description": "Adds perception vs stealth to vision tests",
+  "description": "Adds perception vs stealth checks to vision tests for tokens with the Hidden condition",
   "authors": [
     {
       "name": "Eligarf"
@@ -10,20 +10,21 @@
       "name": "Frstrm"
     }
   ],
-  "version": "1.1.0",
+  "version": "1.2.0",
   "compatibility": {
-    "minimum": "10",
-    "verified": "10"
+    "minimum": "10.291",
+    "verified": "10.291",
+    "maximum": "10"
   },
+  "minimumCoreVersion": 10,
   "system": [
     "dnd5e"
   ],
   "relationships": {
     "requires": [
       {
-        "id": "libwrapper",
-        "type": "module",
-        "compatibility": {}
+        "id": "lib-wrapper",
+        "type": "module"
       }
     ]
   },
@@ -31,8 +32,15 @@
     "./scripts/config.js",
     "./scripts/stealthy.js"
   ],
+  "languages": [
+    {
+      "lang": "en",
+      "name": "English",
+      "path": "./lang/en.json"
+    }
+  ],
   "url": "https://github.com/Eligarf/stealthy",
   "manifest": "https://github.com/Eligarf/stealthy/releases/latest/download/module.json",
-  "download": "https://github.com/Eligarf/stealthy/releases/download/v1.1.0/stealthy-1.1.0.zip",
+  "download": "https://github.com/Eligarf/stealthy/releases/download/v1.2.0/stealthy.zip",
   "bugs": "https://github.com/Eligarf/stealthy/issues"
 }

@@ -1,38 +1,23 @@
 import { Stealthy } from './stealthy.js';
 
-Hooks.once('init', () => {
+Hooks.once('ready', () => {
 
-  game.settings.register(
-    Stealthy.moduleName,
-    Stealthy.spotVsHidden,
-    {
-      name: 'Enable spot vs hidden',
-      scope: 'world',
-      config: true,
-      type: Boolean,
-      default: true,
-    });
+  game.settings.register(Stealthy.moduleName, Stealthy.ignoreFriendlyStealth, {
+    name: game.i18n.localize("stealthy-ignoreFriendlyStealth-name"),
+    hint: game.i18n.localize("stealthy-ignoreFriendlyStealth-hint"),
+    scope: 'world',
+    config: true,
+    type: Boolean,
+    default: true,
+  });
 
-  game.settings.register(
-    Stealthy.moduleName,
-    Stealthy.ignoreFriendlyStealth,
-    {
-      name: 'Ignore friendly stealth',
-      scope: 'world',
-      config: true,
-      type: Boolean,
-      default: true,
-    });
-
-  game.settings.register(
-    Stealthy.moduleName,
-    Stealthy.ignoreFriendlyGloomstalker,
-    {
-      name: 'Ignore friendly gloomstalkers',
-      scope: 'world',
-      config: true,
-      type: Boolean,
-      default: false,
-    });
+  game.settings.register(Stealthy.moduleName, Stealthy.ignoreFriendlyUmbralSight, {
+    name: game.i18n.localize("stealthy-ignoreFriendlyUmbralSight-name"),
+    hint: game.i18n.localize("stealthy-ignoreFriendlyUmbralSight-hint"),
+    scope: 'world',
+    config: true,
+    type: Boolean,
+    default: false,
+  });
 
 });

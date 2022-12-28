@@ -1,0 +1,33 @@
+name: Module Builder
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Zip Files
+        working-directory: ./
+        run: zip -r ./stealthy.zip ./scripts ./lang ./module.json
+
+      - name: Get Version
+        shell: bash
+        id: get-version
+        run: echo "version=$(node ./.github/workflows/get-version.js)" >> $GITHUB_OUTPUT
+
+      - name: Create Release
+        id: create-release
+        uses: ncipollo/release-action@v1
+        with:
+          allowUpdates: true
+          name: Release ${{ steps.get-version.outputs.version }}
+          draft: false
+          prerelease: false
+          token: ${{secrets.GITHUB_TOKEN}}
+          artifacts: './stealthy.zip, ./module.json'
+          tag: v${{ steps.get-version.outputs.version }}
