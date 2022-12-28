@@ -4,10 +4,10 @@
   "description": "Adds perception vs stealth to vision tests",
   "authors": [
     {
-      "name": "rule"
+      "name": "Eligarf"
     },
     {
-      "name": "frstrm"
+      "name": "Frstrm"
     }
   ],
   "version": "1.1.0",
@@ -30,5 +30,9 @@
   "esmodules": [
     "./scripts/config.js",
     "./scripts/stealthy.js"
-  ]
+  ],
+  "url": "https://github.com/Eligarf/stealthy",
+  "manifest": "https://github.com/Eligarf/stealthy/blob/main/module.json",
+  "download": "https://github.com/Eligarf/stealthy/releases/download/v1.1.0/stealthy.zip",
+  "bugs": "https://github.com/Eligarf/stealthy/issues"
 }
