@@ -2,8 +2,7 @@ export class Stealthy {
 
   static moduleName = 'stealthy';
   static ignoreFriendlyStealth = 'ignoreFriendlyStealth';
-  static ignoreFriendlyGloomstalker = 'ignoreFriendlyGloomstalker';
-  static spotVsHidden = 'spotVsHidden';
+  static ignoreFriendlyUmbralSight = 'ignoreFriendlyUmbralSight';
   static CONSOLE_COLORS = ['background: #222; color: #ff80ff', 'color: #fff'];
 
   static log(format, ...args) {
@@ -35,19 +34,21 @@ export class Stealthy {
       game.settings.get(Stealthy.moduleName, Stealthy.ignoreFriendlyStealth) &&
       config.object.document?.disposition === visionSource.object.document?.disposition;
 
-    if (!ignoreFriendlyStealth && game.settings.get(Stealthy.moduleName, Stealthy.spotVsHidden)) {
-      const hidden = target?.effects.find(e => e.label === 'Hidden');
+    if (!ignoreFriendlyStealth) {
+      const hidden = target?.effects.find(e => e.label === game.i18n.localize("stealthy-hidden"));
       if (hidden) {
-        let stealth = hidden.flags.stealthy?.hidden ?? target.system.skills.ste.passive;
         const source = visionSource.object?.actor;
-        const spot = source?.effects.find(e => e.label === 'Spot');
+        if (game.system.id === 'dnd5e') {
+          let stealth = hidden.flags.stealthy?.hidden ?? target.system.skills.ste.passive;
+          const spot = source?.effects.find(e => e.label === game.i18n.localize("stealthy-spot"));
 
-        // active perception loses ties, passive perception wins ties to simulate the
-        // idea that active skills need to win outright to change the status quo. Passive
-        // perception means that stealth is being the active skill.
-        let perception = spot?.flags.stealthy?.spot ?? (source.system.skills.prc.passive + 1);
-        if (perception <= stealth) {
-          return false;
+          // active perception loses ties, passive perception wins ties to simulate the
+          // idea that active skills need to win outright to change the status quo. Passive
+          // perception means that stealth is being the active skill.
+          let perception = spot?.flags.stealthy?.spot ?? (source.system.skills.prc.passive + 1);
+          if (perception <= stealth) {
+            return false;
+          }
         }
       }
     }
@@ -57,18 +58,27 @@ export class Stealthy {
 
   static makeHiddenEffect() {
     const hidden = {
-      label: 'Hidden',
+      label: game.i18n.localize("stealthy-hidden"),
       icon: 'icons/magic/perception/shadow-stealth-eyes-purple.webp',
       changes: [],
-      flags: { convenientDescription: 'Requires perception check to detect' },
+      flags: { convenientDescription: game.i18n.localize("stealthy-hidden-description") },
     };
-    if (typeof TokenMagic !== undefined) {
+
+    if (typeof TokenMagic !== 'undefined') {
       hidden.changes.push({
         key: 'macro.tokenMagic',
         mode: CONST.ACTIVE_EFFECT_MODES.CUSTOM,
         value: 'fog'
       });
     }
+    else if (typeof ATLUpdate !== 'undefined') {
+      hidden.changes.push({
+        key: 'ATL.alpha',
+        mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+        value: '0.5'
+      });
+    }
+
     return hidden;
   }
 }
@@ -82,12 +92,12 @@ Hooks.once('setup', () => {
 
       const target = config.object?.actor;
       let noDarkvision = false;
-      const ignoreFriendlyGloomstalker =
-        game.settings.get(Stealthy.moduleName, Stealthy.ignoreFriendlyGloomstalker) &&
+      const ignoreFriendlyUmbralSight =
+        game.settings.get(Stealthy.moduleName, Stealthy.ignoreFriendlyUmbralSight) &&
         config.object.document?.disposition === visionSource.object.document?.disposition;
-      if (!ignoreFriendlyGloomstalker && visionSource.visionMode?.id === 'darkvision') {
-        const gloomstalker = target?.itemTypes?.subclass?.find(c => c.name === 'Gloom Stalker');
-        if (gloomstalker) noDarkvision = true;
+      if (!ignoreFriendlyUmbralSight && visionSource.visionMode?.id === 'darkvision') {
+        const umbralSight = target?.itemTypes?.feat?.find(f => f.name === game.i18n.localize('Umbral Sight'));
+        if (umbralSight) noDarkvision = true;
       }
 
       if (noDarkvision) {
@@ -117,45 +127,54 @@ Hooks.once('setup', () => {
 Hooks.once('ready', () => {
   const ce = game.dfreds?.effectInterface;
   if (ce) {
-    let ceHidden = ce.findCustomEffectByName('Hidden');
+    let ceHidden = ce.findCustomEffectByName(game.i18n.localize("stealthy-hidden"));
     if (!ceHidden) {
       const hidden = Stealthy.makeHiddenEffect();
       ce.createNewCustomEffectsWith({ activeEffects: [hidden] });
     }
   }
- });
+});
 
 Hooks.on('dnd5e.rollSkill', async (actor, roll, skill) => {
-  if (!game.settings.get(Stealthy.moduleName, Stealthy.spotVsHidden)) return;
-
   if (skill === 'ste') {
-    let hidden = actor.effects.find(e => e.label === 'Hidden');
+    const label = game.i18n.localize("stealthy-hidden");
+    let hidden = actor.effects.find(e => e.label === label);
     if (!hidden) {
       const ce = game.dfreds?.effectInterface;
-      if (!ce)
-        await actor.createEmbeddedDocuments('ActiveEffect', [Stealthy.makeHiddenEffect()]);
-      else
-        await ce.addEffect({ effectName: 'Hidden', uuid: actor.uuid });
-      hidden = actor.effects.find(e => e.label === 'Hidden');
+      if (!ce) {
+        hidden = Stealthy.makeHiddenEffect();
+        hidden.flags['stealthy-hidden'] = roll.total;
+        await actor.createEmbeddedDocuments('ActiveEffect', [hidden]);
+        return;
+      }
+      await ce.addEffect({ effectName: label, uuid: actor.uuid });
+      hidden = actor.effects.find(e => e.label === label);
     }
     let activeHide = duplicate(hidden);
-    activeHide.flags['stealthy.hidden'] = roll.total;
+    activeHide.flags['stealthy-hidden'] = roll.total;
     await actor.updateEmbeddedDocuments('ActiveEffect', [activeHide]);
   }
+
   else if (skill === 'prc') {
-    let spot = actor.effects.find(e => e.label === 'Spot');
+    const label = game.i18n.localize("stealthy-spot");
+    let spot = actor.effects.find(e => e.label === label);
     if (!spot) {
       const newEffect = [{
-        label: 'Spot',
+        label,
         icon: 'icons/magic/perception/eye-ringed-green.webp',
         duration: { turns: 1 },
+        flags: {
+          convenientDescription: game.i18n.localize("stealthy-spot-description"),
+          'stealthy-spot': Math.max(roll.total, actor.system.skills.prc.passive),
+        },
       }];
       await actor.createEmbeddedDocuments('ActiveEffect', newEffect);
-      spot = actor.effects.find(e => e.label === 'Spot');
     }
-    let activeSpot = duplicate(spot);
-    activeSpot.flags['stealthy.spot'] = Math.max(roll.total, actor.system.skills.prc.passive);
-    await actor.updateEmbeddedDocuments('ActiveEffect', [activeSpot]);
+    else {
+      let activeSpot = duplicate(spot);
+      activeSpot.flags['stealthy-spot'] = Math.max(roll.total, actor.system.skills.prc.passive);
+      await actor.updateEmbeddedDocuments('ActiveEffect', [activeSpot]);
+    }
   }
 });
 
@@ -163,19 +182,21 @@ Hooks.on("renderTokenHUD", (tokenHUD, html, app) => {
   if (game.user.isGM == true) {
     const token = tokenHUD.object;
     const actor = token?.actor;
-    const hidden = actor?.effects.find(e => e.label === 'Hidden');
+    const hidden = actor?.effects.find(e => e.label === game.i18n.localize("stealthy-hidden"));
     if (hidden) {
-      const stealth = hidden.flags.stealthy?.hidden ?? actor.system.skills.ste.passive;
-      const divToAdd = $(
-        `<input id="stealth_inp_box" title="Current Stealth Score" type="text" name="stealth_score_inp_box" value="${stealth}"></input>`
-      );
-      html.find(".right").append(divToAdd);
-      divToAdd.change(async (inputbox) => {
-        if (token === undefined) return;
-        let activeHide = duplicate(hidden);
-        activeHide.flags['stealthy.hidden'] = Number(inputbox.target.value);
-        await actor.updateEmbeddedDocuments('ActiveEffect', [activeHide]);
-      });
+      if (game.system.id === 'dnd5e') {
+        const stealth = hidden.flags.stealthy?.hidden ?? actor.system.skills.ste.passive;
+        const stealthBox = $(
+          `<input id="ste_val_inp_box" title="${game.i18n.localize("stealthy-inputBox-title")}" type="text" name="stealth_value_inp_box" value="${stealth}"></input>`
+        );
+        html.find(".right").append(stealthBox);
+        stealthBox.change(async (inputbox) => {
+          if (token === undefined) return;
+          let activeHide = duplicate(hidden);
+          activeHide.flags['stealthy-hidden'] = Number(inputbox.target.value);
+          await actor.updateEmbeddedDocuments('ActiveEffect', [activeHide]);
+        });
+      }
     }
   }
 });
