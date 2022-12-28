@@ -26,9 +26,9 @@ Hooks.once('init', () => {
 
   game.settings.register(
     Stealthy.moduleName,
-    Stealthy.ignoreFriendlyGloomstalker,
+    Stealthy.ignoreFriendlyUmbralSight,
     {
-      name: 'Ignore friendly gloomstalkers',
+      name: 'Ignore friendly Umbral Sight',
       scope: 'world',
       config: true,
       type: Boolean,

@@ -2,7 +2,7 @@ export class Stealthy {
 
   static moduleName = 'stealthy';
   static ignoreFriendlyStealth = 'ignoreFriendlyStealth';
-  static ignoreFriendlyGloomstalker = 'ignoreFriendlyGloomstalker';
+  static ignoreFriendlyUmbralSight = 'ignoreFriendlyUmbralSight';
   static spotVsHidden = 'spotVsHidden';
 
   static testVisionStealth(visionSource, config) {
@@ -58,12 +58,12 @@ Hooks.once('setup', () => {
 
       const target = config.object?.actor;
       let noDarkvision = false;
-      const ignoreFriendlyGloomstalker =
-        game.settings.get(Stealthy.moduleName, Stealthy.ignoreFriendlyGloomstalker) &&
+      const ignoreFriendlyUmbralSight =
+        game.settings.get(Stealthy.moduleName, Stealthy.ignoreFriendlyUmbralSight) &&
         config.object.document?.disposition === visionSource.object.document?.disposition;
-      if (!ignoreFriendlyGloomstalker && visionSource.visionMode?.id === 'darkvision') {
-        const gloomstalker = target?.itemTypes?.subclass?.find(c => c.name === 'Gloom Stalker');
-        if (gloomstalker) noDarkvision = true;
+      if (!ignoreFriendlyUmbralSight && visionSource.visionMode?.id === 'darkvision') {
+        const umbralSight = target?.itemTypes?.feat?.find(f => f.name === 'Umbral Sight');
+        if (umbralSight) noDarkvision = true;
       }
 
       if (noDarkvision) {
