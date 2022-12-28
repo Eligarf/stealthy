@@ -23,15 +23,21 @@
   "relationships": {
     "requires": [
       {
-        "id": "libwrapper",
-        "type": "module",
-        "compatibility": {}
+        "id": "lib-wrapper",
+        "type": "module"
       }
     ]
   },
   "esmodules": [
     "./scripts/config.js",
     "./scripts/stealthy.js"
+  ],
+  "languages": [
+    {
+      "lang": "en",
+      "name": "English",
+      "path": "lang/en.json"
+    }
   ],
   "url": "https://github.com/Eligarf/stealthy",
   "manifest": "https://github.com/Eligarf/stealthy/releases/latest/download/module.json",

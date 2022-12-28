@@ -25,5 +25,6 @@ An invisible actor that also has the 'Hidden' condition will check Perception vs
 
 ## Required modules
 * libwrapper
-## Recommended modules
+## Optional modules
 * DFreds Convenient Effects
+* Token Magic FX

@@ -1,0 +1,9 @@
+{
+  "STEALTHY.Hidden": "Hidden",
+  "STEALTHY.HiddenDescription": "Requires perception check to detect",
+  "STEALTHY.Spot": "Spot",
+  "STEALTHY.SpotDescription": "Active Perception check result",
+  "STEALTHY.InputBoxTitle": "Current Stealth",
+  "STEALTHY.ignoreFriendlyStealth.name": "Ignore friendly stealth",
+  "STEALTHY.ignoreFriendlyUmbralSight.name": "Ignore friendly Umbral Sight"
+}
