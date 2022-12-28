@@ -36,7 +36,7 @@
     {
       "lang": "en",
       "name": "English",
-      "path": "lang/en.json"
+      "path": "./lang/en.json"
     }
   ],
   "url": "https://github.com/Eligarf/stealthy",

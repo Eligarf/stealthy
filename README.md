@@ -24,7 +24,8 @@ Characters with Umbral Sight will no longer be visible to the Darkvision mode. T
 An invisible actor that also has the 'Hidden' condition will check Perception vs Stealth before showing up in the 'See Invisibility' vision mode.
 
 ## Required modules
-* libwrapper
+* libwrapper https://foundryvtt.com/packages/lib-wrapper
 ## Optional modules
-* DFreds Convenient Effects
-* Token Magic FX
+* DFreds Convenient Effects https://foundryvtt.com/packages/dfreds-convenient-effects
+* Token Magic FX https://foundryvtt.com/packages/tokenmagic
+* Active Token Effects https://foundryvtt.com/packages/ATL
