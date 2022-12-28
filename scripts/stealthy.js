@@ -30,6 +30,23 @@ export class Stealthy {
 
     return true;
   }
+
+  static makeHiddenEffect() {
+    const hidden = {
+      label: 'Hidden',
+      icon: 'icons/magic/perception/shadow-stealth-eyes-purple.webp',
+      changes: [],
+      flags: { convenientDescription: 'Requires perception check to detect' },
+    };
+    if (typeof TokenMagic !== undefined) {
+      hidden.changes.push({
+        key: 'macro.tokenMagic',
+        mode: CONST.ACTIVE_EFFECT_MODES.CUSTOM,
+        value: 'fog'
+      });
+    }
+    return hidden;
+  }
 }
 
 Hooks.once('setup', () => {
@@ -75,24 +92,11 @@ Hooks.once('setup', () => {
 
 Hooks.once('ready', () => {
   const ce = game.dfreds?.effectInterface;
-  if (!ce) { ui.notifications.error('Stealthy requires Convenient Effects!'); }
-  else {
+  if (ce) {
     let ceHidden = ce.findCustomEffectByName('Hidden');
     if (!ceHidden) {
-      const newEffect = [{
-        label: 'Hidden',
-        icon: 'icons/magic/perception/shadow-stealth-eyes-purple.webp',
-        changes: [],
-        flags: { convenientDescription: 'Requires perception check to detect'},
-      }];
-      if (typeof TokenMagic !== undefined) {
-        newEffect[0].changes.push({
-          key: 'macro.tokenMagic',
-          mode: CONST.ACTIVE_EFFECT_MODES.CUSTOM,
-          value: 'fog'
-        });
-      }
-      ce.createNewCustomEffectsWith({ activeEffects: newEffect });
+      const hidden = Stealthy.makeHiddenEffect();
+      ce.createNewCustomEffectsWith({ activeEffects: [hidden] });
     }
   }
  });
@@ -104,8 +108,10 @@ Hooks.on('dnd5e.rollSkill', async (actor, roll, skill) => {
     let hidden = actor.effects.find(e => e.label === 'Hidden');
     if (!hidden) {
       const ce = game.dfreds?.effectInterface;
-      if (!ce) return ui.notifications.error('Stealthy requires Convenient Effects!!');
-      await ce.addEffect({ effectName: 'Hidden', uuid: actor.uuid });
+      if (!ce)
+        await actor.createEmbeddedDocuments('ActiveEffect', [Stealthy.makeHiddenEffect()]);
+      else
+        await ce.addEffect({ effectName: 'Hidden', uuid: actor.uuid });
       hidden = actor.effects.find(e => e.label === 'Hidden');
     }
     let activeHide = duplicate(hidden);
