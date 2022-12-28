@@ -149,7 +149,7 @@ Hooks.on("renderTokenHUD", (tokenHUD, html, app) => {
       divToAdd.change(async (inputbox) => {
         if (token === undefined) return;
         let activeHide = duplicate(hidden);
-        activeHide.flags['stealthy.hidden'] = inputbox.target.value;
+        activeHide.flags['stealthy.hidden'] = Number(inputbox.target.value);
         await actor.updateEmbeddedDocuments('ActiveEffect', [activeHide]);
       });
     }
