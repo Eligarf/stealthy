@@ -5,5 +5,7 @@
   "STEALTHY.SpotDescription": "Active Perception check result",
   "STEALTHY.InputBoxTitle": "Current Stealth",
   "STEALTHY.ignoreFriendlyStealth.name": "Ignore friendly stealth",
-  "STEALTHY.ignoreFriendlyUmbralSight.name": "Ignore friendly Umbral Sight"
+  "STEALTHY.ignoreFriendlyStealth.hint": "Perception vs Stealth tests will be ignored for tokens of the same disposition",
+  "STEALTHY.ignoreFriendlyUmbralSight.name": "Ignore friendly Umbral Sight",
+  "STEALTHY.ignoreFriendlyUmbralSight.hint": "In darkvision mode, ignore the Umbral Sight feature for tokens of the same disposition"
 }
