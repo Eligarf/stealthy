@@ -24,31 +24,25 @@ Hooks.once('ready', () => {
     default: false,
   });
 
-  game.settings.register(
-    Stealthy.moduleName,
-    'debugLogging',
-    {
-      name: 'Enable debug logging', // game.i18n.localize('rules5estuff.settings.debug.text'),
-      scope: 'client',
-      config: true,
-      type: Boolean,
-      default: false,
+  game.settings.register(Stealthy.moduleName, Stealthy.debugLogging, {
+    name: game.i18n.localize("stealthy-debugLogging-name"),
+    scope: 'client',
+    config: true,
+    type: Boolean,
+    default: false,
   });
 
-  game.settings.register(
-    Stealthy.moduleName,
-    'logLevel',
-    {
-      name: 'console logging level', // game.i18n.localize('rules5estuff.settings.debug.text'),
-      scope: 'client',
-      config: true,
-      type: String,
-      choices: {
-        'none': 'No logging',
-        'debug': 'Debug level',
-        'log': 'Log level',
-      },
-      default: 'debug'
+  game.settings.register(Stealthy.moduleName, Stealthy.loglevel, {
+    name: game.i18n.localize("stealthy-logLevel-name"),
+    scope: 'client',
+    config: true,
+    type: String,
+    choices: {
+      'none': game.i18n.localize("stealthy-logLevel-none-choice"),
+      'debug': game.i18n.localize("stealthy-logLevel-debuglevel-choice"),
+      'log': game.i18n.localize("stealthy-logLevel-loglevel-choice")
+    },
+    default: 'debug'
   });
   
 });

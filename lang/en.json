@@ -7,5 +7,10 @@
   "stealthy-ignoreFriendlyStealth-name": "Ignore friendly stealth",
   "stealthy-ignoreFriendlyStealth-hint": "Perception vs Stealth tests will be ignored for tokens of the same disposition",
   "stealthy-ignoreFriendlyUmbralSight-name": "Ignore friendly Umbral Sight",
-  "stealthy-ignoreFriendlyUmbralSight-hint": "In darkvision mode, ignore the Umbral Sight feature for tokens of the same disposition"
+  "stealthy-ignoreFriendlyUmbralSight-hint": "In darkvision mode, ignore the Umbral Sight feature for tokens of the same disposition",
+  "stealthy-debugLogging-name": "debugLoggin",
+  "stealthy-logLevel-name": "logLevel",
+  "stealthy-logLevel-none-choice": "No logging",
+  "stealthy-logLevel-debuglevel-choice": "Debug level",
+  "stealthy-logLevel-loglevel-choice": "Log level"
 }

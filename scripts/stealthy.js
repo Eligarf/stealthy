@@ -3,12 +3,14 @@ export class Stealthy {
   static moduleName = 'stealthy';
   static ignoreFriendlyStealth = 'ignoreFriendlyStealth';
   static ignoreFriendlyUmbralSight = 'ignoreFriendlyUmbralSight';
+  static debugLogging = 'debugLogging';
+  static loglevel = 'loglevel';
   static CONSOLE_COLORS = ['background: #222; color: #ff80ff', 'color: #fff'];
 
   static log(format, ...args) {
-    const debugEnabled = game.settings.get(Stealthy.moduleName, 'debugLogging');
+    const debugEnabled = game.settings.get(Stealthy.moduleName, Stealthy.debugLogging);
     if (debugEnabled){
-      const level = game.settings.get(Stealthy.moduleName, 'logLevel');
+      const level = game.settings.get(Stealthy.moduleName, Stealthy.loglevel);
       if (level !== 'none') {
     
         function colorizeOutput(format, ...args) {
