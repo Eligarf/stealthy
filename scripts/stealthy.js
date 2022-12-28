@@ -11,12 +11,12 @@ export class Stealthy {
       config.object.document?.disposition === visionSource.object.document?.disposition;
 
     if (!ignoreFriendlyStealth) {
-      const hidden = target?.effects.find(e => e.label === game.i18n.localize("STEALTHY.Hidden"));
+      const hidden = target?.effects.find(e => e.label === game.i18n.localize("stealthy.Hidden"));
       if (hidden) {
         const source = visionSource.object?.actor;
         if (game.system.id === 'dnd5e') {
           let stealth = hidden.flags.stealthy?.hidden ?? target.system.skills.ste.passive;
-          const spot = source?.effects.find(e => e.label === game.i18n.localize("STEALTHY.Spot"));
+          const spot = source?.effects.find(e => e.label === game.i18n.localize("stealthy.Spot"));
 
           // active perception loses ties, passive perception wins ties to simulate the
           // idea that active skills need to win outright to change the status quo. Passive
@@ -34,10 +34,10 @@ export class Stealthy {
 
   static makeHiddenEffect() {
     const hidden = {
-      label: game.i18n.localize("STEALTHY.Hidden"),
+      label: game.i18n.localize("stealthy.Hidden"),
       icon: 'icons/magic/perception/shadow-stealth-eyes-purple.webp',
       changes: [],
-      flags: { convenientDescription: game.i18n.localize("STEALTHY.HiddenDescription") },
+      flags: { convenientDescription: game.i18n.localize("stealthy.HiddenDescription") },
     };
     if (typeof TokenMagic !== undefined) {
       hidden.changes.push({
@@ -94,7 +94,7 @@ Hooks.once('setup', () => {
 Hooks.once('ready', () => {
   const ce = game.dfreds?.effectInterface;
   if (ce) {
-    let ceHidden = ce.findCustomEffectByName(game.i18n.localize("STEALTHY.Hidden"));
+    let ceHidden = ce.findCustomEffectByName(game.i18n.localize("stealthy.Hidden"));
     if (!ceHidden) {
       const hidden = Stealthy.makeHiddenEffect();
       ce.createNewCustomEffectsWith({ activeEffects: [hidden] });
@@ -104,7 +104,7 @@ Hooks.once('ready', () => {
 
 Hooks.on('dnd5e.rollSkill', async (actor, roll, skill) => {
   if (skill === 'ste') {
-    const label = game.i18n.localize("STEALTHY.Hidden");
+    const label = game.i18n.localize("stealthy.Hidden");
     let hidden = actor.effects.find(e => e.label === label);
     if (!hidden) {
       const ce = game.dfreds?.effectInterface;
@@ -123,7 +123,7 @@ Hooks.on('dnd5e.rollSkill', async (actor, roll, skill) => {
   }
 
   else if (skill === 'prc') {
-    const label = game.i18n.localize("STEALTHY.Spot");
+    const label = game.i18n.localize("stealthy.Spot");
     let spot = actor.effects.find(e => e.label === label);
     if (!spot) {
       const newEffect = [{
@@ -131,7 +131,7 @@ Hooks.on('dnd5e.rollSkill', async (actor, roll, skill) => {
         icon: 'icons/magic/perception/eye-ringed-green.webp',
         duration: { turns: 1 },
         flags: {
-          convenientDescription: game.i18n.localize("STEALTHY.SpotDescription"),
+          convenientDescription: game.i18n.localize("stealthy.SpotDescription"),
           'stealthy.spot': Math.max(roll.total, actor.system.skills.prc.passive),
         },
       }];
@@ -149,12 +149,12 @@ Hooks.on("renderTokenHUD", (tokenHUD, html, app) => {
   if (game.user.isGM == true) {
     const token = tokenHUD.object;
     const actor = token?.actor;
-    const hidden = actor?.effects.find(e => e.label === game.i18n.localize("STEALTHY.Hidden"));
+    const hidden = actor?.effects.find(e => e.label === game.i18n.localize("stealthy.Hidden"));
     if (hidden) {
       if (game.system.id === 'dnd5e') {
         const stealth = hidden.flags.stealthy?.hidden ?? actor.system.skills.ste.passive;
         const stealthBox = $(
-          `<input id="ste_val_inp_box" title="${game.i18n.localize("STEALTHY.InputBoxTitle")}" type="text" name="stealth_value_inp_box" value="${stealth}"></input>`
+          `<input id="ste_val_inp_box" title="${game.i18n.localize("stealthy.InputBoxTitle")}" type="text" name="stealth_value_inp_box" value="${stealth}"></input>`
         );
         html.find(".right").append(stealthBox);
         stealthBox.change(async (inputbox) => {

@@ -1,7 +1,7 @@
 {
   "id": "stealthy",
   "title": "Stealthy",
-  "description": "Adds perception vs stealth to vision tests with the Hidden condition",
+  "description": "Adds perception vs stealth checks to vision tests for tokens with the Hidden condition",
   "authors": [
     {
       "name": "Eligarf"
