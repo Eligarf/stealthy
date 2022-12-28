@@ -13,7 +13,7 @@ jobs:
 
       - name: Zip Files
         working-directory: ./
-        run: zip -r ./stealthy.zip ./scripts ./module.json
+        run: zip -r ./stealthy.zip ./scripts ./lang ./module.json
 
       - name: Get Version
         shell: bash
