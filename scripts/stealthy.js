@@ -13,16 +13,18 @@ export class Stealthy {
     if (!ignoreFriendlyStealth) {
       const hidden = target?.effects.find(e => e.label === game.i18n.localize("STEALTHY.Hidden"));
       if (hidden) {
-        let stealth = hidden.flags.stealthy?.hidden ?? target.system.skills.ste.passive;
         const source = visionSource.object?.actor;
-        const spot = source?.effects.find(e => e.label === game.i18n.localize("STEALTHY.Spot"));
+        if (game.system.id === 'dnd5e') {
+          let stealth = hidden.flags.stealthy?.hidden ?? target.system.skills.ste.passive;
+          const spot = source?.effects.find(e => e.label === game.i18n.localize("STEALTHY.Spot"));
 
-        // active perception loses ties, passive perception wins ties to simulate the
-        // idea that active skills need to win outright to change the status quo. Passive
-        // perception means that stealth is being the active skill.
-        let perception = spot?.flags.stealthy?.spot ?? (source.system.skills.prc.passive + 1);
-        if (perception <= stealth) {
-          return false;
+          // active perception loses ties, passive perception wins ties to simulate the
+          // idea that active skills need to win outright to change the status quo. Passive
+          // perception means that stealth is being the active skill.
+          let perception = spot?.flags.stealthy?.spot ?? (source.system.skills.prc.passive + 1);
+          if (perception <= stealth) {
+            return false;
+          }
         }
       }
     }
@@ -149,17 +151,19 @@ Hooks.on("renderTokenHUD", (tokenHUD, html, app) => {
     const actor = token?.actor;
     const hidden = actor?.effects.find(e => e.label === game.i18n.localize("STEALTHY.Hidden"));
     if (hidden) {
-      const stealth = hidden.flags.stealthy?.hidden ?? actor.system.skills.ste.passive;
-      const stealthBox = $(
-        `<input id="ste_val_inp_box" title="${game.i18n.localize("STEALTHY.InputBoxTitle")}" type="text" name="stealth_value_inp_box" value="${stealth}"></input>`
-      );
-      html.find(".right").append(stealthBox);
-      stealthBox.change(async (inputbox) => {
-        if (token === undefined) return;
-        let activeHide = duplicate(hidden);
-        activeHide.flags['stealthy.hidden'] = Number(inputbox.target.value);
-        await actor.updateEmbeddedDocuments('ActiveEffect', [activeHide]);
-      });
+      if (game.system.id === 'dnd5e') {
+        const stealth = hidden.flags.stealthy?.hidden ?? actor.system.skills.ste.passive;
+        const stealthBox = $(
+          `<input id="ste_val_inp_box" title="${game.i18n.localize("STEALTHY.InputBoxTitle")}" type="text" name="stealth_value_inp_box" value="${stealth}"></input>`
+        );
+        html.find(".right").append(stealthBox);
+        stealthBox.change(async (inputbox) => {
+          if (token === undefined) return;
+          let activeHide = duplicate(hidden);
+          activeHide.flags['stealthy.hidden'] = Number(inputbox.target.value);
+          await actor.updateEmbeddedDocuments('ActiveEffect', [activeHide]);
+        });
+      }
     }
   }
 });
