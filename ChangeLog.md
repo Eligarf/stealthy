@@ -1,3 +1,7 @@
+### Pending
+* Allow selection for source of Hidden effect
+* Support CUB as possible Hidden source
+* Handle disabled Hidden/Spot effects
 
 ### Version 1.2.4
 * Added dubious feature GIFs to readme
