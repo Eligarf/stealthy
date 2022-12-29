@@ -13,8 +13,7 @@
   "stealthy-hiddenSource-ce": "Convenient Effects",
   "stealthy-hiddenSource-cub": "Combat Utility Belt",
   "stealthy-hiddenSource-ae": "Stealthy",
-  "stealthy-debugLogging-name": "debugLogging",
-  "stealthy-logLevel-name": "logLevel",
+  "stealthy-logLevel-name": "Logging Level",
   "stealthy-logLevel-none-choice": "No logging",
   "stealthy-logLevel-debuglevel-choice": "Debug level",
   "stealthy-logLevel-loglevel-choice": "Log level"
