@@ -10,7 +10,7 @@
       "name": "Frstrm"
     }
   ],
-  "version": "1.3.0",
+  "version": "1.3.1",
   "compatibility": {
     "minimum": "10.291",
     "verified": "10.291",
@@ -39,8 +39,8 @@
       "path": "./lang/en.json"
     }
   ],
-  "download": "https://github.com/Eligarf/stealthy/releases/download/v1.3.0/stealthy.zip",
-  "changelog": "https://github.com/Eligarf/stealthy/releases/tag/v1.3.0",
+  "download": "https://github.com/Eligarf/stealthy/releases/download/v1.3.1/stealthy.zip",
+  "changelog": "https://github.com/Eligarf/stealthy/releases/tag/v1.3.1",
   "url": "https://github.com/Eligarf/stealthy",
   "manifest": "https://github.com/Eligarf/stealthy/releases/latest/download/module.json",
   "bugs": "https://github.com/Eligarf/stealthy/issues",
