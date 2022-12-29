@@ -1,10 +1,14 @@
+[![License](https://img.shields.io/github/license/eligarf/stealthy?label=License)](LICENSE)
+[![Latest Version](https://img.shields.io/github/v/release/eligarf/stealthy?display_name=tag&sort=semver&label=Latest%20Version)](https://github.com/eligarf/stealthy/releases/latest)
+![Foundry Version](https://img.shields.io/endpoint?url=https://foundryshields.com/version?url=https%3A%2F%2Fraw.githubusercontent.com%2Feligarf%2Fstealthy%2Fmain%2Fmodule.json)
+[![Forge Installs](https://img.shields.io/badge/dynamic/json?label=Forge%20Installs&query=package.installs&suffix=%25&url=https%3A%2F%2Fforge-vtt.com%2Fapi%2Fbazaar%2Fpackage%2Fstealthy&colorB=blueviolet)](https://forge-vtt.com/bazaar#package=stealthy)
 # Stealthy
 
-A module for <a href="https://foundryvtt.com/">FoundryVTT</a> that adds perception vs stealth testing to Foundry's visibility tests.
+A module for [FoundryVTT](https://foundryvtt.com) that adds perception vs stealth testing to Foundry's visibility tests.
 
 ## Purpose
 
-Don't display any enemies with the 'Hidden' condition if the viewing Perception roll (or passive) failed to beat the Stealth roll.
+During visibility tests, Stealthy filters out any objects with the 'Hidden' condition if the viewing Perception value fails to beat the object's Stealth value.
 
 ## Features
 
@@ -18,14 +22,17 @@ Rolling a Perception check will add a 'Spot' condition to the actor which record
 Once the 'Hidden' condition is applied, GMs will see a token button with an input box on the bottom right which will shows the rolled Stealth result, or show the passive Stealth value if the Hidden condition was added directly without rolling. Changing the value in this input box will alter the stored Stealth result for any future visibility tests.
 
 ### **Umbral Sight affects darkvision**
-Characters with Umbral Sight will no longer be visible to the Darkvision mode. They can still be seen if Basic Vision can see them.
+Characters with Umbral Sight will no longer be visible to the Darkvision mode, but they can still be seen if Basic Vision can see them. The GM has the option to disable this for friendly token visibility tests. 
 
 ### **Invisible characters can hide from See Invisibility**
 An invisible actor that also has the 'Hidden' condition will check Perception vs Stealth before showing up in the 'See Invisibility' vision mode.
 
+### **Friendly tokens can still be viewed**
+The GM has the option for allowing Hidden tokens to be seen by other tokens of the same disposition.
+
 ## Required modules
-* libwrapper https://foundryvtt.com/packages/lib-wrapper
+* [lib-wrapper](https://foundryvtt.com/packages/lib-wrapper)
 ## Optional modules
-* DFreds Convenient Effects https://foundryvtt.com/packages/dfreds-convenient-effects
-* Token Magic FX https://foundryvtt.com/packages/tokenmagic
-* Active Token Effects https://foundryvtt.com/packages/ATL
+* [DFreds Convenient Effects](https://foundryvtt.com/packages/dfreds-convenient-effects)
+* [Token Magic FX](https://foundryvtt.com/packages/tokenmagic)
+* [Active Token Effects](https://foundryvtt.com/packages/ATL)
