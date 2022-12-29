@@ -1,15 +1,9 @@
 export class Stealthy {
 
-  static moduleName = 'stealthy';
-  static ignoreFriendlyStealth = 'ignoreFriendlyStealth';
-  static ignoreFriendlyUmbralSight = 'ignoreFriendlyUmbralSight';
-  static hiddenSource = 'hiddenSource';
-
-  static loglevel = 'loglevel';
   static CONSOLE_COLORS = ['background: #222; color: #ff80ff', 'color: #fff'];
 
   static log(format, ...args) {
-    const level = game.settings.get(Stealthy.moduleName, Stealthy.loglevel);
+    const level = game.settings.get('stealthy', 'logLevel');
     if (level !== 'none') {
 
       function colorizeOutput(format, ...args) {
@@ -31,7 +25,7 @@ export class Stealthy {
   static testVisionStealth(visionSource, config) {
     const target = config.object?.actor;
     const ignoreFriendlyStealth =
-      game.settings.get(Stealthy.moduleName, Stealthy.ignoreFriendlyStealth) &&
+      game.settings.get('stealthy', 'ignoreFriendlyStealth') &&
       config.object.document?.disposition === visionSource.object.document?.disposition;
 
     if (!ignoreFriendlyStealth) {
@@ -55,37 +49,11 @@ export class Stealthy {
 
     return true;
   }
-
-  static makeHiddenEffect() {
-    const hidden = {
-      label: game.i18n.localize("stealthy-hidden"),
-      icon: 'icons/magic/perception/shadow-stealth-eyes-purple.webp',
-      changes: [],
-      flags: { convenientDescription: game.i18n.localize("stealthy-hidden-description") },
-    };
-
-    if (typeof TokenMagic !== 'undefined') {
-      hidden.changes.push({
-        key: 'macro.tokenMagic',
-        mode: CONST.ACTIVE_EFFECT_MODES.CUSTOM,
-        value: 'fog'
-      });
-    }
-    else if (typeof ATLUpdate !== 'undefined') {
-      hidden.changes.push({
-        key: 'ATL.alpha',
-        mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
-        value: '0.5'
-      });
-    }
-
-    return hidden;
-  }
 }
 
 Hooks.once('setup', () => {
   libWrapper.register(
-    Stealthy.moduleName,
+    'stealthy',
     "DetectionModeBasicSight.prototype.testVisibility",
     (wrapped, visionSource, mode, config = {}) => {
       if (!Stealthy.testVisionStealth(visionSource, config)) return false;
@@ -93,7 +61,7 @@ Hooks.once('setup', () => {
       const target = config.object?.actor;
       let noDarkvision = false;
       const ignoreFriendlyUmbralSight =
-        game.settings.get(Stealthy.moduleName, Stealthy.ignoreFriendlyUmbralSight) &&
+        game.settings.get('stealthy', 'ignoreFriendlyUmbralSight') &&
         config.object.document?.disposition === visionSource.object.document?.disposition;
       if (!ignoreFriendlyUmbralSight && visionSource.visionMode?.id === 'darkvision') {
         const umbralSight = target?.itemTypes?.feat?.find(f => f.name === game.i18n.localize('Umbral Sight'));
@@ -113,7 +81,7 @@ Hooks.once('setup', () => {
   );
 
   libWrapper.register(
-    Stealthy.moduleName,
+    'stealthy',
     "DetectionModeInvisibility.prototype.testVisibility",
     (wrapped, visionSource, mode, config = {}) => {
       if (!Stealthy.testVisionStealth(visionSource, config)) return false;
@@ -130,25 +98,52 @@ Hooks.on('dnd5e.rollSkill', async (actor, roll, skill) => {
     let hidden = actor.effects.find(e => e.label === label);
 
     if (!hidden) {
-      const source = game.settings.get(Stealthy.moduleName, Stealthy.hiddenSource);
+      // See if we can source from outside
+      const source = game.settings.get('stealthy', 'hiddenSource');
       if (source === 'ce') {
         await game.dfreds.effectInterface.addEffect({ effectName: label, uuid: actor.uuid });
+        hidden = actor.effects.find(e => e.label === label);
       }
       else if (source === 'cub') {
         await game.cub.applyCondition(label, actor);
+        hidden = actor.effects.find(e => e.label === label);
       }
-      else {
-        hidden = Stealthy.makeHiddenEffect();
-        hidden.disabled = false;
+
+      // If we haven't found an ouside source, create the default one
+      if (!hidden) {
+        hidden = {
+          label: game.i18n.localize("stealthy-hidden"),
+          icon: 'icons/magic/perception/shadow-stealth-eyes-purple.webp',
+          changes: [],
+          flags: { convenientDescription: game.i18n.localize("stealthy-hidden-description") },
+        };
+
+        if (source === 'ae') {
+          if (typeof TokenMagic !== 'undefined') {
+            hidden.changes.push({
+              key: 'macro.tokenMagic',
+              mode: CONST.ACTIVE_EFFECT_MODES.CUSTOM,
+              value: 'fog'
+            });
+          }
+          else if (typeof ATLUpdate !== 'undefined') {
+            hidden.changes.push({
+              key: 'ATL.alpha',
+              mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+              value: '0.5'
+            });
+          }
+        }
         hidden.flags['stealthy.hidden'] = roll.total;
         hidden.flags['core.statusId'] = '1';
         await actor.createEmbeddedDocuments('ActiveEffect', [hidden]);
+
+        // No need to update the effect with roll data because we just created it therein
         return;
       }
-      hidden = actor.effects.find(e => e.label === label);
-      if (!hidden) return ui.notifications.error(game.i18n.localize("stealthy-hidden-error"));
     }
 
+    // Need to stick the roll data into a flag and update the effect
     let activeHide = duplicate(hidden);
     activeHide.flags['stealthy.hidden'] = roll.total;
     activeHide.disabled = false;
@@ -173,6 +168,7 @@ Hooks.on('dnd5e.rollSkill', async (actor, roll, skill) => {
     else {
       let activeSpot = duplicate(spot);
       activeSpot.flags['stealthy.spot'] = Math.max(roll.total, actor.system.skills.prc.passive);
+      activeSpot.disabled = false;
       await actor.updateEmbeddedDocuments('ActiveEffect', [activeSpot]);
     }
   }

@@ -1,6 +1,7 @@
 {
   "stealthy-hidden": "Hidden",
   "stealthy-hidden-description": "Requires perception check to detect",
+  "stealthy-hidden-error": "Can't find effect named Hidden",
   "stealthy-spot": "Spot",
   "stealthy-spot-description": "Active Perception check result",
   "stealthy-inputBox-title": "Current Stealth",
@@ -13,6 +14,7 @@
   "stealthy-hiddenSource-ce": "Convenient Effects",
   "stealthy-hiddenSource-cub": "Combat Utility Belt",
   "stealthy-hiddenSource-ae": "Stealthy",
+  "stealthy-hiddenSource-none": "Disable token effect",
   "stealthy-logLevel-name": "Logging Level",
   "stealthy-logLevel-none-choice": "No logging",
   "stealthy-logLevel-debuglevel-choice": "Debug level",

@@ -1,3 +1,10 @@
+### Version 1.4.0
+* Option to disable token effect on Hidden
+* Ensure Spot effect isn't disabled after rolling Perception
+
+### Version 1.3.1
+* Fix merge error
+
 ### Version 1.3.0
 * Allow selection for source of Hidden effect
 * Support CUB as possible Hidden source

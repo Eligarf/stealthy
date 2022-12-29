@@ -1,12 +1,10 @@
-import { Stealthy } from './stealthy.js';
-
 Hooks.once('ready', () => {
 
-  const module = game.modules.get(Stealthy.moduleName);
+  const module = game.modules.get('stealthy');
   const moduleVersion = module.version;
   console.log(`stealthy | Initializing ${moduleVersion}`);
 
-  game.settings.register(Stealthy.moduleName, Stealthy.ignoreFriendlyStealth, {
+  game.settings.register('stealthy', 'ignoreFriendlyStealth', {
     name: game.i18n.localize("stealthy-ignoreFriendlyStealth-name"),
     hint: game.i18n.localize("stealthy-ignoreFriendlyStealth-hint"),
     scope: 'world',
@@ -15,7 +13,7 @@ Hooks.once('ready', () => {
     default: true,
   });
 
-  game.settings.register(Stealthy.moduleName, Stealthy.ignoreFriendlyUmbralSight, {
+  game.settings.register('stealthy', 'ignoreFriendlyUmbralSight', {
     name: game.i18n.localize("stealthy-ignoreFriendlyUmbralSight-name"),
     hint: game.i18n.localize("stealthy-ignoreFriendlyUmbralSight-hint"),
     scope: 'world',
@@ -24,7 +22,10 @@ Hooks.once('ready', () => {
     default: false,
   });
 
-  let choices = { 'ae': game.i18n.localize("stealthy-hiddenSource-ae") };
+  let choices = {
+    'none': game.i18n.localize("stealthy-hiddenSource-none"),
+    'ae': game.i18n.localize("stealthy-hiddenSource-ae"),
+  };
   let defaultSource = 'ae';
   if (game.cub?.getCondition(game.i18n.localize("stealthy-hidden"))) {
     choices['cub'] = game.i18n.localize("stealthy-hiddenSource-cub");
@@ -35,7 +36,7 @@ Hooks.once('ready', () => {
     defaultSource = 'ce';
   }
 
-  game.settings.register(Stealthy.moduleName, Stealthy.hiddenSource, {
+  game.settings.register('stealthy', 'hiddenSource', {
     name: game.i18n.localize("stealthy-hiddenSource-name"),
     hint: game.i18n.localize("stealthy-hiddenSource-hint"),
     scope: 'world',
@@ -45,7 +46,7 @@ Hooks.once('ready', () => {
     default: defaultSource
   });
 
-  game.settings.register(Stealthy.moduleName, Stealthy.loglevel, {
+  game.settings.register('stealthy', 'logLevel', {
     name: game.i18n.localize("stealthy-logLevel-name"),
     scope: 'client',
     config: true,

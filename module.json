@@ -40,7 +40,7 @@
     }
   ],
   "download": "https://github.com/Eligarf/stealthy/releases/download/v1.3.1/stealthy.zip",
-  "changelog": "https://github.com/Eligarf/stealthy/releases/tag/v1.3.1",
+  "changelog": "https://raw.githubusercontent.com/eligarf/stealthy/main/ChangeLog.md",
   "url": "https://github.com/Eligarf/stealthy",
   "manifest": "https://github.com/Eligarf/stealthy/releases/latest/download/module.json",
   "bugs": "https://github.com/Eligarf/stealthy/issues",
