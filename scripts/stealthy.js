@@ -145,7 +145,7 @@ Hooks.on('dnd5e.rollSkill', async (actor, roll, skill) => {
       const ce = game.dfreds?.effectInterface;
       if (!ce) {
         hidden = Stealthy.makeHiddenEffect();
-        hidden.flags['stealthy-hidden'] = roll.total;
+        hidden.flags['stealthy.hidden'] = roll.total;
         await actor.createEmbeddedDocuments('ActiveEffect', [hidden]);
         return;
       }
@@ -153,7 +153,7 @@ Hooks.on('dnd5e.rollSkill', async (actor, roll, skill) => {
       hidden = actor.effects.find(e => e.label === label);
     }
     let activeHide = duplicate(hidden);
-    activeHide.flags['stealthy-hidden'] = roll.total;
+    activeHide.flags['stealthy.hidden'] = roll.total;
     await actor.updateEmbeddedDocuments('ActiveEffect', [activeHide]);
   }
 
@@ -167,14 +167,14 @@ Hooks.on('dnd5e.rollSkill', async (actor, roll, skill) => {
         duration: { turns: 1 },
         flags: {
           convenientDescription: game.i18n.localize("stealthy-spot-description"),
-          'stealthy-spot': Math.max(roll.total, actor.system.skills.prc.passive),
+          'stealthy.spot': Math.max(roll.total, actor.system.skills.prc.passive),
         },
       }];
       await actor.createEmbeddedDocuments('ActiveEffect', newEffect);
     }
     else {
       let activeSpot = duplicate(spot);
-      activeSpot.flags['stealthy-spot'] = Math.max(roll.total, actor.system.skills.prc.passive);
+      activeSpot.flags['stealthy.spot'] = Math.max(roll.total, actor.system.skills.prc.passive);
       await actor.updateEmbeddedDocuments('ActiveEffect', [activeSpot]);
     }
   }
@@ -195,7 +195,7 @@ Hooks.on("renderTokenHUD", (tokenHUD, html, app) => {
         stealthBox.change(async (inputbox) => {
           if (token === undefined) return;
           let activeHide = duplicate(hidden);
-          activeHide.flags['stealthy-hidden'] = Number(inputbox.target.value);
+          activeHide.flags['stealthy.hidden'] = Number(inputbox.target.value);
           await actor.updateEmbeddedDocuments('ActiveEffect', [activeHide]);
         });
       }

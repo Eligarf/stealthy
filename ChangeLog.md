@@ -1,4 +1,7 @@
 
+### Version 1.2.2
+* Fix stealthy.hidden and stealthy.spot flag access
+
 ### Version 1.2.0
 * Check for Umbral Sight feature rather than Gloom Stalker subclass
 * Localization support
