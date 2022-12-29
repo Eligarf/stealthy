@@ -44,5 +44,6 @@ The GM has the option for allowing Hidden tokens to be seen by other tokens of t
 * [lib-wrapper](https://foundryvtt.com/packages/lib-wrapper)
 ## Optional modules
 * [DFreds Convenient Effects](https://foundryvtt.com/packages/dfreds-convenient-effects)
+* [Combat Utility Belt](https://foundryvtt.com/packages/combat-utility-belt)
 * [Token Magic FX](https://foundryvtt.com/packages/tokenmagic)
 * [Active Token Effects](https://foundryvtt.com/packages/ATL)
