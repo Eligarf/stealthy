@@ -1,4 +1,7 @@
 
+### Version 1.2.3
+* Added Logging method
+
 ### Version 1.2.2
 * Fix stealthy.hidden and stealthy.spot flag access
 
@@ -8,10 +11,6 @@
 * Dnd5e specific code guarded by game.system.id checks
 * Github workflows support
 * Use ATL 50% token alpha as fallback if no TokenMagicFX present
-
-
-### Version 1.2.3
-* Added Logging method
 
 ### Version 1.1.0
 * DFreds Convenient Effects is now optional
