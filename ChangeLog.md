@@ -6,6 +6,10 @@
 * Github workflows support
 * Use ATL 50% token alpha as fallback if no TokenMagicFX present
 
+
+### Version 1.2.1
+* Added Logging method
+
 ### Version 1.1.0
 * DFreds Convenient Effects is now optional
 
