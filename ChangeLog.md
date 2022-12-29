@@ -1,4 +1,4 @@
-### Pending
+### Version 1.3.0
 * Allow selection for source of Hidden effect
 * Support CUB as possible Hidden source
 * Handle disabled Hidden/Spot effects
