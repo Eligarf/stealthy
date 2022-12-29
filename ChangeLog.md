@@ -1,4 +1,7 @@
 
+### Version 1.2.4
+* Added dubious feature GIFs to readme
+
 ### Version 1.2.3
 * Added Logging method
 
