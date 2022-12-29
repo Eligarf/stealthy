@@ -1,4 +1,7 @@
 
+### Version 1.2.3
+* Added Logging method
+
 ### Version 1.2.2
 * Fix stealthy.hidden and stealthy.spot flag access
 

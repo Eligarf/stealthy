@@ -3,6 +3,32 @@ export class Stealthy {
   static moduleName = 'stealthy';
   static ignoreFriendlyStealth = 'ignoreFriendlyStealth';
   static ignoreFriendlyUmbralSight = 'ignoreFriendlyUmbralSight';
+  static debugLogging = 'debugLogging';
+  static loglevel = 'loglevel';
+  static CONSOLE_COLORS = ['background: #222; color: #ff80ff', 'color: #fff'];
+
+  static log(format, ...args) {
+    const debugEnabled = game.settings.get(Stealthy.moduleName, Stealthy.debugLogging);
+    if (debugEnabled){
+      const level = game.settings.get(Stealthy.moduleName, Stealthy.loglevel);
+      if (level !== 'none') {
+    
+        function colorizeOutput(format, ...args) {
+          return [
+            `%cstealthy %c|`,
+            ...Stealthy.CONSOLE_COLORS,
+            format,
+            ...args,
+          ];
+        }
+    
+        if (level === 'debug')
+          console.debug(...colorizeOutput(format, ...args));
+        else if (level === 'log')
+          console.log(...colorizeOutput(format, ...args));
+      }
+    }
+  }
 
   static testVisionStealth(visionSource, config) {
     const target = config.object?.actor;
