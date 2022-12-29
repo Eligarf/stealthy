@@ -7,7 +7,7 @@
 * Use ATL 50% token alpha as fallback if no TokenMagicFX present
 
 
-### Version 1.2.1
+### Version 1.2.3
 * Added Logging method
 
 ### Version 1.1.0
