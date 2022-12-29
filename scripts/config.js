@@ -45,14 +45,6 @@ Hooks.once('ready', () => {
     default: defaultSource
   });
 
-  game.settings.register(Stealthy.moduleName, Stealthy.debugLogging, {
-    name: game.i18n.localize("stealthy-debugLogging-name"),
-    scope: 'client',
-    config: true,
-    type: Boolean,
-    default: false,
-  });
-
   game.settings.register(Stealthy.moduleName, Stealthy.loglevel, {
     name: game.i18n.localize("stealthy-logLevel-name"),
     scope: 'client',
@@ -63,7 +55,7 @@ Hooks.once('ready', () => {
       'debug': game.i18n.localize("stealthy-logLevel-debuglevel-choice"),
       'log': game.i18n.localize("stealthy-logLevel-loglevel-choice")
     },
-    default: 'debug'
+    default: 'none'
   });
   
 });
