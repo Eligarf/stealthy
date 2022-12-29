@@ -15,14 +15,14 @@ During visibility tests, Stealthy filters out any objects with the 'Hidden' cond
 ### **Rolling Stealth checks applies the Hidden condition**
 Rolling a Stealth skill check will apply the 'hidden' condition to the actor and record the result of the check in that condition for later comparisons, replacing the stored result if the Hidden condition is already present. If using DFreds Convenient Effects, a custom Hidden effect will be created therein if no custom effect named Hidden can be found. This effect can be customized as you see fit, but it must remain named 'Hidden'.
 
-![stealth-roll](https://user-images.githubusercontent.com/16523503/209896032-4b1ea031-0efc-4320-8b99-7e6fb7d722e6.gif)
+![stealth-roll](https://user-images.githubusercontent.com/16523503/209989026-e0d2dad2-8dc1-459c-8824-a2332ce8a9cd.gif)
 
 ![stealth-roll](https://user-images.githubusercontent.com/16523503/209896032-4b1ea031-0efc-4320-8b99-7e6fb7d722e6.gif)
 
 ### **Rolling Perception checks applies the Spot condition**
 Rolling a Perception check will add a 'Spot' condition to the actor which records the result of that perception check. The passive value for Perception is used if this condition isn't present on the actor. *The stored Perception result uses the passive value as a floor*
 
-![perception](https://user-images.githubusercontent.com/16523503/209896029-c3df27ab-2936-494a-91ed-f1e445a24e37.gif)
+![perception](https://user-images.githubusercontent.com/16523503/209989470-aac2bdb4-fee4-44c0-a6b7-916e69353081.gif)
 
 ### **GM Stealth Override**
 Once the 'Hidden' condition is applied, GMs will see a token button with an input box on the bottom right which will shows the rolled Stealth result, or show the passive Stealth value if the Hidden condition was added directly without rolling. Changing the value in this input box will alter the stored Stealth result for any future visibility tests.
@@ -32,7 +32,7 @@ Once the 'Hidden' condition is applied, GMs will see a token button with an inpu
 ### **Umbral Sight affects darkvision**
 Characters with Umbral Sight will no longer be visible to the Darkvision mode, but they can still be seen if Basic Vision can see them. The GM has the option to disable this for friendly token visibility tests.
 
-![umbral-sight](https://user-images.githubusercontent.com/16523503/209896483-6aa52e98-9d76-43ab-ad8b-141b3852fb93.gif)
+![umbral-sight](https://user-images.githubusercontent.com/16523503/209987083-487aee33-b75e-452f-9433-7302ffdaeab3.gif)
 
 ### **Invisible characters can hide from See Invisibility**
 An invisible actor that also has the 'Hidden' condition will check Perception vs Stealth before showing up in the 'See Invisibility' vision mode.
