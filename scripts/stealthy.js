@@ -3,6 +3,8 @@ export class Stealthy {
   static moduleName = 'stealthy';
   static ignoreFriendlyStealth = 'ignoreFriendlyStealth';
   static ignoreFriendlyUmbralSight = 'ignoreFriendlyUmbralSight';
+  static hiddenSource = 'hiddenSource';
+
   static debugLogging = 'debugLogging';
   static loglevel = 'loglevel';
   static CONSOLE_COLORS = ['background: #222; color: #ff80ff', 'color: #fff'];
@@ -37,12 +39,12 @@ export class Stealthy {
       config.object.document?.disposition === visionSource.object.document?.disposition;
 
     if (!ignoreFriendlyStealth) {
-      const hidden = target?.effects.find(e => e.label === game.i18n.localize("stealthy-hidden"));
+      const hidden = target?.effects.find(e => e.label === game.i18n.localize("stealthy-hidden") && !e.disabled);
       if (hidden) {
         const source = visionSource.object?.actor;
         if (game.system.id === 'dnd5e') {
           let stealth = hidden.flags.stealthy?.hidden ?? target.system.skills.ste.passive;
-          const spot = source?.effects.find(e => e.label === game.i18n.localize("stealthy-spot"));
+          const spot = source?.effects.find(e => e.label === game.i18n.localize("stealthy-spot") && !e.disabled);
 
           // active perception loses ties, passive perception wins ties to simulate the
           // idea that active skills need to win outright to change the status quo. Passive
@@ -126,34 +128,34 @@ Hooks.once('setup', () => {
   );
 });
 
-Hooks.once('ready', () => {
-  const ce = game.dfreds?.effectInterface;
-  if (ce) {
-    let ceHidden = ce.findCustomEffectByName(game.i18n.localize("stealthy-hidden"));
-    if (!ceHidden) {
-      const hidden = Stealthy.makeHiddenEffect();
-      ce.createNewCustomEffectsWith({ activeEffects: [hidden] });
-    }
-  }
-});
-
 Hooks.on('dnd5e.rollSkill', async (actor, roll, skill) => {
   if (skill === 'ste') {
     const label = game.i18n.localize("stealthy-hidden");
     let hidden = actor.effects.find(e => e.label === label);
+
     if (!hidden) {
-      const ce = game.dfreds?.effectInterface;
-      if (!ce) {
+      const source = game.settings.get(Stealthy.moduleName, Stealthy.hiddenSource);
+      if (source === 'ce') {
+        await game.dfreds.effectInterface.addEffect({ effectName: label, uuid: actor.uuid });
+      }
+      else if (source === 'cub') {
+        await game.cub.applyCondition(label, actor);
+      }
+      else {
         hidden = Stealthy.makeHiddenEffect();
+        hidden.disabled = false;
         hidden.flags['stealthy.hidden'] = roll.total;
+        hidden.flags['core.statusId'] = '1';
         await actor.createEmbeddedDocuments('ActiveEffect', [hidden]);
         return;
       }
-      await ce.addEffect({ effectName: label, uuid: actor.uuid });
       hidden = actor.effects.find(e => e.label === label);
+      if (!hidden) return ui.notifications.error(game.i18n.localize("stealthy-hidden-error"));
     }
+
     let activeHide = duplicate(hidden);
     activeHide.flags['stealthy.hidden'] = roll.total;
+    activeHide.disabled = false;
     await actor.updateEmbeddedDocuments('ActiveEffect', [activeHide]);
   }
 
@@ -184,7 +186,7 @@ Hooks.on("renderTokenHUD", (tokenHUD, html, app) => {
   if (game.user.isGM == true) {
     const token = tokenHUD.object;
     const actor = token?.actor;
-    const hidden = actor?.effects.find(e => e.label === game.i18n.localize("stealthy-hidden"));
+    const hidden = actor?.effects.find(e => e.label === game.i18n.localize("stealthy-hidden") && !e.disabled);
     if (hidden) {
       if (game.system.id === 'dnd5e') {
         const stealth = hidden.flags.stealthy?.hidden ?? actor.system.skills.ste.passive;

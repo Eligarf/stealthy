@@ -24,6 +24,27 @@ Hooks.once('ready', () => {
     default: false,
   });
 
+  let choices = { 'ae': game.i18n.localize("stealthy-hiddenSource-ae") };
+  let defaultSource = 'ae';
+  if (game.cub?.getCondition(game.i18n.localize("stealthy-hidden"))) {
+    choices['cub'] = game.i18n.localize("stealthy-hiddenSource-cub");
+    defaultSource = 'cub';
+  }
+  if (game.dfreds?.effectInterface?.findEffectByName(game.i18n.localize("stealthy-hidden"))) {
+    choices['ce'] = game.i18n.localize("stealthy-hiddenSource-ce");
+    defaultSource = 'ce';
+  }
+
+  game.settings.register(Stealthy.moduleName, Stealthy.hiddenSource, {
+    name: game.i18n.localize("stealthy-hiddenSource-name"),
+    hint: game.i18n.localize("stealthy-hiddenSource-hint"),
+    scope: 'world',
+    config: true,
+    type: String,
+    choices,
+    default: defaultSource
+  });
+
   game.settings.register(Stealthy.moduleName, Stealthy.debugLogging, {
     name: game.i18n.localize("stealthy-debugLogging-name"),
     scope: 'client',
