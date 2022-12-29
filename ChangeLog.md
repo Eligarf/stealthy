@@ -1,5 +1,5 @@
 
-### Version 1.2.1
+### Version 1.2.2
 * Fix stealthy.hidden and stealthy.spot flag access
 
 ### Version 1.2.0
