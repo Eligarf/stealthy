@@ -17,8 +17,6 @@ Rolling a Stealth skill check will apply the 'hidden' condition to the actor and
 
 ![stealth-roll](https://user-images.githubusercontent.com/16523503/209989026-e0d2dad2-8dc1-459c-8824-a2332ce8a9cd.gif)
 
-![stealth-roll](https://user-images.githubusercontent.com/16523503/209896032-4b1ea031-0efc-4320-8b99-7e6fb7d722e6.gif)
-
 ### **Rolling Perception checks applies the Spot condition**
 Rolling a Perception check will add a 'Spot' condition to the actor which records the result of that perception check. The passive value for Perception is used if this condition isn't present on the actor. *The stored Perception result uses the passive value as a floor*
 
