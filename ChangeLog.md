@@ -1,4 +1,7 @@
 
+### Pending
+* Added feature GIFs
+
 ### Version 1.2.3
 * Added Logging method
 
