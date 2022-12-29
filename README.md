@@ -13,7 +13,7 @@ During visibility tests, Stealthy filters out any objects with the 'Hidden' cond
 ## Features
 
 ### **Rolling Stealth checks applies the Hidden condition**
-Rolling a Stealth skill check will apply the 'hidden' condition to the actor and record the result of the check in that condition for later comparisons, replacing the stored result if the Hidden condition is already present. If using DFreds Convenient Effects, a custom Hidden effect will be created therein if no custom effect named Hidden can be found. This effect can be customized as you see fit, but it must remain named 'Hidden'.
+Rolling a Stealth skill check will apply the 'hidden' condition to the actor and record the result of the check in that condition for later comparisons, replacing the stored result if the Hidden condition is already present. If using DFreds Convenient Effects, a custom Hidden effect will be created therein if no custom effect named Hidden can be found. This effect can be customized as you see fit, but it must remain named 'Hidden'.![stealth-roll](https://user-images.githubusercontent.com/16523503/209896032-4b1ea031-0efc-4320-8b99-7e6fb7d722e6.gif)
 
 ![stealth-roll](https://user-images.githubusercontent.com/16523503/209896032-4b1ea031-0efc-4320-8b99-7e6fb7d722e6.gif)
 
