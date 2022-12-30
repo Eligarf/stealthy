@@ -18,5 +18,10 @@
   "stealthy-logLevel-name": "Logging Level",
   "stealthy-logLevel-none-choice": "No logging",
   "stealthy-logLevel-debuglevel-choice": "Debug level",
-  "stealthy-logLevel-loglevel-choice": "Log level"
+  "stealthy-logLevel-loglevel-choice": "Log level",
+  "stealthy-config-general": "General Options",
+  "stealthy-config-debug": "Debug Options",
+  "stealthy-config-experimental": "Experimental",
+  "stealthy-tokenLighting-name": "Check token lighting conditions",
+  "stealthy-tokenLighting-hint": "Check for token effects that indicate lighting condition of the token"
 }

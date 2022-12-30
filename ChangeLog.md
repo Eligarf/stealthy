@@ -1,3 +1,10 @@
+### Pending
+* Adding experimental group config header
+* Experimental Token lighting option
+* Exp: Check for dim/dark effects on target token
+* Exp: Accounts for darkvision lighting adjustments
+* Exp: Adjust passive perception based on target token lighting
+
 ### Version 1.4.0
 * Option to disable token effect on Hidden
 * Ensure Spot effect isn't disabled after rolling Perception
