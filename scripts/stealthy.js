@@ -196,3 +196,8 @@ Hooks.on("renderTokenHUD", (tokenHUD, html, app) => {
     }
   }
 });
+
+Hooks.on("renderSettingsConfig", (app, html, data) => {
+  $('<div>').addClass('form-group group-header').html(game.i18n.localize("stealthy-config-general")).insertBefore($('[name="stealthy.ignoreFriendlyStealth"]').parents('div.form-group:first'));
+  $('<div>').addClass('form-group group-header').html(game.i18n.localize("stealthy-config-debug")).insertBefore($('[name="stealthy.logLevel"]').parents('div.form-group:first'));
+});
