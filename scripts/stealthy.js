@@ -76,6 +76,7 @@ export class Stealthy {
           }
 
           if (perception <= stealth) {
+            Stealthy.log(`${visionSource.object.name}'s ${perception} didn't beat ${config.object.name}'s ${stealth}`);
             return false;
           }
         }
@@ -104,6 +105,7 @@ Hooks.once('setup', () => {
       }
 
       if (noDarkvision) {
+        Stealthy.log(`${visionSource.object.name}'s darkvision can't see ${config.object.name}`);
         let ourMode = duplicate(mode);
         ourMode.range = 0;
         return wrapped(visionSource, ourMode, config);

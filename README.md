@@ -41,7 +41,7 @@ An invisible actor that also has the 'Hidden' condition will check Perception vs
 The GM has the option for allowing Hidden tokens to be seen by other tokens of the same disposition.
 
 ## Stealth vs Perception Ties
-D&D 5E treats skill contest ties as preserving the status quo, so I assume that ties are won by passive Perception and lost by active Perception. Its not perfect, but seems to do a decent job.
+D&D 5E treats skill contest ties as preserving the status quo, so use of passive value for either skill makes a claim of owning the status quo and thus winning ties. If Perception and Stealth are both passive, I assume Stealth takes the active role of wanting to change the status quo from visible to hidden. An active Perception check is only necessary if the passive Perception was beaten by Stealth, so in this case Hidden is now the status quo condition and Stealth wins ties with the active result. More simply, **ties are won by passive Perception and lost by active Perception.**
 
 ## Experimental
 
