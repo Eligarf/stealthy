@@ -43,6 +43,14 @@ The GM has the option for allowing Hidden tokens to be seen by other tokens of t
 ## Stealth vs Perception Ties
 D&D 5E treats skill contest ties as preserving the status quo, so I assume that ties are won by passive Perception and lost by active Perception. Its not perfect, but seems to do a decent job.
 
+## Experimental
+
+### Check token lighting conditions
+This option triggers a check for the following effects on the target token:
+    Dark, Dim
+IF the target token has these effects, then the passive perception check will be adjusted accordingly.
+This takes Darkvision into account for light conditions ( light level bump ) before determining passive perception adjustment.
+
 ## Required modules
 * [lib-wrapper](https://foundryvtt.com/packages/lib-wrapper)
 ## Optional modules
