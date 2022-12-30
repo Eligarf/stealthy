@@ -3,7 +3,7 @@ name: Module Builder
 on:
   push:
     branches:
-      - main
+      - release
 
 jobs:
   build:
