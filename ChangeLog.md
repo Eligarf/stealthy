@@ -1,6 +1,7 @@
 ### Version 1.4.0
 * Option to disable token effect on Hidden
 * Ensure Spot effect isn't disabled after rolling Perception
+* Use MIXED libwrappers
 
 ### Version 1.3.1
 * Fix merge error
