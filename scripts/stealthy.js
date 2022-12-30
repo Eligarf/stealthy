@@ -76,7 +76,7 @@ Hooks.once('setup', () => {
 
       return wrapped(visionSource, mode, config);
     },
-    libWrapper.WRAPPER,
+    libWrapper.MIXED,
     { perf_mode: libWrapper.PERF_FAST }
   );
 
@@ -87,7 +87,7 @@ Hooks.once('setup', () => {
       if (!Stealthy.testVisionStealth(visionSource, config)) return false;
       return wrapped(visionSource, mode, config);
     },
-    libWrapper.WRAPPER,
+    libWrapper.MIXED,
     { perf_mode: libWrapper.PERF_FAST }
   );
 });
