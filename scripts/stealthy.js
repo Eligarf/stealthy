@@ -1,6 +1,7 @@
 export class Stealthy {
 
   static CONSOLE_COLORS = ['background: #222; color: #ff80ff', 'color: #fff'];
+  static lightNumTable  = ['dark','dim','bright'];
 
   static log(format, ...args) {
     const level = game.settings.get('stealthy', 'logLevel');
@@ -36,10 +37,25 @@ export class Stealthy {
           let stealth = hidden.flags.stealthy?.hidden ?? target.system.skills.ste.passive;
           const spot = source?.effects.find(e => e.label === game.i18n.localize("stealthy-spot") && !e.disabled);
 
+          let lightLevel = 2; // bright
+          if (target?.effects.find(e => e.label === 'Dark' && !e.disabled)){lightLevel=0;}
+          if (target?.effects.find(e => e.label === 'Dim' && !e.disabled)){lightLevel=1;}
+          let lightLevelText = Stealthy.lightNumTable[lightLevel];
+          Stealthy.log("testVisionStealth:", lightLevelText);
+
+          if (visionSource.visionMode?.id === 'darkvision'){lightLevel = lightLevel + 1;}
+          lightLevelText = Stealthy.lightNumTable[lightLevel];
+          Stealthy.log("post lightLevel:", lightLevelText);
+
           // active perception loses ties, passive perception wins ties to simulate the
           // idea that active skills need to win outright to change the status quo. Passive
           // perception means that stealth is being the active skill.
           let perception = spot?.flags.stealthy?.spot ?? (source.system.skills.prc.passive + 1);
+          Stealthy.log("Pass prc:",perception);
+          if (lightLevel<2 && !spot?.flags.stealthy?.spot){
+            perception=perception-5;
+            Stealthy.log("Post Pass prc:",perception);
+          };
           if (perception <= stealth) {
             return false;
           }
