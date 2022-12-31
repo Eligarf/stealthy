@@ -1,6 +1,7 @@
 export class Stealthy {
 
   static CONSOLE_COLORS = ['background: #222; color: #ff80ff', 'color: #fff'];
+  static lightNumTable  = ['dark','dim','bright'];
 
   static log(format, ...args) {
     const level = game.settings.get('stealthy', 'logLevel');
@@ -40,6 +41,40 @@ export class Stealthy {
           // idea that active skills need to win outright to change the status quo. Passive
           // perception means that stealth is being the active skill.
           let perception = spot?.flags.stealthy?.spot ?? (source.system.skills.prc.passive + 1);
+          
+          // check target Token Lighting conditions via effects usage
+          // look for effects that indicate Dim or Dark condition on the token
+          const  tokenLight = game.settings.get('stealthy', 'tokenLighting');
+          if (tokenLight){
+            let lightLevel = 2;
+            let debugData = {
+              initlightLevel: "",
+              darklightLevel: "NA",
+              pass_prc: 0,
+              post_pass_prc: 0
+            }   
+
+            if (target?.effects.find(e => e.label === 'Dark' && !e.disabled)){lightLevel=0;}
+            if (target?.effects.find(e => e.label === 'Dim' && !e.disabled)){lightLevel=1;}
+            debugData.initlightLevel = Stealthy.lightNumTable[lightLevel];
+
+            // check if Darkvision is in use, bump light level accordingly
+            if (visionSource.visionMode?.id === 'darkvision'){
+              lightLevel = lightLevel + 1;
+              debugData.darklightLevel = Stealthy.lightNumTable[lightLevel];
+            }
+
+            // adjust passive perception depending on light conditions of target token
+            // don't adjust for active perception checks via 'spot' flag usage
+            debugData.pass_prc = perception;
+            if (lightLevel<2 && !spot?.flags.stealthy?.spot){
+              perception = perception-5;
+            };
+            debugData.post_pass_prc = perception;
+
+            Stealthy.log("tokenLighting: ", debugData);
+          }
+
           if (perception <= stealth) {
             return false;
           }
@@ -200,4 +235,5 @@ Hooks.on("renderTokenHUD", (tokenHUD, html, app) => {
 Hooks.on("renderSettingsConfig", (app, html, data) => {
   $('<div>').addClass('form-group group-header').html(game.i18n.localize("stealthy-config-general")).insertBefore($('[name="stealthy.ignoreFriendlyStealth"]').parents('div.form-group:first'));
   $('<div>').addClass('form-group group-header').html(game.i18n.localize("stealthy-config-debug")).insertBefore($('[name="stealthy.logLevel"]').parents('div.form-group:first'));
+  $('<div>').addClass('form-group group-header').html(game.i18n.localize("stealthy-config-experimental")).insertBefore($('[name="stealthy.tokenLighting"]').parents('div.form-group:first'));
 });

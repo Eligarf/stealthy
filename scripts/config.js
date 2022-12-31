@@ -58,5 +58,15 @@ Hooks.once('ready', () => {
     },
     default: 'none'
   });
+
+  game.settings.register('stealthy', 'tokenLighting', {
+    name: game.i18n.localize("stealthy-tokenLighting-name"),
+    hint: game.i18n.localize("stealthy-tokenLighting-hint"),
+    scope: 'world',
+    config: true,
+    type: Boolean,
+    default: false,
+  });
+
   
 });
