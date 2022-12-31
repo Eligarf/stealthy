@@ -76,7 +76,7 @@ export class Stealthy {
           }
 
           if (perception <= stealth) {
-            Stealthy.log(`${visionSource.object.name}'s ${perception} didn't beat ${config.object.name}'s ${stealth}`);
+            Stealthy.log(`${visionSource.object.name}'s ${perception} can't see ${config.object.name}'s ${stealth}`);
             return false;
           }
         }
