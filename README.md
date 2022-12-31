@@ -17,12 +17,12 @@ During visibility tests, Stealthy filters out any objects with the Hidden condit
 ### **Rolling Stealth checks applies the Hidden condition**
 Rolling a Stealth skill check will apply the Hidden condition to the actor and record the result of the check in that condition for later comparisons, replacing the stored result if the Hidden condition is already present. Stealthy's default Hidden effect can be overriden by adding a custom Hidden effect in either Convenient Effects or CUB.
 
-**Stealthy does not attempt to manage when to remove the Hidden or Spot effects. Modules like the most excellent [Midi-QOL](https://foundryvtt.com/packages/midi-qol) can handle those duties.**
+***Stealthy does not attempt to manage when to remove the Hidden or Spot effects. Modules like the most excellent [Midi-QOL](https://foundryvtt.com/packages/midi-qol) can handle those duties.***
 
 ![stealth-roll](https://user-images.githubusercontent.com/16523503/209989026-e0d2dad2-8dc1-459c-8824-a2332ce8a9cd.gif)
 
 ### **Rolling Perception checks applies the Spot condition**
-Rolling a Perception check will add a 'Spot' condition to the actor which records the result of that perception check (the passive value for Perception is used if this condition isn't present on the actor).
+Rolling a Perception check will add a 1-turn Spot condition to the actor which records the result of that perception check (the passive value for Perception is used if this condition isn't present on the actor).
 
 The stored Perception value uses passive Perception as a floor to the Active roll result.
 
