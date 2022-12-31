@@ -68,5 +68,5 @@ Hooks.once('ready', () => {
     default: false,
   });
 
-  
+
 });

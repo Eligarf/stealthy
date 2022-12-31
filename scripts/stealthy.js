@@ -1,7 +1,7 @@
 export class Stealthy {
 
   static CONSOLE_COLORS = ['background: #222; color: #ff80ff', 'color: #fff'];
-  static lightNumTable  = ['dark','dim','bright'];
+  static lightNumTable = ['dark', 'dim', 'bright'];
 
   static log(format, ...args) {
     const level = game.settings.get('stealthy', 'logLevel');
@@ -41,25 +41,20 @@ export class Stealthy {
           // idea that active skills need to win outright to change the status quo. Passive
           // perception means that stealth is being the active skill.
           let perception = spot?.flags.stealthy?.spot ?? (source.system.skills.prc.passive + 1);
-          
+
           // check target Token Lighting conditions via effects usage
           // look for effects that indicate Dim or Dark condition on the token
-          const  tokenLight = game.settings.get('stealthy', 'tokenLighting');
-          if (tokenLight){
+          const tokenLight = game.settings.get('stealthy', 'tokenLighting');
+          if (tokenLight) {
             let lightLevel = 2;
-            let debugData = {
-              initlightLevel: "",
-              darklightLevel: "NA",
-              pass_prc: 0,
-              post_pass_prc: 0
-            }   
+            let debugData = {};
 
-            if (target?.effects.find(e => e.label === 'Dark' && !e.disabled)){lightLevel=0;}
-            if (target?.effects.find(e => e.label === 'Dim' && !e.disabled)){lightLevel=1;}
+            if (target?.effects.find(e => e.label === 'Dark' && !e.disabled)) { lightLevel = 0; }
+            if (target?.effects.find(e => e.label === 'Dim' && !e.disabled)) { lightLevel = 1; }
             debugData.initlightLevel = Stealthy.lightNumTable[lightLevel];
 
             // check if Darkvision is in use, bump light level accordingly
-            if (visionSource.visionMode?.id === 'darkvision'){
+            if (visionSource.visionMode?.id === 'darkvision') {
               lightLevel = lightLevel + 1;
               debugData.darklightLevel = Stealthy.lightNumTable[lightLevel];
             }
@@ -67,8 +62,8 @@ export class Stealthy {
             // adjust passive perception depending on light conditions of target token
             // don't adjust for active perception checks via 'spot' flag usage
             debugData.pass_prc = perception;
-            if (lightLevel<2 && !spot?.flags.stealthy?.spot){
-              perception = perception-5;
+            if (lightLevel < 2 && !spot?.flags.stealthy?.spot) {
+              perception = perception - 5;
             };
             debugData.post_pass_prc = perception;
 
@@ -76,6 +71,7 @@ export class Stealthy {
           }
 
           if (perception <= stealth) {
+            Stealthy.log(`${visionSource.object.name}'s ${perception} can't see ${config.object.name}'s ${stealth}`);
             return false;
           }
         }
@@ -104,6 +100,7 @@ Hooks.once('setup', () => {
       }
 
       if (noDarkvision) {
+        Stealthy.log(`${visionSource.object.name}'s darkvision can't see ${config.object.name}`);
         let ourMode = duplicate(mode);
         ourMode.range = 0;
         return wrapped(visionSource, ourMode, config);

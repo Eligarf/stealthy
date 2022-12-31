@@ -2,18 +2,22 @@
 [![Latest Version](https://img.shields.io/github/v/release/eligarf/stealthy?display_name=tag&sort=semver&label=Latest%20Version)](https://github.com/eligarf/stealthy/releases/latest)
 ![Foundry Version](https://img.shields.io/endpoint?url=https://foundryshields.com/version?url=https%3A%2F%2Fraw.githubusercontent.com%2Feligarf%2Fstealthy%2Fdev%2Fmodule.json)
 
+![Latest Downloads](https://img.shields.io/github/downloads/eligarf/stealthy/latest/total?color=blue&label=latest%20downloads)
+![Total Downloads](https://img.shields.io/github/downloads/eligarf/stealthy/total?color=blue&label=total%20downloads)
 # Stealthy
 
 A module for [FoundryVTT](https://foundryvtt.com) that adds perception vs stealth testing to Foundry's visibility tests.
 
 ## Purpose
 
-During visibility tests, Stealthy filters out any objects with the 'Hidden' condition if the viewing Perception value fails to beat the object's Stealth value.
+During visibility tests, Stealthy filters out any objects with the Hidden condition if the viewing Perception value fails to beat the object's Stealth value.
 
 ## Features
 
 ### **Rolling Stealth checks applies the Hidden condition**
-Rolling a Stealth skill check will apply the 'hidden' condition to the actor and record the result of the check in that condition for later comparisons, replacing the stored result if the Hidden condition is already present. Stealthy's default Hidden effect can be overriden by adding a custom Hidden effect in either Convenient Effects or CUB.
+Rolling a Stealth skill check will apply the Hidden condition to the actor and record the result of the check in that condition for later comparisons, replacing the stored result if the Hidden condition is already present. Stealthy's default Hidden effect can be overriden by adding a custom Hidden effect in either Convenient Effects or CUB.
+
+**Stealthy does not attempt to manage when to remove the Hidden or Spot effects. Modules like the most excellent [Midi-QOL](https://foundryvtt.com/packages/midi-qol) can handle those duties.**
 
 ![stealth-roll](https://user-images.githubusercontent.com/16523503/209989026-e0d2dad2-8dc1-459c-8824-a2332ce8a9cd.gif)
 
@@ -41,7 +45,7 @@ An invisible actor that also has the 'Hidden' condition will check Perception vs
 The GM has the option for allowing Hidden tokens to be seen by other tokens of the same disposition.
 
 ## Stealth vs Perception Ties
-D&D 5E treats skill contest ties as preserving the status quo, so I assume that ties are won by passive Perception and lost by active Perception. Its not perfect, but seems to do a decent job.
+D&D 5E treats skill contest ties as preserving the status quo, so use of passive value for either skill makes a claim of owning the status quo and thus winning ties. If Perception and Stealth are both passive, I assume Stealth takes the active role of wanting to change the status quo from visible to hidden. An active Perception check is only necessary if the passive Perception was beaten by Stealth, so in this case Hidden is now the status quo condition and Stealth wins ties with the active result. More simply, **ties are won by passive Perception and lost by active Perception.**
 
 ## Experimental
 
