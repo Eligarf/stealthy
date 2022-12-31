@@ -45,7 +45,7 @@ An invisible actor that also has the 'Hidden' condition will check Perception vs
 The GM has the option for allowing Hidden tokens to be seen by other tokens of the same disposition.
 
 ## Handling Hidden removal
-Stealthy will not automatically remove the Hidden condition - the [Skulker](https://www.dndbeyond.com/feats/skulker) feat demonstrates why deleting Hidden gets complicated without heavier automation support provided by modules like the excellent [Midi-QOL](https://foundryvtt.com/packages/midi-qol) which handles this for my games. I suggest [DFreds Effects Panel](https://foundryvtt.com/packages/dfreds-effects-panel) as an easier way to manually remove it, especially for low automation level games. 
+Stealthy will not automatically remove the Hidden condition - the [Skulker](https://www.dndbeyond.com/feats/skulker) feat demonstrates why removing Hidden gets complicated without heavier automation support provided by modules like the excellent [Midi-QOL](https://foundryvtt.com/packages/midi-qol) which handles this for my games. I suggest [DFreds Effects Panel](https://foundryvtt.com/packages/dfreds-effects-panel) as an easier way to manually remove it, especially for low automation level games. 
 ## Stealth vs Perception Ties
 D&D 5E treats skill contest ties as preserving the status quo, so use of passive value for either skill makes a claim of owning the status quo and thus winning ties. If Perception and Stealth are both passive, I assume Stealth takes the active role of wanting to change the status quo from visible to hidden. An active Perception check is only necessary if the passive Perception was beaten by Stealth, so in this case Hidden is now the status quo condition and Stealth wins ties with the active result. More simply, **ties are won by passive Perception and lost by active Perception.**
 
@@ -53,7 +53,9 @@ D&D 5E treats skill contest ties as preserving the status quo, so use of passive
 
 ### Check token lighting conditions
 This option triggers a check for the following effects on the target token:
-    Dark, Dim
+- Dark
+- Dim
+
 IF the target token has these effects, then the passive perception check will be adjusted accordingly.
 This takes Darkvision into account for light conditions ( light level bump ) before determining passive perception adjustment.
 
