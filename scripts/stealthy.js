@@ -46,7 +46,7 @@ export class Stealthy {
           // look for effects that indicate Dim or Dark condition on the token
           const  tokenLight = game.settings.get('stealthy', 'tokenLighting');
           if (tokenLight){
-            let lightLevel = 0;
+            let lightLevel = 2;
             let debugData = {
               initlightLevel: "",
               darklightLevel: "NA",
@@ -69,7 +69,6 @@ export class Stealthy {
             debugData.pass_prc = perception;
             if (lightLevel<2 && !spot?.flags.stealthy?.spot){
               perception = perception-5;
-              debugData.post_pass_prc = perception;
             };
             debugData.post_pass_prc = perception;
 
