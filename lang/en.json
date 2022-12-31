@@ -23,5 +23,5 @@
   "stealthy-config-debug": "Debug Options",
   "stealthy-config-experimental": "Experimental",
   "stealthy-tokenLighting-name": "Check token lighting conditions",
-  "stealthy-tokenLighting-hint": "Check for token effects that indicate lighting condition of the token"
+  "stealthy-tokenLighting-hint": "Check for token effects that indicate lighting condition of the token. WARNING - only currently handles passive perception"
 }

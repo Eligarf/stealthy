@@ -2,8 +2,9 @@
 * Added config group headers
 * Readme clarifications
 * Logging when objects are filtered out by Stealthy
+* Better organization for the isHidden test
 * Adding experimental group config header
-* Experimental Token lighting option
+* Exp: Token lighting option
 * Exp: Check for dim/dark effects on target token
 * Exp: Accounts for darkvision lighting adjustments
 * Exp: Adjust passive perception based on target token lighting
