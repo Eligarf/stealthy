@@ -4,17 +4,18 @@
   "description": "Adds perception vs stealth checks to vision tests for tokens with the Hidden condition",
   "authors": [
     {
-      "name": "Eligarf"
+      "name": "Eligarf",
+      "flags": {}
     },
     {
-      "name": "Frstrm"
+      "name": "Frstrm",
+      "flags": {}
     }
   ],
-  "version": "1.4.0",
+  "version": "1.5.0",
   "compatibility": {
     "minimum": "10.291",
-    "verified": "10.291",
-    "maximum": "10"
+    "verified": "10.291"
   },
   "minimumCoreVersion": 10,
   "system": [
@@ -24,22 +25,24 @@
     "requires": [
       {
         "id": "lib-wrapper",
-        "type": "module"
+        "type": "module",
+        "compatibility": {}
       }
     ]
   },
   "esmodules": [
-    "./scripts/config.js",
-    "./scripts/stealthy.js"
+    "scripts/config.js",
+    "scripts/stealthy.js"
   ],
   "languages": [
     {
       "lang": "en",
       "name": "English",
-      "path": "./lang/en.json"
+      "path": "lang/en.json",
+      "flags": {}
     }
   ],
-  "download": "https://github.com/Eligarf/stealthy/releases/download/v1.4.0/stealthy.zip",
+  "download": "https://github.com/Eligarf/stealthy/releases/download/v1.5.0/stealthy.zip",
   "changelog": "https://raw.githubusercontent.com/eligarf/stealthy/release/ChangeLog.md",
   "url": "https://github.com/Eligarf/stealthy",
   "manifest": "https://github.com/Eligarf/stealthy/releases/latest/download/module.json",

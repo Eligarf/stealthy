@@ -23,6 +23,53 @@ export class Stealthy {
     }
   }
 
+  static calcPerception5e(visionSource, source, target) {
+    const spot = source?.effects.find(e => e.label === game.i18n.localize("stealthy-spot") && !e.disabled);
+
+    // active perception loses ties, passive perception wins ties to simulate the
+    // idea that active skills need to win outright to change the status quo. Passive
+    // perception means that stealth is being the active skill.
+    let perception = spot?.flags.stealthy?.spot ?? (source.system.skills.prc.passive + 1);
+
+    // check target Token Lighting conditions via effects usage
+    // look for effects that indicate Dim or Dark condition on the token
+    if (game.settings.get('stealthy', 'tokenLighting')) {
+      let lightLevel = 2;
+      let debugData = { perception };
+
+      if (target?.effects.find(e => e.label === 'Dark' && !e.disabled)) { lightLevel = 0; }
+      if (target?.effects.find(e => e.label === 'Dim' && !e.disabled)) { lightLevel = 1; }
+      debugData.lightLevel = Stealthy.lightNumTable[lightLevel];
+
+      // check if Darkvision is in use, bump light level accordingly
+      if (visionSource.visionMode?.id === 'darkvision') {
+        lightLevel = lightLevel + 1;
+        debugData.darklightLevel = Stealthy.lightNumTable[lightLevel];
+      }
+
+      // adjust passive perception depending on light conditions of target token
+      // don't adjust for active perception checks via 'spot' flag usage
+      if (lightLevel < 2 && !spot?.flags.stealthy?.spot) {
+        perception = perception - 5;
+        debugData.disadvantagedPassive = perception;
+      };
+
+      Stealthy.log("tokenLighting", debugData);
+    }
+    return perception;
+  }
+
+  static isHidden5e(visionSource, hidden, target, config) {
+    const source = visionSource.object?.actor;
+    const stealth = hidden.flags.stealthy?.hidden ?? target.system.skills.ste.passive;
+    const perception = Stealthy.calcPerception5e(visionSource, source, target);
+    if (perception <= stealth) {
+      Stealthy.log(`${visionSource.object.name}'s ${perception} can't see ${config.object.name}'s ${stealth}`);
+      return true;
+    }
+    return false;
+  }
+
   static testVisionStealth(visionSource, config) {
     const target = config.object?.actor;
     const ignoreFriendlyStealth =
@@ -32,49 +79,9 @@ export class Stealthy {
     if (!ignoreFriendlyStealth) {
       const hidden = target?.effects.find(e => e.label === game.i18n.localize("stealthy-hidden") && !e.disabled);
       if (hidden) {
-        const source = visionSource.object?.actor;
-        if (game.system.id === 'dnd5e') {
-          let stealth = hidden.flags.stealthy?.hidden ?? target.system.skills.ste.passive;
-          const spot = source?.effects.find(e => e.label === game.i18n.localize("stealthy-spot") && !e.disabled);
-
-          // active perception loses ties, passive perception wins ties to simulate the
-          // idea that active skills need to win outright to change the status quo. Passive
-          // perception means that stealth is being the active skill.
-          let perception = spot?.flags.stealthy?.spot ?? (source.system.skills.prc.passive + 1);
-
-          // check target Token Lighting conditions via effects usage
-          // look for effects that indicate Dim or Dark condition on the token
-          const tokenLight = game.settings.get('stealthy', 'tokenLighting');
-          if (tokenLight) {
-            let lightLevel = 2;
-            let debugData = {};
-
-            if (target?.effects.find(e => e.label === 'Dark' && !e.disabled)) { lightLevel = 0; }
-            if (target?.effects.find(e => e.label === 'Dim' && !e.disabled)) { lightLevel = 1; }
-            debugData.initlightLevel = Stealthy.lightNumTable[lightLevel];
-
-            // check if Darkvision is in use, bump light level accordingly
-            if (visionSource.visionMode?.id === 'darkvision') {
-              lightLevel = lightLevel + 1;
-              debugData.darklightLevel = Stealthy.lightNumTable[lightLevel];
-            }
-
-            // adjust passive perception depending on light conditions of target token
-            // don't adjust for active perception checks via 'spot' flag usage
-            debugData.pass_prc = perception;
-            if (lightLevel < 2 && !spot?.flags.stealthy?.spot) {
-              perception = perception - 5;
-            };
-            debugData.post_pass_prc = perception;
-
-            Stealthy.log("tokenLighting: ", debugData);
-          }
-
-          if (perception <= stealth) {
-            Stealthy.log(`${visionSource.object.name}'s ${perception} can't see ${config.object.name}'s ${stealth}`);
-            return false;
-          }
-        }
+        // This will be better implemented as an interface
+        // First thing to do when adding second supported system
+        if (Stealthy.isHidden5e(visionSource, hidden, target, config)) return false;
       }
     }
 
