@@ -17,7 +17,7 @@ During visibility tests, Stealthy filters out any objects with the Hidden condit
 ### **Rolling Stealth checks applies the Hidden condition**
 Rolling a Stealth skill check will apply the Hidden condition to the actor and record the result of the check in that condition for later comparisons, replacing the stored result if the Hidden condition is already present. Stealthy's default Hidden effect can be overriden by adding a custom Hidden effect in either Convenient Effects or CUB.
 
-***Stealthy will not automatically remove the Hidden condition - see the [Skulker](https://www.dndbeyond.com/feats/skulker) feat for why deleting Hidden gets complicated without heavier automation support provided by modules like the excellent [Midi-QOL](https://foundryvtt.com/packages/midi-qol) which handles this for my games. I suggest [DFreds Effects Panel](https://foundryvtt.com/packages/dfreds-effects-panel) as an easier way to manually remove it, especially for low automation level games.***
+***See [Handling Hidden removal](#handling-hidden-removal)***
 
 ![stealth-roll](https://user-images.githubusercontent.com/16523503/209989026-e0d2dad2-8dc1-459c-8824-a2332ce8a9cd.gif)
 
@@ -44,6 +44,8 @@ An invisible actor that also has the 'Hidden' condition will check Perception vs
 ### **Friendly tokens can still be viewed**
 The GM has the option for allowing Hidden tokens to be seen by other tokens of the same disposition.
 
+## Handling Hidden removal
+Stealthy will not automatically remove the Hidden condition - the [Skulker](https://www.dndbeyond.com/feats/skulker) feat demonstrates why deleting Hidden gets complicated without heavier automation support provided by modules like the excellent [Midi-QOL](https://foundryvtt.com/packages/midi-qol) which handles this for my games. I suggest [DFreds Effects Panel](https://foundryvtt.com/packages/dfreds-effects-panel) as an easier way to manually remove it, especially for low automation level games. 
 ## Stealth vs Perception Ties
 D&D 5E treats skill contest ties as preserving the status quo, so use of passive value for either skill makes a claim of owning the status quo and thus winning ties. If Perception and Stealth are both passive, I assume Stealth takes the active role of wanting to change the status quo from visible to hidden. An active Perception check is only necessary if the passive Perception was beaten by Stealth, so in this case Hidden is now the status quo condition and Stealth wins ties with the active result. More simply, **ties are won by passive Perception and lost by active Perception.**
 
