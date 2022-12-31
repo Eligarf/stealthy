@@ -17,7 +17,7 @@ During visibility tests, Stealthy filters out any objects with the Hidden condit
 ### **Rolling Stealth checks applies the Hidden condition**
 Rolling a Stealth skill check will apply the Hidden condition to the actor and record the result of the check in that condition for later comparisons, replacing the stored result if the Hidden condition is already present. Stealthy's default Hidden effect can be overriden by adding a custom Hidden effect in either Convenient Effects or CUB.
 
-***Stealthy does not attempt to manage when to remove the Hidden or Spot effects. Modules like the most excellent [Midi-QOL](https://foundryvtt.com/packages/midi-qol) can handle those duties.***
+***Stealthy does not attempt to manage when to remove the Hidden or Spot effects. Modules like the most excellent [Midi-QOL](https://foundryvtt.com/packages/midi-qol) automate deleting the Hidden condition.***
 
 ![stealth-roll](https://user-images.githubusercontent.com/16523503/209989026-e0d2dad2-8dc1-459c-8824-a2332ce8a9cd.gif)
 
@@ -29,7 +29,7 @@ The stored Perception value uses passive Perception as a floor to the Active rol
 ![perception](https://user-images.githubusercontent.com/16523503/209989470-aac2bdb4-fee4-44c0-a6b7-916e69353081.gif)
 
 ### **GM Stealth Override**
-Once the 'Hidden' condition is applied, GMs will see a token button with an input box on the bottom right which will shows the rolled Stealth result, or show the passive Stealth value if the Hidden condition was added directly without rolling. Changing the value in this input box will alter the stored Stealth result for any future visibility tests.
+Once the Hidden condition is applied, GMs will see a token button with an input box on the bottom right which will shows the rolled Stealth result, or show the passive Stealth value if the Hidden condition was added directly without rolling. Changing the value in this input box will alter the stored Stealth result for any future visibility tests.
 
 ![stealth-override](https://user-images.githubusercontent.com/16523503/209896031-675ab0e3-93e6-4d9c-8eeb-c11abe39fdab.gif)
 
