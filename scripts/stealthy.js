@@ -46,24 +46,34 @@ export class Stealthy {
           // look for effects that indicate Dim or Dark condition on the token
           const  tokenLight = game.settings.get('stealthy', 'tokenLighting');
           if (tokenLight){
-            let lightLevel = 2; // bright
+            let lightLevel = 0;
+            let debugData = {
+              initlightLevel: "",
+              darklightLevel: "NA",
+              pass_prc: 0,
+              post_pass_prc: 0
+            }   
+
             if (target?.effects.find(e => e.label === 'Dark' && !e.disabled)){lightLevel=0;}
             if (target?.effects.find(e => e.label === 'Dim' && !e.disabled)){lightLevel=1;}
-            let lightLevelText = Stealthy.lightNumTable[lightLevel];
-            Stealthy.log("testVisionStealth:", lightLevelText);
+            debugData.initlightLevel = Stealthy.lightNumTable[lightLevel];
 
             // check if Darkvision is in use, bump light level accordingly
-            if (visionSource.visionMode?.id === 'darkvision'){lightLevel = lightLevel + 1;}
-            lightLevelText = Stealthy.lightNumTable[lightLevel];
-            Stealthy.log("post lightLevel:", lightLevelText);
+            if (visionSource.visionMode?.id === 'darkvision'){
+              lightLevel = lightLevel + 1;
+              debugData.darklightLevel = Stealthy.lightNumTable[lightLevel];
+            }
 
             // adjust passive perception depending on light conditions of target token
             // don't adjust for active perception checks via 'spot' flag usage
-            Stealthy.log("Pass prc:",perception);
+            debugData.pass_prc = perception;
             if (lightLevel<2 && !spot?.flags.stealthy?.spot){
-              perception=perception-5;
-              Stealthy.log("Post Pass prc:",perception);
+              perception = perception-5;
+              debugData.post_pass_prc = perception;
             };
+            debugData.post_pass_prc = perception;
+
+            Stealthy.log("tokenLighting: ", debugData);
           }
 
           if (perception <= stealth) {
