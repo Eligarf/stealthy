@@ -1,3 +1,6 @@
+# Version 1.5.1
+* Fixed incorrect name use when toggling Spot
+
 # Version 1.5.0
 * Added socketlib as a required module
 * Added token control for GM to toggle Spot effect generation across all clients
