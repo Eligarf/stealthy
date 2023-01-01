@@ -1,3 +1,9 @@
+# Pending
+* Iterate placeables instead of actors when clearing spot effects
+
+# Version 1.5.2
+* made a mess of publishing 1.5.1
+
 # Version 1.5.1
 * Fixed incorrect name use when toggling Spot
 
