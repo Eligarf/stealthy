@@ -1,8 +1,7 @@
 # Version 1.5.0
-* Added token control toggle to dynamically disable Spot condition generation
-* Added config group headers
-* Readme clarifications
-* Logging when objects are filtered out by Stealthy
+* Added socketlib as a required module
+* Added token control for GM to toggle Spot effect generation across all clients
+* Added Logging when objects are filtered out by Stealthy
 * Better code organization
 * Grouped related settings in the settings dialog
 * Experimental: option for perception checks to be affected by Dim or Dark status conditions on the token. Only affect passive perception currently.

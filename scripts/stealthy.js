@@ -2,6 +2,7 @@ export class Stealthy {
 
   static CONSOLE_COLORS = ['background: #222; color: #ff80ff', 'color: #fff'];
   static lightNumTable = ['dark', 'dim', 'bright'];
+  static socket;
 
   static log(format, ...args) {
     const level = game.settings.get('stealthy', 'logLevel');
@@ -71,10 +72,10 @@ export class Stealthy {
     return false;
   }
 
-  static isCreatingSpotEffect = true;
+  static enableSpot = true;
 
   static async rollPerception(actor, roll) {
-    if (!Stealthy.isCreatingSpotEffect) return;
+    if (!Stealthy.enableSpot) return;
     const label = game.i18n.localize("stealthy-spot");
     let spot = actor.effects.find(e => e.label === label);
     if (!spot) {
@@ -172,6 +173,10 @@ export class Stealthy {
     return true;
   }
 
+  static toggleSpotting(toggled) {
+    Stealthy.enableSpot = toggled;
+  }
+
 }
 
 Hooks.once('setup', () => {
@@ -254,6 +259,11 @@ Hooks.on("renderSettingsConfig", (app, html, data) => {
   $('<div>').addClass('form-group group-header').html(game.i18n.localize("stealthy-config-experimental")).insertBefore($('[name="stealthy.tokenLighting"]').parents('div.form-group:first'));
 });
 
+Hooks.once("socketlib.ready", () => {
+  Stealthy.socket = socketlib.registerModule("stealthy");
+  Stealthy.socket.register("toggleSpotting", Stealthy.toggleSpotting);
+});
+
 Hooks.on("getSceneControlButtons", (controls) => {
   if (!game.user.isGM) return;
   let tokenControls = controls.find(x => x.name === "token");
@@ -262,8 +272,8 @@ Hooks.on("getSceneControlButtons", (controls) => {
     name: "stealthy-spotting",
     title: game.i18n.localize("stealthy-spotting-toggle"),
     toggle: true,
-    active: Stealthy.isCreatingSpotEffect,
-    onClick: (toggled) => Stealthy.isCreatingSpotEffect = toggled
+    active: Stealthy.enableSpot,
+    onClick: (toggled) => Stealthy.socket.executeForEveryone('toggleSpotting', toggled);
   });
 
 });

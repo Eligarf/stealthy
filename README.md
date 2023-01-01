@@ -61,6 +61,7 @@ This takes Darkvision into account for light conditions ( light level bump ) bef
 
 ## Required modules
 * [lib-wrapper](https://foundryvtt.com/packages/lib-wrapper)
+* [socketlib](https://github.com/manuelVo/foundryvtt-socketlib)
 ## Optional modules
 * [DFreds Convenient Effects](https://foundryvtt.com/packages/dfreds-convenient-effects)
 * [Combat Utility Belt](https://foundryvtt.com/packages/combat-utility-belt)

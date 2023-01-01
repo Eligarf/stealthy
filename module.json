@@ -27,6 +27,11 @@
         "id": "lib-wrapper",
         "type": "module",
         "compatibility": {}
+      },
+      {
+        "id": "socketlib",
+        "type": "module",
+        "compatibility": {}
       }
     ]
   },
