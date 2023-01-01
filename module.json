@@ -4,18 +4,17 @@
   "description": "Adds perception vs stealth checks to vision tests for tokens with the Hidden condition",
   "authors": [
     {
-      "name": "Eligarf",
-      "flags": {}
+      "name": "Eligarf"
     },
     {
-      "name": "Frstrm",
-      "flags": {}
+      "name": "Frstrm"
     }
   ],
-  "version": "1.5.0",
+  "version": "1.4.0",
   "compatibility": {
     "minimum": "10.291",
-    "verified": "10.291"
+    "verified": "10.291",
+    "maximum": "10"
   },
   "minimumCoreVersion": 10,
   "system": [
@@ -25,33 +24,23 @@
     "requires": [
       {
         "id": "lib-wrapper",
-        "type": "module",
-        "manifest": "https://github.com/ruipin/fvtt-lib-wrapper",
-        "compatibility": {}
-      },
-      {
-        "id": "socketlib",
-        "type": "module",
-        "manifest": "https://raw.githubusercontent.com/manuelVo/foundryvtt-socketlib/master/module.json",
-        "compatibility": {}
+        "type": "module"
       }
     ]
   },
   "esmodules": [
-    "scripts/config.js",
-    "scripts/stealthy.js"
+    "./scripts/config.js",
+    "./scripts/stealthy.js"
   ],
   "languages": [
     {
       "lang": "en",
       "name": "English",
-      "path": "lang/en.json",
-      "flags": {}
+      "path": "./lang/en.json"
     }
   ],
-  "socket": true,
-  "download": "https://github.com/Eligarf/stealthy/releases/download/v1.5.0/stealthy.zip",
-  "changelog": "https://raw.githubusercontent.com/eligarf/stealthy/release/ChangeLog.md",
+  "download": "https://github.com/Eligarf/stealthy/releases/download/v1.4.0/stealthy.zip",
+  "changelog": "https://raw.githubusercontent.com/eligarf/stealthy/main/ChangeLog.md",
   "url": "https://github.com/Eligarf/stealthy",
   "manifest": "https://github.com/Eligarf/stealthy/releases/latest/download/module.json",
   "bugs": "https://github.com/Eligarf/stealthy/issues",

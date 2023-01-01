@@ -1,8 +1,6 @@
 export class Stealthy {
 
-  static CONSOLE_COLORS = ['background: #222; color: #80ffff', 'color: #fff'];
-  static lightNumTable = ['dark', 'dim', 'bright'];
-  static socket;
+  static CONSOLE_COLORS = ['background: #222; color: #ff80ff', 'color: #fff'];
 
   static log(format, ...args) {
     const level = game.settings.get('stealthy', 'logLevel');
@@ -24,81 +22,78 @@ export class Stealthy {
     }
   }
 
-  // check target Token Lighting conditions via effects usage
-  // look for effects that indicate Dim or Dark condition on the token
-  static tokenLighting5e(spot, perception, visionSource, source, target) {
-    let lightLevel = 2;
-    let debugData = { perception };
+  static testVisionStealth(visionSource, config) {
+    const target = config.object?.actor;
+    const ignoreFriendlyStealth =
+      game.settings.get('stealthy', 'ignoreFriendlyStealth') &&
+      config.object.document?.disposition === visionSource.object.document?.disposition;
 
-    if (target?.effects.find(e => e.label === 'Dark' && !e.disabled)) { lightLevel = 0; }
-    if (target?.effects.find(e => e.label === 'Dim' && !e.disabled)) { lightLevel = 1; }
-    debugData.lightLevel = Stealthy.lightNumTable[lightLevel];
+    if (!ignoreFriendlyStealth) {
+      const hidden = target?.effects.find(e => e.label === game.i18n.localize("stealthy-hidden") && !e.disabled);
+      if (hidden) {
+        const source = visionSource.object?.actor;
+        if (game.system.id === 'dnd5e') {
+          let stealth = hidden.flags.stealthy?.hidden ?? target.system.skills.ste.passive;
+          const spot = source?.effects.find(e => e.label === game.i18n.localize("stealthy-spot") && !e.disabled);
 
-    // check if Darkvision is in use, bump light level accordingly
-    if (visionSource.visionMode?.id === 'darkvision') {
-      lightLevel = lightLevel + 1;
-      debugData.darklightLevel = Stealthy.lightNumTable[lightLevel];
+          // active perception loses ties, passive perception wins ties to simulate the
+          // idea that active skills need to win outright to change the status quo. Passive
+          // perception means that stealth is being the active skill.
+          let perception = spot?.flags.stealthy?.spot ?? (source.system.skills.prc.passive + 1);
+          if (perception <= stealth) {
+            return false;
+          }
+        }
+      }
     }
 
-    // adjust passive perception depending on light conditions of target token
-    // don't adjust for active perception checks via 'spot' flag usage
-    if (lightLevel < 2 && !spot?.flags.stealthy?.spot) {
-      perception = perception - 5;
-      debugData.disadvantagedPassive = perception;
-    };
-
-    Stealthy.log('tokenLighting5e', debugData);
-    return perception;
+    return true;
   }
+}
 
-  static isHidden5e(visionSource, hidden, target, config) {
-    const source = visionSource.object?.actor;
-    const stealth = hidden.flags.stealthy?.hidden ?? target.system.skills.ste.passive;
-    const spot = source?.effects.find(e => e.label === game.i18n.localize("stealthy-spot") && !e.disabled);
+Hooks.once('setup', () => {
+  libWrapper.register(
+    'stealthy',
+    "DetectionModeBasicSight.prototype.testVisibility",
+    (wrapped, visionSource, mode, config = {}) => {
+      if (!Stealthy.testVisionStealth(visionSource, config)) return false;
 
-    // active perception loses ties, passive perception wins ties to simulate the
-    // idea that active skills need to win outright to change the status quo. Passive
-    // perception means that stealth is being the active skill.
-    let perception = spot?.flags.stealthy?.spot ?? (source.system.skills.prc.passive + 1);
+      const target = config.object?.actor;
+      let noDarkvision = false;
+      const ignoreFriendlyUmbralSight =
+        game.settings.get('stealthy', 'ignoreFriendlyUmbralSight') &&
+        config.object.document?.disposition === visionSource.object.document?.disposition;
+      if (!ignoreFriendlyUmbralSight && visionSource.visionMode?.id === 'darkvision') {
+        const umbralSight = target?.itemTypes?.feat?.find(f => f.name === game.i18n.localize('Umbral Sight'));
+        if (umbralSight) noDarkvision = true;
+      }
 
-    if (game.settings.get('stealthy', 'tokenLighting')) {
-      perception = Stealthy.tokenLighting5e(spot, perception, visionSource, source, target);
-    }
+      if (noDarkvision) {
+        let ourMode = duplicate(mode);
+        ourMode.range = 0;
+        return wrapped(visionSource, ourMode, config);
+      }
 
-    if (perception <= stealth) {
-      Stealthy.log(`${visionSource.object.name}'s ${perception} can't see ${config.object.name}'s ${stealth}`);
-      return true;
-    }
-    return false;
-  }
+      return wrapped(visionSource, mode, config);
+    },
+    libWrapper.MIXED,
+    { perf_mode: libWrapper.PERF_FAST }
+  );
 
-  static enableSpot = true;
+  libWrapper.register(
+    'stealthy',
+    "DetectionModeInvisibility.prototype.testVisibility",
+    (wrapped, visionSource, mode, config = {}) => {
+      if (!Stealthy.testVisionStealth(visionSource, config)) return false;
+      return wrapped(visionSource, mode, config);
+    },
+    libWrapper.MIXED,
+    { perf_mode: libWrapper.PERF_FAST }
+  );
+});
 
-  static async rollPerception(actor, roll) {
-    if (!Stealthy.enableSpot) return;
-    const label = game.i18n.localize("stealthy-spot");
-    let spot = actor.effects.find(e => e.label === label);
-    if (!spot) {
-      const newEffect = [{
-        label,
-        icon: 'icons/magic/perception/eye-ringed-green.webp',
-        duration: { turns: 1, seconds: 6 },
-        flags: {
-          convenientDescription: game.i18n.localize("stealthy-spot-description"),
-          'stealthy.spot': Math.max(roll.total, actor.system.skills.prc.passive),
-        },
-      }];
-      await actor.createEmbeddedDocuments('ActiveEffect', newEffect);
-    }
-    else {
-      let activeSpot = duplicate(spot);
-      activeSpot.flags['stealthy.spot'] = Math.max(roll.total, actor.system.skills.prc.passive);
-      activeSpot.disabled = false;
-      await actor.updateEmbeddedDocuments('ActiveEffect', [activeSpot]);
-    }
-  }
-
-  static async rollStealth(actor, roll) {
+Hooks.on('dnd5e.rollSkill', async (actor, roll, skill) => {
+  if (skill === 'ste') {
     const label = game.i18n.localize("stealthy-hidden");
     let hidden = actor.effects.find(e => e.label === label);
 
@@ -155,95 +150,31 @@ export class Stealthy {
     await actor.updateEmbeddedDocuments('ActiveEffect', [activeHide]);
   }
 
-  static testVisionStealth(visionSource, config) {
-    const target = config.object?.actor;
-    const ignoreFriendlyStealth =
-      game.settings.get('stealthy', 'ignoreFriendlyStealth') &&
-      config.object.document?.disposition === visionSource.object.document?.disposition;
-
-    if (!ignoreFriendlyStealth) {
-      const hidden = target?.effects.find(e => e.label === game.i18n.localize("stealthy-hidden") && !e.disabled);
-      if (hidden) {
-        // This will be better implemented as an interface
-        // First thing to do when adding second supported system
-        if (Stealthy.isHidden5e(visionSource, hidden, target, config)) return false;
-      }
-    }
-
-    return true;
-  }
-
-  static async toggleSpotting(toggled) {
-    Stealthy.enableSpot = toggled;
-
-    if (!toggled && game.user.isGM) {
-      for (let actor of game.actors.contents) {
-        const spot = actor.effects.find(e => e.name = game.i18n.localize('stealthy-spot'));
-        if (spot) {
-          actor.deleteEmbeddedDocuments('ActiveEffect', [spot.id]);
-        }
-      }
-    }
-  }
-
-  static async getSpotting() {
-    return Stealthy.enableSpot
-  }
-
-}
-
-Hooks.once('setup', () => {
-  libWrapper.register(
-    'stealthy',
-    'DetectionModeBasicSight.prototype.testVisibility',
-    (wrapped, visionSource, mode, config = {}) => {
-      if (!Stealthy.testVisionStealth(visionSource, config)) return false;
-
-      const target = config.object?.actor;
-      let noDarkvision = false;
-      const ignoreFriendlyUmbralSight =
-        game.settings.get('stealthy', 'ignoreFriendlyUmbralSight') &&
-        config.object.document?.disposition === visionSource.object.document?.disposition;
-      if (!ignoreFriendlyUmbralSight && visionSource.visionMode?.id === 'darkvision') {
-        const umbralSight = target?.itemTypes?.feat?.find(f => f.name === game.i18n.localize('Umbral Sight'));
-        if (umbralSight) noDarkvision = true;
-      }
-
-      if (noDarkvision) {
-        Stealthy.log(`${visionSource.object.name}'s darkvision can't see ${config.object.name}`);
-        let ourMode = duplicate(mode);
-        ourMode.range = 0;
-        return wrapped(visionSource, ourMode, config);
-      }
-
-      return wrapped(visionSource, mode, config);
-    },
-    libWrapper.MIXED,
-    { perf_mode: libWrapper.PERF_FAST }
-  );
-
-  libWrapper.register(
-    'stealthy',
-    'DetectionModeInvisibility.prototype.testVisibility',
-    (wrapped, visionSource, mode, config = {}) => {
-      if (!Stealthy.testVisionStealth(visionSource, config)) return false;
-      return wrapped(visionSource, mode, config);
-    },
-    libWrapper.MIXED,
-    { perf_mode: libWrapper.PERF_FAST }
-  );
-});
-
-Hooks.on('dnd5e.rollSkill', async (actor, roll, skill) => {
-  if (skill === 'ste') {
-    await Stealthy.rollStealth(actor, roll);
-  }
   else if (skill === 'prc') {
-    await Stealthy.rollPerception(actor, roll);
+    const label = game.i18n.localize("stealthy-spot");
+    let spot = actor.effects.find(e => e.label === label);
+    if (!spot) {
+      const newEffect = [{
+        label,
+        icon: 'icons/magic/perception/eye-ringed-green.webp',
+        duration: { turns: 1 },
+        flags: {
+          convenientDescription: game.i18n.localize("stealthy-spot-description"),
+          'stealthy.spot': Math.max(roll.total, actor.system.skills.prc.passive),
+        },
+      }];
+      await actor.createEmbeddedDocuments('ActiveEffect', newEffect);
+    }
+    else {
+      let activeSpot = duplicate(spot);
+      activeSpot.flags['stealthy.spot'] = Math.max(roll.total, actor.system.skills.prc.passive);
+      activeSpot.disabled = false;
+      await actor.updateEmbeddedDocuments('ActiveEffect', [activeSpot]);
+    }
   }
 });
 
-Hooks.on('renderTokenHUD', (tokenHUD, html, app) => {
+Hooks.on("renderTokenHUD", (tokenHUD, html, app) => {
   if (game.user.isGM == true) {
     const token = tokenHUD.object;
     const actor = token?.actor;
@@ -264,34 +195,4 @@ Hooks.on('renderTokenHUD', (tokenHUD, html, app) => {
       }
     }
   }
-});
-
-Hooks.on('renderSettingsConfig', (app, html, data) => {
-  $('<div>').addClass('form-group group-header').html(game.i18n.localize("stealthy-config-general")).insertBefore($('[name="stealthy.ignoreFriendlyStealth"]').parents('div.form-group:first'));
-  $('<div>').addClass('form-group group-header').html(game.i18n.localize("stealthy-config-debug")).insertBefore($('[name="stealthy.logLevel"]').parents('div.form-group:first'));
-  $('<div>').addClass('form-group group-header').html(game.i18n.localize("stealthy-config-experimental")).insertBefore($('[name="stealthy.tokenLighting"]').parents('div.form-group:first'));
-});
-
-Hooks.once('socketlib.ready', () => {
-  Stealthy.socket = socketlib.registerModule('stealthy');
-  Stealthy.socket.register('toggleSpotting', Stealthy.toggleSpotting);
-  Stealthy.socket.register('getSpotting', Stealthy.getSpotting);
-});
-
-Hooks.on('getSceneControlButtons', (controls) => {
-  if (!game.user.isGM) return;
-  let tokenControls = controls.find(x => x.name === 'token');
-  tokenControls.tools.push({
-    icon: 'fa-solid fa-eyes',
-    name: 'stealthy-spotting',
-    title: game.i18n.localize("stealthy-spotting-toggle"),
-    toggle: true,
-    active: Stealthy.enableSpot,
-    onClick: (toggled) => Stealthy.socket.executeForEveryone('toggleSpotting', toggled)
-  });
-});
-
-Hooks.once('ready', async () => {
-  if (!game.user.isGM)
-    Stealthy.enableSpot = await Stealthy.socket.executeAsGM('getSpotting');
 });
