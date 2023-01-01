@@ -1,8 +1,9 @@
+import { Stealthy } from "./stealthy.js";
+
 Hooks.once('ready', () => {
 
   const module = game.modules.get('stealthy');
   const moduleVersion = module.version;
-  console.log(`stealthy | Initializing ${moduleVersion}`);
 
   game.settings.register('stealthy', 'ignoreFriendlyStealth', {
     name: game.i18n.localize("stealthy-ignoreFriendlyStealth-name"),
@@ -58,5 +59,15 @@ Hooks.once('ready', () => {
     },
     default: 'none'
   });
-  
+
+  game.settings.register('stealthy', 'tokenLighting', {
+    name: game.i18n.localize("stealthy-tokenLighting-name"),
+    hint: game.i18n.localize("stealthy-tokenLighting-hint"),
+    scope: 'world',
+    config: true,
+    type: Boolean,
+    default: false,
+  });
+
+  Stealthy.log(`Initialized ${moduleVersion}`);
 });

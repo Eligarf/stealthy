@@ -4,6 +4,7 @@
   "stealthy-hidden-error": "Can't find effect named Hidden",
   "stealthy-spot": "Spot",
   "stealthy-spot-description": "Active Perception check result",
+  "stealthy-spotting-toggle": "Toggle Active Spot",
   "stealthy-inputBox-title": "Current Stealth",
   "stealthy-ignoreFriendlyStealth-name": "Ignore friendly stealth",
   "stealthy-ignoreFriendlyStealth-hint": "Perception vs Stealth tests will be ignored for tokens of the same disposition",
@@ -18,5 +19,10 @@
   "stealthy-logLevel-name": "Logging Level",
   "stealthy-logLevel-none-choice": "No logging",
   "stealthy-logLevel-debuglevel-choice": "Debug level",
-  "stealthy-logLevel-loglevel-choice": "Log level"
+  "stealthy-logLevel-loglevel-choice": "Log level",
+  "stealthy-config-general": "General Options",
+  "stealthy-config-debug": "Debug Options",
+  "stealthy-config-experimental": "Experimental",
+  "stealthy-tokenLighting-name": "Check token lighting conditions",
+  "stealthy-tokenLighting-hint": "Check for token effects that indicate lighting condition of the token. WARNING - only currently handles passive perception"
 }
