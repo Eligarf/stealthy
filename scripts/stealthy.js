@@ -178,7 +178,7 @@ export class Stealthy {
 
     if (!toggled && game.user.isGM) {
       for (let actor of game.actors.contents) {
-        const spot = actor.effects.find(e => e.name = game.i18n.localize('stealthy-spot'));
+        const spot = actor.effects.find(e => e.label = game.i18n.localize('stealthy-spot'));
         if (spot) {
           actor.deleteEmbeddedDocuments('ActiveEffect', [spot.id]);
         }
