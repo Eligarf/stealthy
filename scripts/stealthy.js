@@ -1,6 +1,6 @@
 export class Stealthy {
 
-  static CONSOLE_COLORS = ['background: #222; color: #ff80ff', 'color: #fff'];
+  static CONSOLE_COLORS = ['background: #222; color: #80ffff', 'color: #fff'];
   static lightNumTable = ['dark', 'dim', 'bright'];
   static socket;
 
@@ -47,7 +47,7 @@ export class Stealthy {
       debugData.disadvantagedPassive = perception;
     };
 
-    Stealthy.log("tokenLighting5e", debugData);
+    Stealthy.log('tokenLighting5e', debugData);
     return perception;
   }
 
@@ -186,12 +186,16 @@ export class Stealthy {
     }
   }
 
+  static async getSpotting() {
+    return Stealthy.enableSpot
+  }
+
 }
 
 Hooks.once('setup', () => {
   libWrapper.register(
     'stealthy',
-    "DetectionModeBasicSight.prototype.testVisibility",
+    'DetectionModeBasicSight.prototype.testVisibility',
     (wrapped, visionSource, mode, config = {}) => {
       if (!Stealthy.testVisionStealth(visionSource, config)) return false;
 
@@ -220,7 +224,7 @@ Hooks.once('setup', () => {
 
   libWrapper.register(
     'stealthy',
-    "DetectionModeInvisibility.prototype.testVisibility",
+    'DetectionModeInvisibility.prototype.testVisibility',
     (wrapped, visionSource, mode, config = {}) => {
       if (!Stealthy.testVisionStealth(visionSource, config)) return false;
       return wrapped(visionSource, mode, config);
@@ -239,7 +243,7 @@ Hooks.on('dnd5e.rollSkill', async (actor, roll, skill) => {
   }
 });
 
-Hooks.on("renderTokenHUD", (tokenHUD, html, app) => {
+Hooks.on('renderTokenHUD', (tokenHUD, html, app) => {
   if (game.user.isGM == true) {
     const token = tokenHUD.object;
     const actor = token?.actor;
@@ -262,27 +266,32 @@ Hooks.on("renderTokenHUD", (tokenHUD, html, app) => {
   }
 });
 
-Hooks.on("renderSettingsConfig", (app, html, data) => {
+Hooks.on('renderSettingsConfig', (app, html, data) => {
   $('<div>').addClass('form-group group-header').html(game.i18n.localize("stealthy-config-general")).insertBefore($('[name="stealthy.ignoreFriendlyStealth"]').parents('div.form-group:first'));
   $('<div>').addClass('form-group group-header').html(game.i18n.localize("stealthy-config-debug")).insertBefore($('[name="stealthy.logLevel"]').parents('div.form-group:first'));
   $('<div>').addClass('form-group group-header').html(game.i18n.localize("stealthy-config-experimental")).insertBefore($('[name="stealthy.tokenLighting"]').parents('div.form-group:first'));
 });
 
-Hooks.once("socketlib.ready", () => {
-  Stealthy.socket = socketlib.registerModule("stealthy");
-  Stealthy.socket.register("toggleSpotting", Stealthy.toggleSpotting);
+Hooks.once('socketlib.ready', () => {
+  Stealthy.socket = socketlib.registerModule('stealthy');
+  Stealthy.socket.register('toggleSpotting', Stealthy.toggleSpotting);
+  Stealthy.socket.register('getSpotting', Stealthy.getSpotting);
 });
 
-Hooks.on("getSceneControlButtons", (controls) => {
+Hooks.on('getSceneControlButtons', (controls) => {
   if (!game.user.isGM) return;
-  let tokenControls = controls.find(x => x.name === "token");
+  let tokenControls = controls.find(x => x.name === 'token');
   tokenControls.tools.push({
-    icon: "fa-solid fa-eyes",
-    name: "stealthy-spotting",
+    icon: 'fa-solid fa-eyes',
+    name: 'stealthy-spotting',
     title: game.i18n.localize("stealthy-spotting-toggle"),
     toggle: true,
     active: Stealthy.enableSpot,
     onClick: (toggled) => Stealthy.socket.executeForEveryone('toggleSpotting', toggled)
   });
+});
 
+Hooks.once('ready', async () => {
+  if (!game.user.isGM)
+    Stealthy.enableSpot = await Stealthy.socket.executeAsGM('getSpotting');
 });
