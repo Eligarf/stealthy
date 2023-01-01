@@ -1,29 +1,36 @@
 [![License](https://img.shields.io/github/license/eligarf/stealthy?label=License)](LICENSE)
 [![Latest Version](https://img.shields.io/github/v/release/eligarf/stealthy?display_name=tag&sort=semver&label=Latest%20Version)](https://github.com/eligarf/stealthy/releases/latest)
-![Foundry Version](https://img.shields.io/endpoint?url=https://foundryshields.com/version?url=https%3A%2F%2Fraw.githubusercontent.com%2Feligarf%2Fstealthy%2Fmain%2Fmodule.json)
+![Foundry Version](https://img.shields.io/endpoint?url=https://foundryshields.com/version?url=https%3A%2F%2Fraw.githubusercontent.com%2Feligarf%2Fstealthy%2Fdev%2Fmodule.json)
 
+![Latest Downloads](https://img.shields.io/github/downloads/eligarf/stealthy/latest/total?color=blue&label=latest%20downloads)
+![Total Downloads](https://img.shields.io/github/downloads/eligarf/stealthy/total?color=blue&label=total%20downloads)
 # Stealthy
 
 A module for [FoundryVTT](https://foundryvtt.com) that adds perception vs stealth testing to Foundry's visibility tests.
 
 ## Purpose
 
-During visibility tests, Stealthy filters out any objects with the 'Hidden' condition if the viewing Perception value fails to beat the object's Stealth value.
+During visibility tests, Stealthy filters out any objects with the Hidden condition if the viewing Perception value fails to beat the object's Stealth value.
 
 ## Features
 
 ### **Rolling Stealth checks applies the Hidden condition**
-Rolling a Stealth skill check will apply the 'hidden' condition to the actor and record the result of the check in that condition for later comparisons, replacing the stored result if the Hidden condition is already present. If using DFreds Convenient Effects, a custom Hidden effect will be created therein if no custom effect named Hidden can be found. This effect can be customized as you see fit, but it must remain named 'Hidden'.
+Rolling a Stealth skill check will apply the Hidden condition to the actor and record the result of the check in that condition for later comparisons, replacing the stored result if the Hidden condition is already present. Stealthy's default Hidden effect can be overriden by adding a custom Hidden effect in either Convenient Effects or CUB.
+
+***See [Handling Hidden removal](#handling-hidden-removal)***
 
 ![stealth-roll](https://user-images.githubusercontent.com/16523503/209989026-e0d2dad2-8dc1-459c-8824-a2332ce8a9cd.gif)
 
 ### **Rolling Perception checks applies the Spot condition**
-Rolling a Perception check will add a 'Spot' condition to the actor which records the result of that perception check. The passive value for Perception is used if this condition isn't present on the actor. *The stored Perception result uses the passive value as a floor*
+Rolling a Perception check will add a one turn/six second duration Spot condition to the actor which records the result of that perception check (the passive value for Perception is used if this condition isn't present on the actor). The duration isn't from RAW, but is an approximation I've chosen that seems to work well in my games. A toggle named 'Toggle Active Spot' is available under token controls to suspend adding of the Spot condition as the GM sees fit. Toggling it off will also clear out all Spot effects.
+
+*The stored Perception value uses passive Perception as a floor to the Active roll result.*
 
 ![perception](https://user-images.githubusercontent.com/16523503/209989470-aac2bdb4-fee4-44c0-a6b7-916e69353081.gif)
+![control](https://user-images.githubusercontent.com/16523503/210176825-3fcb3183-81db-4f64-836a-81f29199b580.png)
 
 ### **GM Stealth Override**
-Once the 'Hidden' condition is applied, GMs will see a token button with an input box on the bottom right which will shows the rolled Stealth result, or show the passive Stealth value if the Hidden condition was added directly without rolling. Changing the value in this input box will alter the stored Stealth result for any future visibility tests.
+Once the Hidden condition is applied, GMs will see a token button with an input box on the bottom right which will shows the rolled Stealth result, or show the passive Stealth value if the Hidden condition was added directly without rolling. Changing the value in this input box will alter the stored Stealth result for any future visibility tests.
 
 ![stealth-override](https://user-images.githubusercontent.com/16523503/209896031-675ab0e3-93e6-4d9c-8eeb-c11abe39fdab.gif)
 
@@ -35,11 +42,29 @@ Characters with Umbral Sight will no longer be visible to the Darkvision mode, b
 ### **Invisible characters can hide from See Invisibility**
 An invisible actor that also has the 'Hidden' condition will check Perception vs Stealth before showing up in the 'See Invisibility' vision mode.
 
+![invisible](https://user-images.githubusercontent.com/16523503/210176827-03fda57a-6d09-4144-8253-b8b7cd9155ac.gif)
+
 ### **Friendly tokens can still be viewed**
 The GM has the option for allowing Hidden tokens to be seen by other tokens of the same disposition.
 
+## Handling Hidden removal
+Stealthy will not automatically remove the Hidden condition - the [Skulker](https://www.dndbeyond.com/feats/skulker) feat demonstrates why removing Hidden gets complicated without heavier automation support provided by modules like the excellent [Midi-QOL](https://foundryvtt.com/packages/midi-qol) which handles this for my games. I suggest [DFreds Effects Panel](https://foundryvtt.com/packages/dfreds-effects-panel) as an easier way to manually remove it, especially for low automation level games. 
+## Stealth vs Perception Ties
+D&D 5E treats skill contest ties as preserving the status quo, so use of passive value for either skill makes a claim of owning the status quo and thus winning ties. If Perception and Stealth are both passive, I assume Stealth takes the active role of wanting to change the status quo from visible to hidden. An active Perception check is only necessary if the passive Perception was beaten by Stealth, so in this case Hidden is now the status quo condition and Stealth wins ties with the active result. More simply, **ties are won by passive Perception and lost by active Perception.**
+
+## Experimental
+
+### Check token lighting conditions
+This option triggers a check for the following effects on the target token:
+- Dark
+- Dim
+
+IF the target token has these effects, then the passive perception check will be adjusted accordingly.
+This takes Darkvision into account for light conditions ( light level bump ) before determining passive perception adjustment.
+
 ## Required modules
 * [lib-wrapper](https://foundryvtt.com/packages/lib-wrapper)
+* [socketlib](https://github.com/manuelVo/foundryvtt-socketlib)
 ## Optional modules
 * [DFreds Convenient Effects](https://foundryvtt.com/packages/dfreds-convenient-effects)
 * [Combat Utility Belt](https://foundryvtt.com/packages/combat-utility-belt)
