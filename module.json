@@ -12,7 +12,7 @@
       "flags": {}
     }
   ],
-  "version": "1.5.0",
+  "version": "1.5.1",
   "compatibility": {
     "minimum": "10.291",
     "verified": "10.291"
@@ -50,7 +50,7 @@
     }
   ],
   "socket": true,
-  "download": "https://github.com/Eligarf/stealthy/releases/download/v1.5.0/stealthy.zip",
+  "download": "https://github.com/Eligarf/stealthy/releases/download/v1.5.1/stealthy.zip",
   "changelog": "https://raw.githubusercontent.com/eligarf/stealthy/release/ChangeLog.md",
   "url": "https://github.com/Eligarf/stealthy",
   "manifest": "https://github.com/Eligarf/stealthy/releases/latest/download/module.json",
