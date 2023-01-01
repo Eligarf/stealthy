@@ -173,8 +173,17 @@ export class Stealthy {
     return true;
   }
 
-  static toggleSpotting(toggled) {
+  static async toggleSpotting(toggled) {
     Stealthy.enableSpot = toggled;
+
+    if (!toggled && game.user.isGM) {
+      for (let actor of game.actors.contents) {
+        const spot = actor.effects.find(e => e.name = game.i18n.localize('stealthy-spot'));
+        if (spot) {
+          actor.deleteEmbeddedDocuments('ActiveEffect', [spot.id]);
+        }
+      }
+    }
   }
 
 }
@@ -273,7 +282,7 @@ Hooks.on("getSceneControlButtons", (controls) => {
     title: game.i18n.localize("stealthy-spotting-toggle"),
     toggle: true,
     active: Stealthy.enableSpot,
-    onClick: (toggled) => Stealthy.socket.executeForEveryone('toggleSpotting', toggled);
+    onClick: (toggled) => Stealthy.socket.executeForEveryone('toggleSpotting', toggled)
   });
 
 });

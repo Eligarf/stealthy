@@ -26,11 +26,13 @@
       {
         "id": "lib-wrapper",
         "type": "module",
+        "manifest": "https://github.com/ruipin/fvtt-lib-wrapper",
         "compatibility": {}
       },
       {
         "id": "socketlib",
         "type": "module",
+        "manifest": "https://raw.githubusercontent.com/manuelVo/foundryvtt-socketlib/master/module.json",
         "compatibility": {}
       }
     ]
@@ -47,6 +49,7 @@
       "flags": {}
     }
   ],
+  "socket": true,
   "download": "https://github.com/Eligarf/stealthy/releases/download/v1.5.0/stealthy.zip",
   "changelog": "https://raw.githubusercontent.com/eligarf/stealthy/release/ChangeLog.md",
   "url": "https://github.com/Eligarf/stealthy",
