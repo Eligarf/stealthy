@@ -1,4 +1,4 @@
-# Pending
+# Version 1.5.0
 * Added token control toggle to dynamically disable Spot condition generation
 * Added config group headers
 * Readme clarifications
