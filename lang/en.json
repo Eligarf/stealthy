@@ -4,6 +4,7 @@
   "stealthy-hidden-error": "Can't find effect named Hidden",
   "stealthy-spot": "Spot",
   "stealthy-spot-description": "Active Perception check result",
+  "stealthy-spotting-toggle": "Perception creates Spot effect",
   "stealthy-inputBox-title": "Current Stealth",
   "stealthy-ignoreFriendlyStealth-name": "Ignore friendly stealth",
   "stealthy-ignoreFriendlyStealth-hint": "Perception vs Stealth tests will be ignored for tokens of the same disposition",

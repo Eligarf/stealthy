@@ -1,13 +1,11 @@
-# Pending
+# Version 1.5.0
+* Added token control toggle to dynamically disable Spot condition generation
 * Added config group headers
 * Readme clarifications
 * Logging when objects are filtered out by Stealthy
-* Better organization for the isHidden test
-* Adding experimental group config header
-* Exp: Token lighting option
-* Exp: Check for dim/dark effects on target token
-* Exp: Accounts for darkvision lighting adjustments
-* Exp: Adjust passive perception based on target token lighting
+* Better code organization
+* Grouped related settings in the settings dialog
+* Experimental: option for perception checks to be affected by Dim or Dark status conditions on the token. Only affect passive perception currently.
 
 # Version 1.4.0
 * Option to disable token effect on Hidden

@@ -22,9 +22,9 @@ Rolling a Stealth skill check will apply the Hidden condition to the actor and r
 ![stealth-roll](https://user-images.githubusercontent.com/16523503/209989026-e0d2dad2-8dc1-459c-8824-a2332ce8a9cd.gif)
 
 ### **Rolling Perception checks applies the Spot condition**
-Rolling a Perception check will add a one turn/six second duration Spot condition to the actor which records the result of that perception check (the passive value for Perception is used if this condition isn't present on the actor). The duration isn't from RAW, but is an approximation I've chosen that seems to work well in my games.
+Rolling a Perception check will add a one turn/six second duration Spot condition to the actor which records the result of that perception check (the passive value for Perception is used if this condition isn't present on the actor). The duration isn't from RAW, but is an approximation I've chosen that seems to work well in my games. A toggle entitled 'Perception creates Spot effect' is available under token controls to suspend adding of the Spot condition as the GM sees fit.
 
-The stored Perception value uses passive Perception as a floor to the Active roll result.
+*The stored Perception value uses passive Perception as a floor to the Active roll result.*
 
 ![perception](https://user-images.githubusercontent.com/16523503/209989470-aac2bdb4-fee4-44c0-a6b7-916e69353081.gif)
 
