@@ -5,7 +5,7 @@
 * Logging when objects are filtered out by Stealthy
 * Better code organization
 * Grouped related settings in the settings dialog
-* Experimental: option for perception checks to be affected by token lighting. Partial.
+* Experimental: option for perception checks to be affected by Dim or Dark status conditions on the token. Only affect passive perception currently.
 
 # Version 1.4.0
 * Option to disable token effect on Hidden

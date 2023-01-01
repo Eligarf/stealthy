@@ -71,7 +71,10 @@ export class Stealthy {
     return false;
   }
 
+  static isCreatingSpotEffect = true;
+
   static async rollPerception(actor, roll) {
+    if (!Stealthy.isCreatingSpotEffect) return;
     const label = game.i18n.localize("stealthy-spot");
     let spot = actor.effects.find(e => e.label === label);
     if (!spot) {
@@ -215,10 +218,10 @@ Hooks.once('setup', () => {
 
 Hooks.on('dnd5e.rollSkill', async (actor, roll, skill) => {
   if (skill === 'ste') {
-    await rollStealth(actor, roll);
+    await Stealthy.rollStealth(actor, roll);
   }
   else if (skill === 'prc') {
-    await rollPerception(actor, roll);
+    await Stealthy.rollPerception(actor, roll);
   }
 });
 
@@ -249,4 +252,18 @@ Hooks.on("renderSettingsConfig", (app, html, data) => {
   $('<div>').addClass('form-group group-header').html(game.i18n.localize("stealthy-config-general")).insertBefore($('[name="stealthy.ignoreFriendlyStealth"]').parents('div.form-group:first'));
   $('<div>').addClass('form-group group-header').html(game.i18n.localize("stealthy-config-debug")).insertBefore($('[name="stealthy.logLevel"]').parents('div.form-group:first'));
   $('<div>').addClass('form-group group-header').html(game.i18n.localize("stealthy-config-experimental")).insertBefore($('[name="stealthy.tokenLighting"]').parents('div.form-group:first'));
+});
+
+Hooks.on("getSceneControlButtons", (controls) => {
+  if (!game.user.isGM) return;
+  let tokenControls = controls.find(x => x.name === "token");
+  tokenControls.tools.push({
+    icon: "fa-solid fa-eyes",
+    name: "stealthy-spotting",
+    title: game.i18n.localize("stealthy-spotting-toggle"),
+    toggle: true,
+    active: Stealthy.isCreatingSpotEffect,
+    onClick: (toggled) => Stealthy.isCreatingSpotEffect = toggled
+  });
+
 });
