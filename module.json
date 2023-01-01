@@ -17,10 +17,6 @@
     "minimum": "10.291",
     "verified": "10.291"
   },
-  "minimumCoreVersion": 10,
-  "system": [
-    "dnd5e"
-  ],
   "relationships": {
     "requires": [
       {
