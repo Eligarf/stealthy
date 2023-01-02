@@ -79,6 +79,7 @@ export class Stealthy {
     Stealthy.log('rollPerception', { actor, roll });
     const label = game.i18n.localize("stealthy-spot-label");
     let spot = actor.effects.find(e => e.label === label);
+    let flag = { spot: Math.max(roll.total, actor.system.skills.prc.passive) };
 
     if (!spot) {
       // See if we can source from outside
@@ -100,7 +101,7 @@ export class Stealthy {
           duration: { turns: 1, seconds: 6 },
           flags: {
             convenientDescription: game.i18n.localize("stealthy-spot-description"),
-            'stealthy.spot': Math.max(roll.total, actor.system.skills.prc.passive),
+            stealthy: flag,
           },
         };
 
@@ -110,7 +111,7 @@ export class Stealthy {
     }
     
     let activeSpot = duplicate(spot);
-    activeSpot.flags['stealthy.spot'] = Math.max(roll.total, actor.system.skills.prc.passive);
+    activeSpot.flags.stealthy = flag;
     activeSpot.disabled = false;
     await actor.updateEmbeddedDocuments('ActiveEffect', [activeSpot]);
   }
@@ -119,6 +120,7 @@ export class Stealthy {
     Stealthy.log('rollStealth', { actor, roll });
     const label = game.i18n.localize("stealthy-hidden-label");
     let hidden = actor.effects.find(e => e.label === label);
+    let flag = { hidden: roll.total };
 
     if (!hidden) {
       // See if we can source from outside
@@ -138,7 +140,11 @@ export class Stealthy {
           label,
           icon: 'icons/magic/perception/shadow-stealth-eyes-purple.webp',
           changes: [],
-          flags: { convenientDescription: game.i18n.localize("stealthy-hidden-description") },
+          flags: {
+            core: {statusId: '1'},
+            convenientDescription: game.i18n.localize("stealthy-hidden-description"),
+            stealthy: flag
+          },
         };
 
         if (source === 'ae') {
@@ -157,18 +163,16 @@ export class Stealthy {
             });
           }
         }
-        hidden.flags['stealthy.hidden'] = roll.total;
-        hidden.flags['core.statusId'] = '1';
-        await actor.createEmbeddedDocuments('ActiveEffect', [hidden]);
 
         // No need to update the effect with roll data because we just created it therein
+        await actor.createEmbeddedDocuments('ActiveEffect', [hidden]);
         return;
       }
     }
 
     // Need to stick the roll data into a flag and update the effect
     let activeHide = duplicate(hidden);
-    activeHide.flags['stealthy.hidden'] = roll.total;
+    activeHide.flags.stealthy = flag;
     activeHide.disabled = false;
     await actor.updateEmbeddedDocuments('ActiveEffect', [activeHide]);
   }
@@ -278,7 +282,7 @@ Hooks.on('renderTokenHUD', (tokenHUD, html, app) => {
       inputBox.change(async (inputbox) => {
         if (token === undefined) return;
         let activeHide = duplicate(hidden);
-        activeHide.flags['stealthy.hidden'] = Number(inputbox.target.value);
+        activeHide.flags.stealthy = { hidden: Number(inputbox.target.value) };
         await actor.updateEmbeddedDocuments('ActiveEffect', [activeHide]);
       });
     }
@@ -293,7 +297,7 @@ Hooks.on('renderTokenHUD', (tokenHUD, html, app) => {
       inputBox.change(async (inputbox) => {
         if (token === undefined) return;
         let activeSpot = duplicate(spot);
-        activeSpot.flags['stealthy.spot'] = Number(inputbox.target.value);
+        activeSpot.flags.stealthy = { spot: Number(inputbox.target.value) };
         await actor.updateEmbeddedDocuments('ActiveEffect', [activeSpot]);
       });
     }
