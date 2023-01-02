@@ -1,3 +1,6 @@
+# v1.6.1
+* Fixed error creating default spot effect
+
 # v1.6.0
 * Fixed issue where toggling active spot off deleted an effect from every actor
 * Add token button for spot value overrides
