@@ -23,27 +23,27 @@ Hooks.once('ready', () => {
     default: false,
   });
 
-  let choices = {
-    'none': game.i18n.localize("stealthy-hiddenSource-none"),
-    'ae': game.i18n.localize("stealthy-hiddenSource-ae"),
+  let sources = {
+    'none': game.i18n.localize("stealthy-source-min"),
+    'ae': game.i18n.localize("stealthy-source-ae"),
+    'cub': game.i18n.localize("stealthy-source-cub"),
+    'ce': game.i18n.localize("stealthy-source-ce")
   };
   let defaultSource = 'ae';
-  if (game.cub?.getCondition(game.i18n.localize("stealthy-hidden"))) {
-    choices['cub'] = game.i18n.localize("stealthy-hiddenSource-cub");
+  if (game.cub?.getCondition(game.i18n.localize("stealthy-hidden-label"))) {
     defaultSource = 'cub';
   }
-  if (game.dfreds?.effectInterface?.findEffectByName(game.i18n.localize("stealthy-hidden"))) {
-    choices['ce'] = game.i18n.localize("stealthy-hiddenSource-ce");
+  if (game.dfreds?.effectInterface?.findEffectByName(game.i18n.localize("stealthy-hidden-label"))) {
     defaultSource = 'ce';
   }
 
   game.settings.register('stealthy', 'hiddenSource', {
-    name: game.i18n.localize("stealthy-hiddenSource-name"),
-    hint: game.i18n.localize("stealthy-hiddenSource-hint"),
+    name: game.i18n.localize("stealthy-source-name"),
+    hint: game.i18n.localize("stealthy-source-hint"),
     scope: 'world',
     config: true,
     type: String,
-    choices,
+    choices: sources,
     default: defaultSource
   });
 
