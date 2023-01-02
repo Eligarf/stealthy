@@ -1,5 +1,6 @@
 # Pending
 * Iterate placeables instead of actors when clearing spot effects
+* Add token button for spot value overrides
 
 # Version 1.5.2
 * made a mess of publishing 1.5.1
