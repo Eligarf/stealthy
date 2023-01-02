@@ -64,8 +64,8 @@ For this approach we've broken this down into three pieces:
   - Foundry Darkvision: Dark -> Dim; Dim -> Bright
   - Demonsight: Dark -> Bright
 
-  After the light level is remapped, objects in 'Dark' don't get drawn and objects in 'Dim' would be tested against using disadvantaged perception.
-- Capturing the advantage/disadvantage state of the viewers perception in order to do the right thing when applying disadvantage in dim vision. We get these flags on the active rolls, and can generate an extra roll result we can store in our flag so that we have a result for disadvantage should we need it. The passive case could maybe be figured out by doing a silent rollSkill call for perception to see what flags were set.
+  After the light level is remapped, objects in 'Dark' get rejected and objects in 'Dim' would be tested against using disadvantaged perception.
+- Capturing the advantage/disadvantage state of the viewers perception in order to do the right thing when applying disadvantage in dim vision. We get these flags on the active rolls, and can generate an extra roll result we can store in our flag so that we have a result for disadvantage should we need it. The passive case could maybe be figured out by doing a silent rollSkill call for perception to see what flags are set.
 
 ## Required modules
 * [lib-wrapper](https://foundryvtt.com/packages/lib-wrapper)
