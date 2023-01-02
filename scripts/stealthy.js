@@ -26,7 +26,7 @@ export class Stealthy {
 
   // check target Token Lighting conditions via effects usage
   // look for effects that indicate Dim or Dark condition on the token
-  static tokenLighting5e(spot, perception, visionSource, source, target) {
+  static tokenLighting5e(spot, spotPair, perception, visionSource, source, target) {
     let lightLevel = 2;
     let debugData = { perception };
 
@@ -59,10 +59,15 @@ export class Stealthy {
     // active perception loses ties, passive perception wins ties to simulate the
     // idea that active skills need to win outright to change the status quo. Passive
     // perception means that stealth is being the active skill.
-    let perception = spot?.flags.stealthy?.spot ?? (source.system.skills.prc.passive + 1);
+    const spotPair = spot?.flags.stealthy?.spot;
+    Stealthy.log('spotPair', spotPair);
+    let perception;
 
     if (game.settings.get('stealthy', 'tokenLighting')) {
-      perception = Stealthy.tokenLighting5e(spot, perception, visionSource, source, target);
+      perception = Stealthy.tokenLighting5e(spot, spotPair, source.system.skills.prc.passive + 1, visionSource, source, target);
+    }
+    else {
+      perception = spotPair?.normal ?? (source.system.skills.prc.passive + 1);
     }
 
     if (perception <= stealth) {
@@ -77,9 +82,11 @@ export class Stealthy {
   static async rollPerception(actor, roll) {
     if (!Stealthy.enableSpot) return;
     Stealthy.log('rollPerception', { actor, roll });
+    const floor = Math.max(roll.total, actor.system.skills.prc.passive);
+    let perception = { normal: floor, disadvantaged: floor };
     const label = game.i18n.localize("stealthy-spot-label");
     let spot = actor.effects.find(e => e.label === label);
-    let flag = { spot: Math.max(roll.total, actor.system.skills.prc.passive) };
+    let flag = { spot: perception };
 
     if (!spot) {
       // See if we can source from outside
@@ -289,7 +296,7 @@ Hooks.on('renderTokenHUD', (tokenHUD, html, app) => {
 
     const spot = actor?.effects.find(e => e.label === game.i18n.localize("stealthy-spot-label") && !e.disabled);
     if (spot) {
-      const value = spot.flags.stealthy?.spot ?? actor.system.skills.prc.passive;
+      const value = spot.flags.stealthy?.spot?.normal ?? spot.flags.stealthy?.spot ?? actor.system.skills.prc.passive;
       const inputBox = $(
         `<input id="ste_spt_inp_box" title="${game.i18n.localize("stealthy-spot-inputBox-title")}" type="text" name="spot_value_inp_box" value="${value}"></input>`
       );
@@ -297,7 +304,13 @@ Hooks.on('renderTokenHUD', (tokenHUD, html, app) => {
       inputBox.change(async (inputbox) => {
         if (token === undefined) return;
         let activeSpot = duplicate(spot);
-        activeSpot.flags.stealthy = { spot: Number(inputbox.target.value) };
+        const delta = Number(inputbox.target.value) - value;
+        activeSpot.flags.stealthy = {
+          spot: {
+            normal: value + delta,
+            disadvantaged: spot.flags.stealthy.spot.disadvantaged + delta
+          }
+        };
         await actor.updateEmbeddedDocuments('ActiveEffect', [activeSpot]);
       });
     }
