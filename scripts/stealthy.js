@@ -189,7 +189,7 @@ export class Stealthy {
   }
 
   static async getSpotting() {
-    return Stealthy.enableSpot
+    return Stealthy.enableSpot;
   }
 
 }
@@ -249,21 +249,35 @@ Hooks.on('renderTokenHUD', (tokenHUD, html, app) => {
   if (game.user.isGM == true) {
     const token = tokenHUD.object;
     const actor = token?.actor;
+
     const hidden = actor?.effects.find(e => e.label === game.i18n.localize("stealthy-hidden") && !e.disabled);
     if (hidden) {
-      if (game.system.id === 'dnd5e') {
-        const stealth = hidden.flags.stealthy?.hidden ?? actor.system.skills.ste.passive;
-        const stealthBox = $(
-          `<input id="ste_val_inp_box" title="${game.i18n.localize("stealthy-inputBox-title")}" type="text" name="stealth_value_inp_box" value="${stealth}"></input>`
-        );
-        html.find(".right").append(stealthBox);
-        stealthBox.change(async (inputbox) => {
-          if (token === undefined) return;
-          let activeHide = duplicate(hidden);
-          activeHide.flags['stealthy.hidden'] = Number(inputbox.target.value);
-          await actor.updateEmbeddedDocuments('ActiveEffect', [activeHide]);
-        });
-      }
+      const value = hidden.flags.stealthy?.hidden ?? actor.system.skills.ste.passive;
+      const inputBox = $(
+        `<input id="ste_hid_inp_box" title="${game.i18n.localize("stealthy-hidden-inputBox-title")}" type="text" name="hidden_value_inp_box" value="${value}"></input>`
+      );
+      html.find(".right").append(inputBox);
+      inputBox.change(async (inputbox) => {
+        if (token === undefined) return;
+        let activeHide = duplicate(hidden);
+        activeHide.flags['stealthy.hidden'] = Number(inputbox.target.value);
+        await actor.updateEmbeddedDocuments('ActiveEffect', [activeHide]);
+      });
+    }
+
+    const spot = actor?.effects.find(e => e.label === game.i18n.localize("stealthy-spot") && !e.disabled);
+    if (spot) {
+      const value = spot.flags.stealthy?.spot ?? actor.system.skills.prc.passive;
+      const inputBox = $(
+        `<input id="ste_spt_inp_box" title="${game.i18n.localize("stealthy-spot-inputBox-title")}" type="text" name="spot_value_inp_box" value="${value}"></input>`
+      );
+      html.find(".left").append(inputBox);
+      inputBox.change(async (inputbox) => {
+        if (token === undefined) return;
+        let activeSpot = duplicate(spot);
+        activeSpot.flags['stealthy.spot'] = Number(inputbox.target.value);
+        await actor.updateEmbeddedDocuments('ActiveEffect', [activeSpot]);
+      });
     }
   }
 });
