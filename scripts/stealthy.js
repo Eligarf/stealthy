@@ -76,6 +76,7 @@ export class Stealthy {
 
   static async rollPerception(actor, roll) {
     if (!Stealthy.enableSpot) return;
+    Stealthy.log('rollPerception', { actor, roll });
     const label = game.i18n.localize("stealthy-spot-label");
     let spot = actor.effects.find(e => e.label === label);
 
@@ -115,6 +116,7 @@ export class Stealthy {
   }
 
   static async rollStealth(actor, roll) {
+    Stealthy.log('rollStealth', { actor, roll });
     const label = game.i18n.localize("stealthy-hidden-label");
     let hidden = actor.effects.find(e => e.label === label);
 
