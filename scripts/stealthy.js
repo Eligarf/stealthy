@@ -78,24 +78,40 @@ export class Stealthy {
     if (!Stealthy.enableSpot) return;
     const label = game.i18n.localize("stealthy-spot");
     let spot = actor.effects.find(e => e.label === label);
+
     if (!spot) {
-      const newEffect = [{
-        label,
-        icon: 'icons/magic/perception/eye-ringed-green.webp',
-        duration: { turns: 1, seconds: 6 },
-        flags: {
-          convenientDescription: game.i18n.localize("stealthy-spot-description"),
-          'stealthy.spot': Math.max(roll.total, actor.system.skills.prc.passive),
-        },
-      }];
-      await actor.createEmbeddedDocuments('ActiveEffect', newEffect);
+      // See if we can source from outside
+      const source = game.settings.get('stealthy', 'hiddenSource');
+      if (source === 'ce') {
+        await game.dfreds.effectInterface.addEffect({ effectName: label, uuid: actor.uuid });
+        spot = actor.effects.find(e => e.label === label);
+      }
+      else if (source === 'cub') {
+        await game.cub.applyCondition(label, actor);
+        spot = actor.effects.find(e => e.label === label);
+      }
+
+      // If we haven't found an ouside source, create the default one
+      if (!spot) {
+        spot = {
+          label,
+          icon: 'icons/magic/perception/eye-ringed-green.webp',
+          duration: { turns: 1, seconds: 6 },
+          flags: {
+            convenientDescription: game.i18n.localize("stealthy-spot-description"),
+            'stealthy.spot': Math.max(roll.total, actor.system.skills.prc.passive),
+          },
+        };
+
+        await actor.createEmbeddedDocuments('ActiveEffect', newEffect);
+        return;
+      }
     }
-    else {
-      let activeSpot = duplicate(spot);
-      activeSpot.flags['stealthy.spot'] = Math.max(roll.total, actor.system.skills.prc.passive);
-      activeSpot.disabled = false;
-      await actor.updateEmbeddedDocuments('ActiveEffect', [activeSpot]);
-    }
+    
+    let activeSpot = duplicate(spot);
+    activeSpot.flags['stealthy.spot'] = Math.max(roll.total, actor.system.skills.prc.passive);
+    activeSpot.disabled = false;
+    await actor.updateEmbeddedDocuments('ActiveEffect', [activeSpot]);
   }
 
   static async rollStealth(actor, roll) {
@@ -117,7 +133,7 @@ export class Stealthy {
       // If we haven't found an ouside source, create the default one
       if (!hidden) {
         hidden = {
-          label: game.i18n.localize("stealthy-hidden"),
+          label,
           icon: 'icons/magic/perception/shadow-stealth-eyes-purple.webp',
           changes: [],
           flags: { convenientDescription: game.i18n.localize("stealthy-hidden-description") },
