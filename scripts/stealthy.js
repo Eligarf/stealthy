@@ -103,7 +103,7 @@ export class Stealthy {
           },
         };
 
-        await actor.createEmbeddedDocuments('ActiveEffect', newEffect);
+        await actor.createEmbeddedDocuments('ActiveEffect', [spot]);
         return;
       }
     }
