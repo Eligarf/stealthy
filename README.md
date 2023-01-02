@@ -22,15 +22,17 @@ Rolling a Stealth skill check will apply the Hidden condition to the actor and r
 ![stealth-roll](https://user-images.githubusercontent.com/16523503/209989026-e0d2dad2-8dc1-459c-8824-a2332ce8a9cd.gif)
 
 ### **Rolling Perception checks applies the Spot condition**
-Rolling a Perception check will add a one turn/six second duration Spot condition to the actor which records the result of that perception check (the passive value for Perception is used if this condition isn't present on the actor). The duration isn't from RAW, but is an approximation I've chosen that seems to work well in my games. A toggle named 'Active Spot' is available under token controls to suspend adding of the Spot condition as the GM sees fit. Toggling it off will also clear out all Spot effects.
+Rolling a Perception check will add a one turn/six second duration Spot condition to the actor which records the result of that perception check (the passive value for Perception is used if this condition isn't present on the actor). The duration isn't from RAW, but is an approximation I've chosen that seems to work well in my games.
 
-*The stored Perception value uses passive Perception as a floor to the Active roll result.*
+*The initial stored Perception value from the roll uses passive Perception as a floor.*
+
+A toggle named 'Active Spot' is available under token controls to suspend adding of the Spot condition as the GM sees fit. Toggling it off will also clear out all Spot effects.
 
 ![perception](https://user-images.githubusercontent.com/16523503/209989470-aac2bdb4-fee4-44c0-a6b7-916e69353081.gif)
 ![control](https://user-images.githubusercontent.com/16523503/210176825-3fcb3183-81db-4f64-836a-81f29199b580.png)
 
-### **GM Stealth Override**
-Once the Hidden condition is applied, GMs will see a token button with an input box on the bottom right which will shows the rolled Stealth result, or show the passive Stealth value if the Hidden condition was added directly without rolling. Changing the value in this input box will alter the stored Stealth result for any future visibility tests.
+### **GM Overrides**
+Once the Hidden or Spot conditions are applied, GMs will see token buttons with an input box on the bottom which shows the rolled values, or the passive values if the condition was added directly without rolling. Perception is on the left, Stealth is on the right. Changing the value in this input box will alter the stored results for future visibility tests while that condition remains.
 
 ![stealth-override](https://user-images.githubusercontent.com/16523503/209896031-675ab0e3-93e6-4d9c-8eeb-c11abe39fdab.gif)
 

@@ -30,8 +30,8 @@ export class Stealthy {
     let lightLevel = 2;
     let debugData = { perception };
 
-    if (target?.effects.find(e => e.label === 'Dark' && !e.disabled)) { lightLevel = 0; }
-    if (target?.effects.find(e => e.label === 'Dim' && !e.disabled)) { lightLevel = 1; }
+    if (target?.effects.find(e => e.label === game.i18n.localize("stealthy-dark-label") && !e.disabled)) { lightLevel = 0; }
+    if (target?.effects.find(e => e.label === game.i18n.localize("stealthy-dim-label") && !e.disabled)) { lightLevel = 1; }
     debugData.lightLevel = Stealthy.lightNumTable[lightLevel];
 
     // check if Darkvision is in use, bump light level accordingly
@@ -54,7 +54,7 @@ export class Stealthy {
   static isHidden5e(visionSource, hidden, target, config) {
     const source = visionSource.object?.actor;
     const stealth = hidden.flags.stealthy?.hidden ?? target.system.skills.ste.passive;
-    const spot = source?.effects.find(e => e.label === game.i18n.localize("stealthy-spot") && !e.disabled);
+    const spot = source?.effects.find(e => e.label === game.i18n.localize("stealthy-spot-label") && !e.disabled);
 
     // active perception loses ties, passive perception wins ties to simulate the
     // idea that active skills need to win outright to change the status quo. Passive
@@ -76,30 +76,46 @@ export class Stealthy {
 
   static async rollPerception(actor, roll) {
     if (!Stealthy.enableSpot) return;
-    const label = game.i18n.localize("stealthy-spot");
+    const label = game.i18n.localize("stealthy-spot-label");
     let spot = actor.effects.find(e => e.label === label);
+
     if (!spot) {
-      const newEffect = [{
-        label,
-        icon: 'icons/magic/perception/eye-ringed-green.webp',
-        duration: { turns: 1, seconds: 6 },
-        flags: {
-          convenientDescription: game.i18n.localize("stealthy-spot-description"),
-          'stealthy.spot': Math.max(roll.total, actor.system.skills.prc.passive),
-        },
-      }];
-      await actor.createEmbeddedDocuments('ActiveEffect', newEffect);
+      // See if we can source from outside
+      const source = game.settings.get('stealthy', 'hiddenSource');
+      if (source === 'ce') {
+        await game.dfreds.effectInterface.addEffect({ effectName: label, uuid: actor.uuid });
+        spot = actor.effects.find(e => e.label === label);
+      }
+      else if (source === 'cub') {
+        await game.cub.applyCondition(label, actor);
+        spot = actor.effects.find(e => e.label === label);
+      }
+
+      // If we haven't found an ouside source, create the default one
+      if (!spot) {
+        spot = {
+          label,
+          icon: 'icons/commodities/biological/eye-blue.webp',
+          duration: { turns: 1, seconds: 6 },
+          flags: {
+            convenientDescription: game.i18n.localize("stealthy-spot-description"),
+            'stealthy.spot': Math.max(roll.total, actor.system.skills.prc.passive),
+          },
+        };
+
+        await actor.createEmbeddedDocuments('ActiveEffect', newEffect);
+        return;
+      }
     }
-    else {
-      let activeSpot = duplicate(spot);
-      activeSpot.flags['stealthy.spot'] = Math.max(roll.total, actor.system.skills.prc.passive);
-      activeSpot.disabled = false;
-      await actor.updateEmbeddedDocuments('ActiveEffect', [activeSpot]);
-    }
+    
+    let activeSpot = duplicate(spot);
+    activeSpot.flags['stealthy.spot'] = Math.max(roll.total, actor.system.skills.prc.passive);
+    activeSpot.disabled = false;
+    await actor.updateEmbeddedDocuments('ActiveEffect', [activeSpot]);
   }
 
   static async rollStealth(actor, roll) {
-    const label = game.i18n.localize("stealthy-hidden");
+    const label = game.i18n.localize("stealthy-hidden-label");
     let hidden = actor.effects.find(e => e.label === label);
 
     if (!hidden) {
@@ -117,7 +133,7 @@ export class Stealthy {
       // If we haven't found an ouside source, create the default one
       if (!hidden) {
         hidden = {
-          label: game.i18n.localize("stealthy-hidden"),
+          label,
           icon: 'icons/magic/perception/shadow-stealth-eyes-purple.webp',
           changes: [],
           flags: { convenientDescription: game.i18n.localize("stealthy-hidden-description") },
@@ -162,7 +178,7 @@ export class Stealthy {
       config.object.document?.disposition === visionSource.object.document?.disposition;
 
     if (!ignoreFriendlyStealth) {
-      const hidden = target?.effects.find(e => e.label === game.i18n.localize("stealthy-hidden") && !e.disabled);
+      const hidden = target?.effects.find(e => e.label === game.i18n.localize("stealthy-hidden-label") && !e.disabled);
       if (hidden) {
         // This will be better implemented as an interface
         // First thing to do when adding second supported system
@@ -177,7 +193,7 @@ export class Stealthy {
     Stealthy.enableSpot = toggled;
 
     if (!toggled && game.user.isGM) {
-      const label = game.i18n.localize('stealthy-spot');
+      const label = game.i18n.localize('stealthy-spot-label');
       for (let token of canvas.tokens.placeables) {
         const actor = token.actor;
         const spot = actor.effects.find(e => e.label === label);
@@ -250,7 +266,7 @@ Hooks.on('renderTokenHUD', (tokenHUD, html, app) => {
     const token = tokenHUD.object;
     const actor = token?.actor;
 
-    const hidden = actor?.effects.find(e => e.label === game.i18n.localize("stealthy-hidden") && !e.disabled);
+    const hidden = actor?.effects.find(e => e.label === game.i18n.localize("stealthy-hidden-label") && !e.disabled);
     if (hidden) {
       const value = hidden.flags.stealthy?.hidden ?? actor.system.skills.ste.passive;
       const inputBox = $(
@@ -265,7 +281,7 @@ Hooks.on('renderTokenHUD', (tokenHUD, html, app) => {
       });
     }
 
-    const spot = actor?.effects.find(e => e.label === game.i18n.localize("stealthy-spot") && !e.disabled);
+    const spot = actor?.effects.find(e => e.label === game.i18n.localize("stealthy-spot-label") && !e.disabled);
     if (spot) {
       const value = spot.flags.stealthy?.spot ?? actor.system.skills.prc.passive;
       const inputBox = $(
@@ -300,7 +316,7 @@ Hooks.on('getSceneControlButtons', (controls) => {
   tokenControls.tools.push({
     icon: 'fa-solid fa-eyes',
     name: 'stealthy-spotting',
-    title: game.i18n.localize("stealthy-spotting-toggle"),
+    title: game.i18n.localize("stealthy-active-spot"),
     toggle: true,
     active: Stealthy.enableSpot,
     onClick: (toggled) => Stealthy.socket.executeForEveryone('toggleSpotting', toggled)
