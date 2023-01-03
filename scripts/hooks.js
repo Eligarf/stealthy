@@ -2,7 +2,7 @@ import { Stealthy } from "./stealthy.js";
 import { Stealthy5e } from "./systems/dnd5e.js";
 
 Hooks.once('init', () => {
-  Stealthy.system = new Stealthy5e();
+  if (game.system.id === 'dnd5e') Stealthy.system = new Stealthy5e();
 });
 
 Hooks.on('renderTokenHUD', (tokenHUD, html, app) => {
