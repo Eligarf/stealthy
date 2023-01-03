@@ -1,10 +1,10 @@
-import { Stealthy } from '../stealthy.js';
+import { Stealthy, StealthySystem } from '../stealthy.js';
 
-export class Stealthy5e {
+export class Stealthy5e extends StealthySystem {
 
   static LIGHT_LABELS = ['dark', 'dim', 'bright'];
 
-  static isHidden(visionSource, hidden, target, config) {
+  isHidden(visionSource, hidden, target, config) {
     const source = visionSource.object?.actor;
     const stealth = hidden.flags.stealthy?.hidden ?? target.system.skills.ste.passive;
     const spot = source?.effects.find(e => e.label === game.i18n.localize("stealthy-spot-label") && !e.disabled);
@@ -16,10 +16,10 @@ export class Stealthy5e {
     let perception;
 
     if (game.settings.get('stealthy', 'tokenLighting')) {
-      perception = Stealthy5e.adjustForLightingConditions(spotPair, visionSource, source, target);
+      perception = Stealthy5e.AdjustForLightingConditions(spotPair, visionSource, source, target);
     }
     else {
-      perception = Stealthy5e.adjustForDefaultConditions(spotPair, visionSource, source, target);
+      perception = Stealthy5e.AdjustForDefaultConditions(spotPair, visionSource, source, target);
     }
 
     if (perception <= stealth) {
@@ -29,7 +29,7 @@ export class Stealthy5e {
     return false;
   }
 
-  static basicVision(wrapped, visionSource, mode, config)
+  basicVision(wrapped, visionSource, mode, config)
   {
     const target = config.object?.actor;
     let noDarkvision = false;
@@ -51,7 +51,7 @@ export class Stealthy5e {
     return wrapped(visionSource, mode, config);
   }
 
-  static seeInvisibility(wrapped, visionSource, mode, config) {
+  seeInvisibility(wrapped, visionSource, mode, config) {
     return wrapped(visionSource, mode, config);
   }
 
@@ -79,7 +79,7 @@ export class Stealthy5e {
     }
 
     const label = game.i18n.localize("stealthy-spot-label");
-    await Stealthy.updateOrCreateEffect({
+    await Stealthy.UpdateOrCreateEffect({
       label,
       actor,
       flag: { spot: perception },
@@ -99,7 +99,7 @@ export class Stealthy5e {
     Stealthy.log('rollStealth', { actor, roll });
 
     const label = game.i18n.localize("stealthy-hidden-label");
-    await Stealthy.updateOrCreateEffect({
+    await Stealthy.UpdateOrCreateEffect({
       label,
       actor,
       flag: { hidden: roll.total },
@@ -135,18 +135,18 @@ export class Stealthy5e {
     });
   }
 
-  static getHiddenFlagAndValue(hidden) {
+  getHiddenFlagAndValue(hidden) {
     const value = hidden.flags.stealthy?.hidden ?? actor.system.skills.ste.passive;
     return { flag: {hidden: value}, value };
   }
 
-  static async setHiddenValue(actor, effect, flag, value) {
+  async setHiddenValue(actor, effect, flag, value) {
     flag.hidden = value;
     effect.flags.stealthy = flag;
     await actor.updateEmbeddedDocuments('ActiveEffect', [effect]);
   }
 
-  static getSpotFlagAndValue(spot) {
+  getSpotFlagAndValue(spot) {
     let flag = { normal: undefined, disadvantaged: undefined };
     const active = spot.flags.stealthy?.spot?.normal ?? spot.flags.stealthy?.spot;
     if (active !== undefined) {
@@ -155,12 +155,12 @@ export class Stealthy5e {
     }
     else {
       flag.normal = actor.system.skills.prc.passive;
-      disadvantaged = Stealthy5e.getPassivePerceptionWithDisadvantage(actor);
+      disadvantaged = Stealthy5e.GetPassivePerceptionWithDisadvantage(actor);
     }
     return { flag: {spot: flag}, value: flag.normal };
   }
 
-  static async setSpotValue(actor, effect, flag, value) {
+  async setSpotValue(actor, effect, flag, value) {
     const delta = value - flag.spot.normal;
     flag.spot.normal = value;
     flag.spot.disadvantaged += delta;
@@ -169,12 +169,12 @@ export class Stealthy5e {
     await actor.updateEmbeddedDocuments('ActiveEffect', [effect]);
   }
 
-  static getPassivePerceptionWithDisadvantage(source) {
+  static GetPassivePerceptionWithDisadvantage(source) {
     // todo: don't apply -5 if already disadvantaged
     return source.system.skills.prc.passive - 5;
   }
   
-  static adjustForDefaultConditions(spotPair, visionSource, source, target) {
+  static AdjustForDefaultConditions(spotPair, visionSource, source, target) {
     let perception = spotPair?.normal
       ?? spotPair
       ?? (source.system.skills.prc.passive + 1);
@@ -184,7 +184,7 @@ export class Stealthy5e {
 
   // check target Token Lighting conditions via effects usage
   // look for effects that indicate Dim or Dark condition on the token
-  static adjustForLightingConditions(spotPair, visionSource, source, target) {
+  static AdjustForLightingConditions(spotPair, visionSource, source, target) {
     let debugData = { spotPair };
     let perception;
 
@@ -218,7 +218,7 @@ export class Stealthy5e {
       debugData.cantSee = perception;
     }
     else if (lightBand === 1) {
-      let passiveDisadv = Stealthy5e.getPassivePerceptionWithDisadvantage(source);
+      let passiveDisadv = Stealthy5e.GetPassivePerceptionWithDisadvantage(source);
       if (active !== undefined) {
         value = spotPair?.disadvantaged ?? value - 5;
         debugData.activeDisadv = value;
@@ -235,7 +235,7 @@ export class Stealthy5e {
       debugData.seesBright = perception;
     }
 
-    Stealthy.log('adjustForLightingConditions5e', debugData);
+    // Stealthy.log('adjustForLightingConditions5e', debugData);
     return perception;
   }
 

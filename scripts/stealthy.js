@@ -1,10 +1,62 @@
-import { Stealthy5e } from './systems/dnd5e.js'
+export class StealthySystem {
+  constructor() {
+  }
+
+  testStealth(visionSource, config) {
+    const target = config.object?.actor;
+    const ignoreFriendlyStealth =
+      game.settings.get('stealthy', 'ignoreFriendlyStealth') &&
+      config.object.document?.disposition === visionSource.object.document?.disposition;
+
+    if (!ignoreFriendlyStealth) {
+      const hidden = target?.effects.find(e => e.label === game.i18n.localize("stealthy-hidden-label") && !e.disabled);
+      if (hidden) {
+        if (this.isHidden(visionSource, hidden, target, config)) return false;
+      }
+    }
+
+    return true;
+  }
+
+  isHidden(visionSource, hidden, target, config) {
+    return true;
+  }
+
+  basicVision(wrapped, visionSource, mode, config) {
+    return wrapped(visionSource, mode, config);
+  }
+
+  seeInvisibility(wrapped, visionSource, mode, config) {
+    return wrapped(visionSource, mode, config);
+  }
+
+  getHiddenFlagAndValue(hidden) {
+    return { flag: { hidden: undefined }, value: undefined };
+  }
+
+  async setHiddenValue(actor, effect, flag, value) {
+    flag.hidden = value;
+    effect.flags.stealthy = flag;
+    await actor.updateEmbeddedDocuments('ActiveEffect', [effect]);
+  }
+
+  getSpotFlagAndValue(spot) {
+    return { flag: { spot: undefined }, value: undefined };
+  }
+
+  async setSpotValue(actor, effect, flag, value) {
+    flag.spot = value;
+    effect.flags.stealthy = flag;
+    await actor.updateEmbeddedDocuments('ActiveEffect', [effect]);
+  }
+}
 
 export class Stealthy {
 
   static CONSOLE_COLORS = ['background: #222; color: #80ffff', 'color: #fff'];
   static socket;
   static enableSpot = true;
+  static system;
 
   static log(format, ...args) {
     const level = game.settings.get('stealthy', 'logLevel');
@@ -47,25 +99,7 @@ export class Stealthy {
     return Stealthy.enableSpot;
   }
 
-  static testVisionStealth(visionSource, config) {
-    const target = config.object?.actor;
-    const ignoreFriendlyStealth =
-      game.settings.get('stealthy', 'ignoreFriendlyStealth') &&
-      config.object.document?.disposition === visionSource.object.document?.disposition;
-
-    if (!ignoreFriendlyStealth) {
-      const hidden = target?.effects.find(e => e.label === game.i18n.localize("stealthy-hidden-label") && !e.disabled);
-      if (hidden) {
-        // This will be better implemented as an interface
-        // First thing to do when adding second supported system
-        if (Stealthy5e.isHidden(visionSource, hidden, target, config)) return false;
-      }
-    }
-
-    return true;
-  }
-
-  static async updateOrCreateEffect({ label, actor, flag, makeEffect }) {
+  static async UpdateOrCreateEffect({ label, actor, flag, makeEffect }) {
     let effect = actor.effects.find(e => e.label === label);
 
     if (!effect) {
