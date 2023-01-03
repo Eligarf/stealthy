@@ -1,10 +1,12 @@
-import { Stealthy, StealthySystem } from '../stealthy.js';
+import { Stealthy, StealthyBaseEngine } from '../stealthy.js';
 
-export class StealthyPF1 extends StealthySystem {
-  // Any extensions to this class will need to hook the relevant skills to
-  // capture spot and hidden test results into effects on the actor.
+export class StealthyPF1 extends StealthyBaseEngine {
 
   constructor() {
+    // Hook the relevant skills to capture spot and hidden test
+    // results into effects on the actor.
+    super();
+    console.warn(`Stealthy for '${game.system.id}' is stubbed out, needs development`);
   }
 
   testStealth(visionSource, config) {

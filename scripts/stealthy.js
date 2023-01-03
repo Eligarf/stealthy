@@ -1,8 +1,8 @@
-export class StealthySystem {
-  // Any extensions to this class will need to hook the relevant skills to
-  // capture spot and hidden test results into effects on the actor.
+export class StealthyBaseEngine {
 
   constructor() {
+    // Hook the relevant skills to capture spot and hidden test
+    // results into effects on the actor.
   }
 
   testStealth(visionSource, config) {
@@ -70,7 +70,7 @@ export class Stealthy {
   static CONSOLE_COLORS = ['background: #222; color: #80ffff', 'color: #fff'];
   static socket;
   static enableSpot = true;
-  static system;
+  static engine;
 
   static log(format, ...args) {
     const level = game.settings.get('stealthy', 'logLevel');

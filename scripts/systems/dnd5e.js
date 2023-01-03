@@ -1,6 +1,18 @@
-import { Stealthy, StealthySystem } from '../stealthy.js';
+import { Stealthy, StealthyBaseEngine } from '../stealthy.js';
 
-export class Stealthy5e extends StealthySystem {
+export class Stealthy5e extends StealthyBaseEngine {
+
+  constructor() {
+    super();
+    Hooks.on('dnd5e.rollSkill', async (actor, roll, skill) => {
+      if (skill === 'ste') {
+        await Stealthy5e.rollStealth(actor, roll);
+      }
+      else if (skill === 'prc') {
+        await Stealthy5e.rollPerception(actor, roll);
+      }
+    });
+  }
 
   static LIGHT_LABELS = ['dark', 'dim', 'bright'];
 
@@ -240,12 +252,3 @@ export class Stealthy5e extends StealthySystem {
   }
 
 }
-
-Hooks.on('dnd5e.rollSkill', async (actor, roll, skill) => {
-  if (skill === 'ste') {
-    await Stealthy5e.rollStealth(actor, roll);
-  }
-  else if (skill === 'prc') {
-    await Stealthy5e.rollPerception(actor, roll);
-  }
-});

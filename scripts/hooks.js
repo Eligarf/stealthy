@@ -1,15 +1,28 @@
 import { Stealthy } from "./stealthy.js";
 import { Stealthy5e } from "./systems/dnd5e.js";
+import { StealthyPF1 } from "./systems/pf1.js";
+import { StealthyPF2e } from "./systems/pf2e.js";
 
 Hooks.once('init', () => {
-  if (game.system.id === 'dnd5e') Stealthy.system = new Stealthy5e();
+  const engines = {
+    'dnd5e': () => { Stealthy.engine = new Stealthy5e(); },
+    'pf1': () => { Stealthy.engine = new StealthyPF1(); },
+    'pf2e': () => { Stealthy.engine = new StealthyPF2e(); },
+  }
+  const engine = engines[game.system.id];
+  if (engine) {
+    engine();
+  }
+  else {
+    console.error(`Stealthy doesn't yet support system id '${game.system.id}'`);
+  }
 });
 
 Hooks.on('renderTokenHUD', (tokenHUD, html, app) => {
   if (game.user.isGM == true) {
     const token = tokenHUD.object;
     const actor = token?.actor;
-    const system = Stealthy.system;
+    const system = Stealthy.engine;
 
     const hidden = actor?.effects.find(e => e.label === game.i18n.localize("stealthy-hidden-label") && !e.disabled);
     if (hidden) {
