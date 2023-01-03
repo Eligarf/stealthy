@@ -26,7 +26,7 @@ export class Stealthy {
 
   // check target Token Lighting conditions via effects usage
   // look for effects that indicate Dim or Dark condition on the token
-  static adjustForLightingConditions5e(spot, spotPair, visionSource, source, target) {
+  static adjustForLightingConditions5e(spotPair, visionSource, source, target) {
     let debugData = { spotPair };
 
     // What light band are we told we sit in?
@@ -38,7 +38,7 @@ export class Stealthy {
     // Adjust the light band based on conditions
     if (visionSource.visionMode?.id === 'darkvision') {
       lightBand = lightBand + 1;
-      debugData.darklightLevel = Stealthy.LIGHT_LABELS[lightBand];
+      debugData.foundryDarkvision = Stealthy.LIGHT_LABELS[lightBand];
     }
 
     // Extract the normal and disadvantaged perception values from the source
@@ -48,10 +48,12 @@ export class Stealthy {
     if (active !== undefined) {
       normal = active;
       disadv = spotPair?.disadv ?? normal - 5;
+      debugData.active = { normal, disadv };
     }
     else {
       normal = source.system.skills.prc.passive;
       disadv = normal - 5;
+      debugData.passive = { normal, disadv };
     }
 
     // dark = fail, dim = disadvantage, bright = normal
@@ -68,11 +70,11 @@ export class Stealthy {
       debugData.seesBright = perception;
     }
 
-    Stealthy.log('tokenLighting5e', debugData);
+    Stealthy.log('adjustForLightingConditions5e', debugData);
     return perception;
   }
 
-  static adjustForConditions5e(spot, spotPair, visionSource, source, target) {
+  static adjustForConditions5e(spotPair, visionSource, source, target) {
     let perception = spotPair?.normal
       ?? spotPair
       ?? (source.system.skills.prc.passive + 1);
@@ -91,10 +93,10 @@ export class Stealthy {
     let perception;
 
     if (game.settings.get('stealthy', 'tokenLighting')) {
-      perception = Stealthy.adjustForLightingConditions5e(spot, spotPair, visionSource, source, target);
+      perception = Stealthy.adjustForLightingConditions5e(spotPair, visionSource, source, target);
     }
     else {
-      perception = Stealthy.adjustForConditions5e(spot, spotPair, visionSource, source, target);
+      perception = Stealthy.adjustForConditions5e(spotPair, visionSource, source, target);
     }
 
     if (perception <= stealth) {
@@ -112,11 +114,20 @@ export class Stealthy {
 
     let perception = { normal: roll.total, disadvantaged: roll.total };
     if (!roll.hasDisadvantage && game.settings.get('stealthy', 'spotPair')) {
+      const dice = roll.dice[0];
       if (roll.hasAdvantage) {
-        Stealthy.log('pull out first die rolled as disadvantage roll');
+        const delta = dice.results[1].result - dice.results[0].result;
+        if (delta > 0) {
+          perception.disadvantaged -= delta;
+        }
       }
       else {
-        Stealthy.log('roll a 2nd die');
+        let disadvantageRoll = await new Roll(`1d20`).evaluate();
+        game.dice3d?.showForRoll(disadvantageRoll);
+        const delta = dice.results[0].result - disadvantageRoll.total;
+        if (delta > 0) {
+          perception.disadvantaged -= delta;
+        }
       }
     }
 
