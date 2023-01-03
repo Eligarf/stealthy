@@ -60,11 +60,7 @@ export class Stealthy5e extends StealthyBaseEngine {
       return wrapped(visionSource, ourMode, config);
     }
 
-    return wrapped(visionSource, mode, config);
-  }
-
-  seeInvisibility(wrapped, visionSource, mode, config) {
-    return wrapped(visionSource, mode, config);
+    return super.basicVision(wrapped, visionSource, mode, config);
   }
 
   static async rollPerception(actor, roll) {

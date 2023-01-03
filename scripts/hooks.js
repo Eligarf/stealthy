@@ -5,13 +5,13 @@ import { StealthyPF2e } from "./systems/pf2e.js";
 
 Hooks.once('init', () => {
   const engines = {
-    'dnd5e': () => { Stealthy.engine = new Stealthy5e(); },
-    'pf1': () => { Stealthy.engine = new StealthyPF1(); },
-    'pf2e': () => { Stealthy.engine = new StealthyPF2e(); },
+    'dnd5e': () => new Stealthy5e(),
+    'pf1': () => new StealthyPF1(),
+    'pf2e': () => new StealthyPF2e(),
   }
-  const engine = engines[game.system.id];
-  if (engine) {
-    engine();
+  const systemEngine = engines[game.system.id];
+  if (systemEngine) {
+    Stealthy.engine = systemEngine();
   }
   else {
     console.error(`Stealthy doesn't yet support system id '${game.system.id}'`);
