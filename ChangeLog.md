@@ -1,6 +1,7 @@
 # Pending
-* EXP: Generate normal/disadvantage results in Spot effect for all Perception rolls
-* EXP: Implement Dim/Dark flag effects on Perception checks for Foundry darkvision model
+* Built proper interface for dnd5e stealth engine, built stubs for pf1 and pf2e
+* Experimental: Convert Perception roll results into roll pairs for Spot, rolling an extra die if needed
+* Experimental: Implement Dim/Dark flag effects on Perception tests using Foundry darkvision model
 
 # v1.6.1
 * Fixed error creating default spot effect
