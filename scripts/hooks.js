@@ -1,13 +1,5 @@
 import { Stealthy } from "./stealthy.js";
-
-Hooks.on('dnd5e.rollSkill', async (actor, roll, skill) => {
-  if (skill === 'ste') {
-    await Stealthy.rollStealth(actor, roll);
-  }
-  else if (skill === 'prc') {
-    await Stealthy.rollPerception(actor, roll);
-  }
-});
+import { Stealthy5e } from "./systems/dnd5e.js";
 
 Hooks.on('renderTokenHUD', (tokenHUD, html, app) => {
   if (game.user.isGM == true) {
@@ -16,47 +8,27 @@ Hooks.on('renderTokenHUD', (tokenHUD, html, app) => {
 
     const hidden = actor?.effects.find(e => e.label === game.i18n.localize("stealthy-hidden-label") && !e.disabled);
     if (hidden) {
-      const value = hidden.flags.stealthy?.hidden ?? actor.system.skills.ste.passive;
+      let { flag, value } = Stealthy5e.getHiddenFlagAndValue(hidden);
       const inputBox = $(
         `<input id="ste_hid_inp_box" title="${game.i18n.localize("stealthy-hidden-inputBox-title")}" type="text" name="hidden_value_inp_box" value="${value}"></input>`
       );
       html.find(".right").append(inputBox);
       inputBox.change(async (inputbox) => {
         if (token === undefined) return;
-        let activeHide = duplicate(hidden);
-        activeHide.flags.stealthy = { hidden: Number(inputbox.target.value) };
-        await actor.updateEmbeddedDocuments('ActiveEffect', [activeHide]);
+        await Stealthy5e.setHiddenValue(actor, duplicate(hidden), flag, Number(inputbox.target.value));
       });
     }
 
     const spot = actor?.effects.find(e => e.label === game.i18n.localize("stealthy-spot-label") && !e.disabled);
     if (spot) {
-      let normal;
-      let disadv;
-      const active = spot.flags.stealthy?.spot?.normal ?? spot.flags.stealthy?.spot;
-      if (active !== undefined) {
-        normal = active;
-        disadv = spot.flags.stealthy?.spot?.disadvantaged ?? normal - 5;
-      }
-      else {
-        normal = actor.system.skills.prc.passive;
-        disadv = Stealthy.getPassivePerceptionWithDisadvantage(actor);
-      }
+      let { flag, value } = Stealthy5e.getSpotFlagAndValue(spot);
       const inputBox = $(
-        `<input id="ste_spt_inp_box" title="${game.i18n.localize("stealthy-spot-inputBox-title")}" type="text" name="spot_value_inp_box" value="${normal}"></input>`
+        `<input id="ste_spt_inp_box" title="${game.i18n.localize("stealthy-spot-inputBox-title")}" type="text" name="spot_value_inp_box" value="${value}"></input>`
       );
       html.find(".left").append(inputBox);
       inputBox.change(async (inputbox) => {
         if (token === undefined) return;
-        let activeSpot = duplicate(spot);
-        const delta = Number(inputbox.target.value) - normal;
-        activeSpot.flags.stealthy = {
-          spot: {
-            normal: normal + delta,
-            disadvantaged: disadv + delta
-          }
-        };
-        await actor.updateEmbeddedDocuments('ActiveEffect', [activeSpot]);
+        await Stealthy5e.setSpotValue(actor, duplicate(spot), flag, Number(inputbox.target.value));
       });
     }
   }
