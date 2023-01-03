@@ -41,21 +41,16 @@ export class Stealthy {
       debugData.foundryDarkvision = Stealthy.LIGHT_LABELS[lightBand];
     }
 
-    // Extract the normal and disadvantaged perception values from the source
+    // Extract the normal perception values from the source
     let active = spotPair?.normal ?? spotPair;
-    let normal;
-    let disadv;
-    let passiveDisadv;
+    let value;
     if (active !== undefined) {
-      normal = active;
-      disadv = spotPair?.disadv ?? normal - 5;
-      debugData.active = { normal, disadv };
+      value = active;
+      debugData.active = value;
     }
     else {
-      normal = source.system.skills.prc.passive;
-      passiveDisadv = Stealthy.getPassivePerceptionWithDisadvantage(source);
-      disadv = passiveDisadv;
-      debugData.passive = { normal, disadv };
+      value = source.system.skills.prc.passive;
+      debugData.passive = value;
     }
 
     // dark = fail, dim = disadvantage, bright = normal
@@ -64,13 +59,20 @@ export class Stealthy {
       debugData.cantSee = perception;
     }
     else if (lightBand === 1) {
-      passiveDisadv = passiveDisadv ?? Stealthy.getPassivePerceptionWithDisadvantage(source);
-      perception = Math.max(disadv, passiveDisadv);
+      passiveDisadv = Stealthy.getPassivePerceptionWithDisadvantage(source);
+      if (active !== undefined) {
+        value = spotPair?.disadv ?? value - 5;
+        debugData.activeDisadv = value;
+      }
+      else {
+        value = passiveDisadv;
+        debugData.passiveDisadv = value;
+      }
+      perception = Math.max(value, passiveDisadv);
       debugData.seesDim = perception;
-      debugData.passiveDisadvantage = passiveDisadv;
     }
     else {
-      perception = Math.max(normal, source.system.skills.prc.passive);
+      perception = Math.max(value, source.system.skills.prc.passive);
       debugData.seesBright = perception;
     }
 
