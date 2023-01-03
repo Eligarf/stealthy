@@ -45,6 +45,7 @@ export class Stealthy {
     let active = spotPair?.normal ?? spotPair;
     let normal;
     let disadv;
+    let passiveDisadv;
     if (active !== undefined) {
       normal = active;
       disadv = spotPair?.disadv ?? normal - 5;
@@ -52,7 +53,8 @@ export class Stealthy {
     }
     else {
       normal = source.system.skills.prc.passive;
-      disadv = normal - 5;
+      passiveDisadv = Stealthy.getPassivePerceptionWithDisadvantage(source);
+      disadv = passiveDisadv;
       debugData.passive = { normal, disadv };
     }
 
@@ -62,8 +64,10 @@ export class Stealthy {
       debugData.cantSee = perception;
     }
     else if (lightBand === 1) {
-      perception = Math.max(disadv, source.system.skills.prc.passive - 5);
+      passiveDisadv = passiveDisadv ?? Stealthy.getPassivePerceptionWithDisadvantage(source);
+      perception = Math.max(disadv, passiveDisadv);
       debugData.seesDim = perception;
+      debugData.passiveDisadvantage = passiveDisadv;
     }
     else {
       perception = Math.max(normal, source.system.skills.prc.passive);
@@ -104,6 +108,11 @@ export class Stealthy {
       return true;
     }
     return false;
+  }
+
+  static getPassivePerceptionWithDisadvantage(source) {
+    // todo: don't apply -5 if already disadvantaged
+    return source.system.skills.prc.passive - 5;
   }
 
   static enableSpot = true;
@@ -269,131 +278,3 @@ export class Stealthy {
   }
 
 }
-
-Hooks.once('setup', () => {
-  libWrapper.register(
-    'stealthy',
-    'DetectionModeBasicSight.prototype.testVisibility',
-    (wrapped, visionSource, mode, config = {}) => {
-      if (!Stealthy.testVisionStealth(visionSource, config)) return false;
-
-      const target = config.object?.actor;
-      let noDarkvision = false;
-      const ignoreFriendlyUmbralSight =
-        game.settings.get('stealthy', 'ignoreFriendlyUmbralSight') &&
-        config.object.document?.disposition === visionSource.object.document?.disposition;
-      if (!ignoreFriendlyUmbralSight && visionSource.visionMode?.id === 'darkvision') {
-        const umbralSight = target?.itemTypes?.feat?.find(f => f.name === game.i18n.localize('Umbral Sight'));
-        if (umbralSight) noDarkvision = true;
-      }
-
-      if (noDarkvision) {
-        Stealthy.log(`${visionSource.object.name}'s darkvision can't see ${config.object.name}`);
-        let ourMode = duplicate(mode);
-        ourMode.range = 0;
-        return wrapped(visionSource, ourMode, config);
-      }
-
-      return wrapped(visionSource, mode, config);
-    },
-    libWrapper.MIXED,
-    { perf_mode: libWrapper.PERF_FAST }
-  );
-
-  libWrapper.register(
-    'stealthy',
-    'DetectionModeInvisibility.prototype.testVisibility',
-    (wrapped, visionSource, mode, config = {}) => {
-      if (!Stealthy.testVisionStealth(visionSource, config)) return false;
-      return wrapped(visionSource, mode, config);
-    },
-    libWrapper.MIXED,
-    { perf_mode: libWrapper.PERF_FAST }
-  );
-});
-
-Hooks.on('dnd5e.rollSkill', async (actor, roll, skill) => {
-  if (skill === 'ste') {
-    await Stealthy.rollStealth(actor, roll);
-  }
-  else if (skill === 'prc') {
-    await Stealthy.rollPerception(actor, roll);
-  }
-});
-
-Hooks.on('renderTokenHUD', (tokenHUD, html, app) => {
-  if (game.user.isGM == true) {
-    const token = tokenHUD.object;
-    const actor = token?.actor;
-
-    const hidden = actor?.effects.find(e => e.label === game.i18n.localize("stealthy-hidden-label") && !e.disabled);
-    if (hidden) {
-      const value = hidden.flags.stealthy?.hidden ?? actor.system.skills.ste.passive;
-      const inputBox = $(
-        `<input id="ste_hid_inp_box" title="${game.i18n.localize("stealthy-hidden-inputBox-title")}" type="text" name="hidden_value_inp_box" value="${value}"></input>`
-      );
-      html.find(".right").append(inputBox);
-      inputBox.change(async (inputbox) => {
-        if (token === undefined) return;
-        let activeHide = duplicate(hidden);
-        activeHide.flags.stealthy = { hidden: Number(inputbox.target.value) };
-        await actor.updateEmbeddedDocuments('ActiveEffect', [activeHide]);
-      });
-    }
-
-    const spot = actor?.effects.find(e => e.label === game.i18n.localize("stealthy-spot-label") && !e.disabled);
-    if (spot) {
-      let normal;
-      let disadv;
-      const active = spot.flags.stealthy?.spot?.normal ?? spot.flags.stealthy?.spot;
-      if (active !== undefined) {
-        normal = active;
-        disadv = spot.flags.stealthy?.spot?.disadv ?? normal - 5;
-      }
-      else {
-        normal = actor.system.skills.prc.passive;
-        disadv = normal - 5;
-      }
-      const inputBox = $(
-        `<input id="ste_spt_inp_box" title="${game.i18n.localize("stealthy-spot-inputBox-title")}" type="text" name="spot_value_inp_box" value="${normal}"></input>`
-      );
-      html.find(".left").append(inputBox);
-      inputBox.change(async (inputbox) => {
-        if (token === undefined) return;
-        let activeSpot = duplicate(spot);
-        const delta = Number(inputbox.target.value) - normal;
-        activeSpot.flags.stealthy = {
-          spot: {
-            normal: normal + delta,
-            disadvantaged: disadv + delta
-          }
-        };
-        await actor.updateEmbeddedDocuments('ActiveEffect', [activeSpot]);
-      });
-    }
-  }
-});
-
-Hooks.once('socketlib.ready', () => {
-  Stealthy.socket = socketlib.registerModule('stealthy');
-  Stealthy.socket.register('toggleSpotting', Stealthy.toggleSpotting);
-  Stealthy.socket.register('getSpotting', Stealthy.getSpotting);
-});
-
-Hooks.on('getSceneControlButtons', (controls) => {
-  if (!game.user.isGM) return;
-  let tokenControls = controls.find(x => x.name === 'token');
-  tokenControls.tools.push({
-    icon: 'fa-solid fa-eyes',
-    name: 'stealthy-spotting',
-    title: game.i18n.localize("stealthy-active-spot"),
-    toggle: true,
-    active: Stealthy.enableSpot,
-    onClick: (toggled) => Stealthy.socket.executeForEveryone('toggleSpotting', toggled)
-  });
-});
-
-Hooks.once('ready', async () => {
-  if (!game.user.isGM)
-    Stealthy.enableSpot = await Stealthy.socket.executeAsGM('getSpotting');
-});
