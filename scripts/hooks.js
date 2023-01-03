@@ -36,7 +36,7 @@ Hooks.on('renderTokenHUD', (tokenHUD, html, app) => {
       const active = spot.flags.stealthy?.spot?.normal ?? spot.flags.stealthy?.spot;
       if (active !== undefined) {
         normal = active;
-        disadv = spot.flags.stealthy?.spot?.disadv ?? normal - 5;
+        disadv = spot.flags.stealthy?.spot?.disadvantaged ?? normal - 5;
       }
       else {
         normal = actor.system.skills.prc.passive;

@@ -98,6 +98,7 @@ export class Stealthy {
       ?? spotPair
       ?? (source.system.skills.prc.passive + 1);
     perception = Math.max(perception, source.system.skills.prc.passive);
+    return perception;
   }
 
   //########################## Skills #####################################
@@ -123,10 +124,12 @@ export class Stealthy {
           perception.disadvantaged -= delta;
         }
       }
+      Stealthy.log('perception', perception);
     }
 
+    const label = game.i18n.localize("stealthy-spot-label");
     await Stealthy.updateOrCreateEffect({
-      label: game.i18n.localize("stealthy-spot-label"),
+      label,
       actor,
       flag: { spot: perception },
       makeEffect: (flag, source) => ({
@@ -144,17 +147,20 @@ export class Stealthy {
   static async rollStealth(actor, roll) {
     Stealthy.log('rollStealth', { actor, roll });
 
+    const label = game.i18n.localize("stealthy-hidden-label");
     await Stealthy.updateOrCreateEffect({
-      label: game.i18n.localize("stealthy-hidden-label"),
+      label,
       actor,
       flag: { hidden: roll.total },
       makeEffect: (flag, source) => {
         let hidden = {
           label,
-          icon: 'icons/commodities/biological/eye-blue.webp',
-          duration: { turns: 1, seconds: 6 },
+          icon: 'icons/magic/perception/shadow-stealth-eyes-purple.webp',
+          changes: [],
           flags: {
-            convenientDescription: game.i18n.localize("stealthy-spot-description"),
+            convenientDescription: game.i18n.localize("stealthy-hidden-description"),
+            stealthy: flag,
+            core: { statusId: '1' },
           },
         };
         if (source === 'ae') {
@@ -185,7 +191,6 @@ export class Stealthy {
 
   static async updateOrCreateEffect({ label, actor, flag, makeEffect }) {
     let effect = actor.effects.find(e => e.label === label);
-    let flag = { spot: perception };
 
     if (!effect) {
       // See if we can source from outside
@@ -219,6 +224,7 @@ export class Stealthy {
   // look for effects that indicate Dim or Dark condition on the token
   static adjustForLightingConditions5e(spotPair, visionSource, source, target) {
     let debugData = { spotPair };
+    let perception;
 
     // What light band are we told we sit in?
     let lightBand = 2;
@@ -250,9 +256,9 @@ export class Stealthy {
       debugData.cantSee = perception;
     }
     else if (lightBand === 1) {
-      passiveDisadv = Stealthy.getPassivePerceptionWithDisadvantage(source);
+      let passiveDisadv = Stealthy.getPassivePerceptionWithDisadvantage(source);
       if (active !== undefined) {
-        value = spotPair?.disadv ?? value - 5;
+        value = spotPair?.disadvantaged ?? value - 5;
         debugData.activeDisadv = value;
       }
       else {
