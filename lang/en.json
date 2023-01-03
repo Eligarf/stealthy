@@ -26,5 +26,7 @@
   "stealthy-tokenLighting-name": "Check token lighting conditions",
   "stealthy-tokenLighting-hint": "Check for token effects that indicate lighting condition of the token. WARNING - only currently handles passive perception",
   "stealthy-dark-label": "Dark",
-  "stealthy-dim-label": "Dim"
+  "stealthy-dim-label": "Dim",
+  "stealthy-spotPair-name": "Roll second Perception die",
+  "stealthy-spotPair-hint": "Parse Perception roll results to have both a normal and disadvantaged result, rolling a second die if necessary"
 }

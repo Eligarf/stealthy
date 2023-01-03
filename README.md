@@ -60,12 +60,12 @@ D&D 5E treats skill contest ties as preserving the status quo, so use of passive
 For this approach we've broken this down into three pieces:
 - Detecting the light level on the token itself, which is independant of viewer. Stealthy is decoupled from figuring that out by just looking for 'Dim' or 'Dark' conditions on the token; a different module will manage this. Fingers crossed.
 - Remapping the dim/dark light level per viewer based on their viewing mode. At least 3 different mapping tables are needed:
+  - Foundry Darkvision: Dark -> Dim; Dim -> Bright **(Current Implementation)**
   - RAW 5E Darkvision: Dark -> Dim
-  - Foundry Darkvision: Dark -> Dim; Dim -> Bright
   - Demonsight: Dark -> Bright
 
-  After the light level is remapped, objects in 'Dark' don't get drawn and objects in 'Dim' would be tested against using disadvantaged perception.
-- Capturing the advantage/disadvantage state of the viewers perception in order to do the right thing when applying disadvantage in dim vision. We get these flags on the active rolls, and can generate an extra roll result we can store in our flag so that we have a result for disadvantage should we need it. The passive case could maybe be figured out by doing a silent rollSkill call for perception to see what flags were set.
+  After the light level is remapped, objects in 'Dark' get rejected and objects in 'Dim' would be tested against using disadvantaged perception.
+- Capturing the advantage/disadvantage state of the viewers perception in order to do the right thing when applying disadvantage in dim vision. We get these flags on the active rolls, and can generate an extra roll result we can store in our flag so that we have a result for disadvantage should we need it. **We don't have a cost-effective way to figure out pre-existing passive disadvantage on perception, so this edge case will cause those tokens to end up taking the -5 penalty twice. You have been warned.**
 
 ## Required modules
 * [lib-wrapper](https://foundryvtt.com/packages/lib-wrapper)

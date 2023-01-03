@@ -1,3 +1,7 @@
+# Pending
+* EXP: Generate normal/disadvantage results in Spot effect for all Perception rolls
+* EXP: Implement Dim/Dark flag effects on Perception checks for Foundry darkvision model
+
 # v1.6.1
 * Fixed error creating default spot effect
 
