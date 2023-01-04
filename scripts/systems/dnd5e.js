@@ -242,7 +242,7 @@ export class Stealthy5e extends StealthyBaseEngine {
       debugData.seesBright = perception;
     }
 
-    // Stealthy.log('adjustForLightingConditions5e', debugData);
+    Stealthy.log('adjustForLightingConditions5e', debugData);
     return perception;
   }
 
