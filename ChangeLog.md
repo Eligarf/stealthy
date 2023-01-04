@@ -2,7 +2,9 @@
 * Built proper interface for stealth engine
   - dnd5e: fully encapsulated
   - pf2e: need to adapt the active effects to the PF2e system implementation
-  - pf1: stubbed
+  - pf1: actually seems to "work"
+    - I assume take-10 perception for tokens without an active spot effect. It isn't RAW, but perhaps this is acceptable to the PF1 community.
+    - the PF1 actor sheet UI doesn't seem to have a way to delete the effects once they've been added by rolling
 * Experimental: Convert Perception roll results into roll pairs for Spot, rolling an extra die if needed
 * Experimental: Implement Dim/Dark flag effects on Perception tests using Foundry darkvision model
 
