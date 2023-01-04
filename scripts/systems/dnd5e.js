@@ -6,10 +6,10 @@ export class Stealthy5e extends StealthyBaseEngine {
     super();
     Hooks.on('dnd5e.rollSkill', async (actor, roll, skill) => {
       if (skill === 'ste') {
-        await Stealthy5e.rollStealth(actor, roll);
+        await this.rollStealth(actor, roll);
       }
       else if (skill === 'prc') {
-        await Stealthy5e.rollPerception(actor, roll);
+        await this.rollPerception(actor, roll);
       }
     });
   }
@@ -96,9 +96,9 @@ export class Stealthy5e extends StealthyBaseEngine {
     await actor.updateEmbeddedDocuments('ActiveEffect', [effect]);
   }
 
-  static async rollPerception(actor, roll) {
+  async rollPerception(actor, roll) {
     if (!game.stealthy.activeSpot) return;
-    Stealthy.log('rollPerception', { actor, roll });
+    Stealthy.log('Stealthy5e.rollPerception', { actor, roll });
 
     let perception = { normal: roll.total, disadvantaged: roll.total };
     if (!roll.hasDisadvantage && game.settings.get('stealthy', 'spotPair')) {
@@ -120,7 +120,7 @@ export class Stealthy5e extends StealthyBaseEngine {
     }
 
     const label = game.i18n.localize("stealthy-spot-label");
-    await Stealthy.UpdateOrCreateEffect({
+    await this.UpdateOrCreateEffect({
       label,
       actor,
       flag: { spot: perception },
@@ -136,11 +136,11 @@ export class Stealthy5e extends StealthyBaseEngine {
     });
   }
 
-  static async rollStealth(actor, roll) {
-    Stealthy.log('rollStealth', { actor, roll });
+  async rollStealth(actor, roll) {
+    Stealthy.log('Stealthy5e.rollStealth', { actor, roll });
 
     const label = game.i18n.localize("stealthy-hidden-label");
-    await Stealthy.UpdateOrCreateEffect({
+    await this.UpdateOrCreateEffect({
       label,
       actor,
       flag: { hidden: roll.total },

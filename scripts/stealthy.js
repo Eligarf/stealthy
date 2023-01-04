@@ -46,6 +46,35 @@ export class StealthyBaseEngine {
     return wrapped(visionSource, mode, config);
   }
 
+  async UpdateOrCreateEffect({ label, actor, flag, makeEffect }) {
+    let effect = actor.effects.find(e => e.label === label);
+
+    if (!effect) {
+      // See if we can source from outside
+      const source = game.settings.get('stealthy', 'hiddenSource');
+      if (source === 'ce') {
+        await game.dfreds.effectInterface.addEffect({ effectName: label, uuid: actor.uuid });
+        effect = actor.effects.find(e => e.label === label);
+      }
+      else if (source === 'cub') {
+        await game.cub.applyCondition(label, actor);
+        effect = actor.effects.find(e => e.label === label);
+      }
+
+      // If we haven't found an ouside source, create the default one
+      if (!effect) {
+        effect = makeEffect(flag, source);
+        await actor.createEmbeddedDocuments('ActiveEffect', [effect]);
+        return;
+      }
+    }
+
+    effect = duplicate(effect);
+    effect.flags.stealthy = flag;
+    effect.disabled = false;
+    await actor.updateEmbeddedDocuments('ActiveEffect', [effect]);
+  }
+
   getHiddenFlagAndValue(hidden) {
     // Return the data necessary for storing data about hidden, and the
     // value that should be shown on the token button input
@@ -132,35 +161,6 @@ export class Stealthy {
       else if (level === 'log')
         console.log(...colorizeOutput(format, ...args));
     }
-  }
-
-  static async UpdateOrCreateEffect({ label, actor, flag, makeEffect }) {
-    let effect = actor.effects.find(e => e.label === label);
-
-    if (!effect) {
-      // See if we can source from outside
-      const source = game.settings.get('stealthy', 'hiddenSource');
-      if (source === 'ce') {
-        await game.dfreds.effectInterface.addEffect({ effectName: label, uuid: actor.uuid });
-        effect = actor.effects.find(e => e.label === label);
-      }
-      else if (source === 'cub') {
-        await game.cub.applyCondition(label, actor);
-        effect = actor.effects.find(e => e.label === label);
-      }
-
-      // If we haven't found an ouside source, create the default one
-      if (!effect) {
-        effect = makeEffect(flag, source);
-        await actor.createEmbeddedDocuments('ActiveEffect', [effect]);
-        return;
-      }
-    }
-
-    effect = duplicate(effect);
-    effect.flags.stealthy = flag;
-    effect.disabled = false;
-    await actor.updateEmbeddedDocuments('ActiveEffect', [effect]);
   }
 
 }
