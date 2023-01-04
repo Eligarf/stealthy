@@ -62,6 +62,40 @@ export class Stealthy5e extends StealthyBaseEngine {
     return super.basicVision(wrapped, visionSource, mode, config);
   }
 
+  getHiddenFlagAndValue(hidden) {
+    const value = hidden.flags.stealthy?.hidden ?? actor.system.skills.ste.passive;
+    return { flag: { hidden: value }, value };
+  }
+
+  async setHiddenValue(actor, effect, flag, value) {
+    flag.hidden = value;
+    effect.flags.stealthy = flag;
+    await actor.updateEmbeddedDocuments('ActiveEffect', [effect]);
+  }
+
+  getSpotFlagAndValue(spot) {
+    let flag = { normal: undefined, disadvantaged: undefined };
+    const active = spot.flags.stealthy?.spot?.normal ?? spot.flags.stealthy?.spot;
+    if (active !== undefined) {
+      flag.normal = active;
+      flag.disadvantaged = spot.flags.stealthy?.spot?.disadvantaged ?? active - 5;
+    }
+    else {
+      flag.normal = actor.system.skills.prc.passive;
+      disadvantaged = Stealthy5e.GetPassivePerceptionWithDisadvantage(actor);
+    }
+    return { flag: { spot: flag }, value: flag.normal };
+  }
+
+  async setSpotValue(actor, effect, flag, value) {
+    const delta = value - flag.spot.normal;
+    flag.spot.normal = value;
+    flag.spot.disadvantaged += delta;
+    effect.flags.stealthy = flag;
+
+    await actor.updateEmbeddedDocuments('ActiveEffect', [effect]);
+  }
+
   static async rollPerception(actor, roll) {
     if (!game.stealthy.activeSpot) return;
     Stealthy.log('rollPerception', { actor, roll });
@@ -140,40 +174,6 @@ export class Stealthy5e extends StealthyBaseEngine {
         return hidden;
       }
     });
-  }
-
-  getHiddenFlagAndValue(hidden) {
-    const value = hidden.flags.stealthy?.hidden ?? actor.system.skills.ste.passive;
-    return { flag: { hidden: value }, value };
-  }
-
-  async setHiddenValue(actor, effect, flag, value) {
-    flag.hidden = value;
-    effect.flags.stealthy = flag;
-    await actor.updateEmbeddedDocuments('ActiveEffect', [effect]);
-  }
-
-  getSpotFlagAndValue(spot) {
-    let flag = { normal: undefined, disadvantaged: undefined };
-    const active = spot.flags.stealthy?.spot?.normal ?? spot.flags.stealthy?.spot;
-    if (active !== undefined) {
-      flag.normal = active;
-      flag.disadvantaged = spot.flags.stealthy?.spot?.disadvantaged ?? active - 5;
-    }
-    else {
-      flag.normal = actor.system.skills.prc.passive;
-      disadvantaged = Stealthy5e.GetPassivePerceptionWithDisadvantage(actor);
-    }
-    return { flag: { spot: flag }, value: flag.normal };
-  }
-
-  async setSpotValue(actor, effect, flag, value) {
-    const delta = value - flag.spot.normal;
-    flag.spot.normal = value;
-    flag.spot.disadvantaged += delta;
-    effect.flags.stealthy = flag;
-
-    await actor.updateEmbeddedDocuments('ActiveEffect', [effect]);
   }
 
   static GetPassivePerceptionWithDisadvantage(source) {

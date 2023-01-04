@@ -1,5 +1,8 @@
 # Pending
-* Built proper interface for dnd5e stealth engine, built stubs for pf1 and pf2e
+* Built proper interface for stealth engine
+  - dnd5e: fully encapsulated
+  - pf2e: need to adapt the active effects to the PF2e system implementation
+  - pf1: stubbed
 * Experimental: Convert Perception roll results into roll pairs for Spot, rolling an extra die if needed
 * Experimental: Implement Dim/Dark flag effects on Perception tests using Foundry darkvision model
 
