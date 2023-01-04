@@ -41,8 +41,7 @@ export class Stealthy5e extends StealthyBaseEngine {
     return false;
   }
 
-  basicVision(wrapped, visionSource, mode, config)
-  {
+  basicVision(wrapped, visionSource, mode, config) {
     const target = config.object?.actor;
     let noDarkvision = false;
     const ignoreFriendlyUmbralSight =
@@ -64,7 +63,7 @@ export class Stealthy5e extends StealthyBaseEngine {
   }
 
   static async rollPerception(actor, roll) {
-    if (!Stealthy.enableSpot) return;
+    if (!game.stealthy.activeSpot) return;
     Stealthy.log('rollPerception', { actor, roll });
 
     let perception = { normal: roll.total, disadvantaged: roll.total };
@@ -77,7 +76,7 @@ export class Stealthy5e extends StealthyBaseEngine {
         }
       }
       else {
-        let disadvantageRoll = await new Roll(`1d20`).evaluate();
+        let disadvantageRoll = await new Roll(`1d20`).evaluate({ async: true });
         game.dice3d?.showForRoll(disadvantageRoll);
         const delta = dice.results[0].result - disadvantageRoll.total;
         if (delta > 0) {
@@ -145,7 +144,7 @@ export class Stealthy5e extends StealthyBaseEngine {
 
   getHiddenFlagAndValue(hidden) {
     const value = hidden.flags.stealthy?.hidden ?? actor.system.skills.ste.passive;
-    return { flag: {hidden: value}, value };
+    return { flag: { hidden: value }, value };
   }
 
   async setHiddenValue(actor, effect, flag, value) {
@@ -165,7 +164,7 @@ export class Stealthy5e extends StealthyBaseEngine {
       flag.normal = actor.system.skills.prc.passive;
       disadvantaged = Stealthy5e.GetPassivePerceptionWithDisadvantage(actor);
     }
-    return { flag: {spot: flag}, value: flag.normal };
+    return { flag: { spot: flag }, value: flag.normal };
   }
 
   async setSpotValue(actor, effect, flag, value) {
@@ -181,7 +180,7 @@ export class Stealthy5e extends StealthyBaseEngine {
     // todo: don't apply -5 if already disadvantaged
     return source.system.skills.prc.passive - 5;
   }
-  
+
   static AdjustForDefaultConditions(spotPair, visionSource, source, target) {
     let perception = spotPair?.normal
       ?? spotPair
@@ -248,3 +247,8 @@ export class Stealthy5e extends StealthyBaseEngine {
   }
 
 }
+
+Hooks.once('init', () => {
+  console.log('========> dnd5e init');
+  Stealthy.engines['dnd5e'] = () => new Stealthy5e();
+});

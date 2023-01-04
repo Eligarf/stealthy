@@ -5,9 +5,9 @@ Hooks.once('setup', () => {
     'stealthy',
     'DetectionModeBasicSight.prototype.testVisibility',
     (wrapped, visionSource, mode, config = {}) => {
-      const system = Stealthy.engine;
-      if (!system.testStealth(visionSource, config)) return false;
-      return system.basicVision(wrapped, visionSource, mode, config);
+      const engine = game.stealthy.engine;
+      if (!engine.testStealth(visionSource, config)) return false;
+      return engine.basicVision(wrapped, visionSource, mode, config);
     },
     libWrapper.MIXED,
     { perf_mode: libWrapper.PERF_FAST }
@@ -17,9 +17,9 @@ Hooks.once('setup', () => {
     'stealthy',
     'DetectionModeInvisibility.prototype.testVisibility',
     (wrapped, visionSource, mode, config = {}) => {
-      const system = Stealthy.engine;
-      if (!system.testStealth(visionSource, config)) return false;
-      return system.seeInvisibility(wrapped, visionSource, mode, config);
+      const engine = game.stealthy.engine;
+      if (!engine.testStealth(visionSource, config)) return false;
+      return engine.seeInvisibility(wrapped, visionSource, mode, config);
     },
     libWrapper.MIXED,
     { perf_mode: libWrapper.PERF_FAST }

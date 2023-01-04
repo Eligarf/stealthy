@@ -3,6 +3,14 @@ export class StealthyBaseEngine {
   constructor() {
     // Hook the relevant skills to capture spot and hidden test
     // results into effects on the actor.
+
+    // new implementations need to add something like the following
+    // at file scope so that the Stealthy can find the engine during
+    // setup
+
+    // Hooks.once('init', () => {
+    //   Stealthy.engines['game-system-id'] = () => new StealthyGameSystem();
+    // });
   }
 
   testStealth(visionSource, config) {
@@ -67,10 +75,38 @@ export class StealthyBaseEngine {
 
 export class Stealthy {
 
+  constructor(makeEngine) {
+    this.engine = makeEngine();
+    this.activeSpot = true;
+    this.socket = null;
+    this.socket = socketlib.registerModule('stealthy');
+    this.socket.register('ToggleActiveSpot', Stealthy.ToggleActiveSpot);
+    this.socket.register('GetActiveSpot', Stealthy.GetActiveSpot);
+  }
+
+  static async ToggleActiveSpot(toggled) {
+    Stealthy.log(`ToggleActiveSpot <= ${toggled}`);
+    game.stealthy.activeSpot = toggled;
+
+    if (!toggled && game.user.isGM) {
+      const label = game.i18n.localize('stealthy-spot-label');
+      for (let token of canvas.tokens.placeables) {
+        const actor = token.actor;
+        const spot = actor.effects.find(e => e.label === label);
+        if (spot) {
+          actor.deleteEmbeddedDocuments('ActiveEffect', [spot.id]);
+        }
+      }
+    }
+  }
+
+  static async GetActiveSpot() {
+    Stealthy.log(`GetActiveSpot => ${game.stealthy.activeSpot}`);
+    return game.stealthy.activeSpot;
+  }
+
   static CONSOLE_COLORS = ['background: #222; color: #80ffff', 'color: #fff'];
-  static socket;
-  static enableSpot = true;
-  static engine;
+  static engines = {};
 
   static log(format, ...args) {
     const level = game.settings.get('stealthy', 'logLevel');
@@ -90,27 +126,6 @@ export class Stealthy {
       else if (level === 'log')
         console.log(...colorizeOutput(format, ...args));
     }
-  }
-
-  //########### Socket Functions ##############
-
-  static async toggleSpotting(toggled) {
-    Stealthy.enableSpot = toggled;
-
-    if (!toggled && game.user.isGM) {
-      const label = game.i18n.localize('stealthy-spot-label');
-      for (let token of canvas.tokens.placeables) {
-        const actor = token.actor;
-        const spot = actor.effects.find(e => e.label === label);
-        if (spot) {
-          actor.deleteEmbeddedDocuments('ActiveEffect', [spot.id]);
-        }
-      }
-    }
-  }
-
-  static async getSpotting() {
-    return Stealthy.enableSpot;
   }
 
   static async UpdateOrCreateEffect({ label, actor, flag, makeEffect }) {

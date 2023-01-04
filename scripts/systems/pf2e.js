@@ -68,3 +68,8 @@ export class StealthyPF2e extends StealthyBaseEngine {
     await actor.updateEmbeddedDocuments('ActiveEffect', [effect]);
   }
 }
+
+Hooks.once('init', () => {
+  console.log('========> pf2e init');
+  Stealthy.engines['pf2e'] = () => new StealthyPF2e();
+});
