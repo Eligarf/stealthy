@@ -1,8 +1,8 @@
 # v1.7.0
-* PF1 engine sort-of working, needs some kind of cleanup for UI
-* PF2e engine parked due to Active Effect incompatibility
+* PF1 support - effect cleanup is macro based so buyer beware
+* No PF2e support due to active effect incompatibility
 * Experimental: Converted Perception roll results into roll pairs for Spot, rolling an extra die if needed
-* Experimental: Dim condition on observed token applies disadvantage to Perception tests
+* Experimental: Dim and Hidden conditions on viewed token applies disadvantage to Perception during visibility test
 
 # v1.6.1
 * Fixed error creating default spot effect
