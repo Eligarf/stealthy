@@ -249,6 +249,5 @@ export class Stealthy5e extends StealthyBaseEngine {
 }
 
 Hooks.once('init', () => {
-  console.log('========> dnd5e init');
-  Stealthy.engines['dnd5e'] = () => new Stealthy5e();
+  Stealthy.RegisterEngine('dnd5e', () => new Stealthy5e());
 });

@@ -70,6 +70,5 @@ export class StealthyPF2e extends StealthyBaseEngine {
 }
 
 Hooks.once('init', () => {
-  console.log('========> pf2e init');
-  Stealthy.engines['pf2e'] = () => new StealthyPF2e();
+  Stealthy.RegisterEngine('pf2e', () => new StealthyPF2e());
 });
