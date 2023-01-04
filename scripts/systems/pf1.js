@@ -62,15 +62,7 @@ export class StealthyPF1 extends StealthyBaseEngine {
       label,
       actor,
       flag: { spot: message.rolls[0].total },
-      makeEffect: (flag, source) => ({
-        label,
-        icon: 'icons/commodities/biological/eye-blue.webp',
-        duration: { turns: 1, seconds: 6 },
-        flags: {
-          convenientDescription: game.i18n.localize("stealthy-spot-description"),
-          stealthy: flag
-        },
-      })
+      makeEffect: this.makeSpotEffect(label)
     });
   }
 
@@ -82,35 +74,7 @@ export class StealthyPF1 extends StealthyBaseEngine {
       label,
       actor,
       flag: { hidden: message.rolls[0].total },
-      makeEffect: (flag, source) => {
-        let hidden = {
-          label,
-          icon: 'icons/magic/perception/shadow-stealth-eyes-purple.webp',
-          changes: [],
-          flags: {
-            convenientDescription: game.i18n.localize("stealthy-hidden-description"),
-            stealthy: flag,
-            core: { statusId: '1' },
-          },
-        };
-        if (source === 'ae') {
-          if (typeof TokenMagic !== 'undefined') {
-            hidden.changes.push({
-              key: 'macro.tokenMagic',
-              mode: CONST.ACTIVE_EFFECT_MODES.CUSTOM,
-              value: 'fog'
-            });
-          }
-          else if (typeof ATLUpdate !== 'undefined') {
-            hidden.changes.push({
-              key: 'ATL.alpha',
-              mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
-              value: '0.5'
-            });
-          }
-        }
-        return hidden;
-      }
+      makeEffect: this.makeHiddenEffect(label)
     });
   }
 }

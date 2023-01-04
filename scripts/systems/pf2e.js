@@ -9,22 +9,6 @@ export class StealthyPF2e extends StealthyBaseEngine {
     console.warn(`Stealthy for '${game.system.id}' is stubbed out, needs development`);
   }
 
-  testStealth(visionSource, config) {
-    const target = config.object?.actor;
-    const ignoreFriendlyStealth =
-      game.settings.get('stealthy', 'ignoreFriendlyStealth') &&
-      config.object.document?.disposition === visionSource.object.document?.disposition;
-
-    if (!ignoreFriendlyStealth) {
-      const hidden = target?.effects.find(e => e.label === game.i18n.localize("stealthy-hidden-label") && !e.disabled);
-      if (hidden) {
-        if (this.isHidden(visionSource, hidden, target, config)) return false;
-      }
-    }
-
-    return true;
-  }
-
   isHidden(visionSource, hidden, target, config) {
     // Implement your system's method for testing spot data vs hidden data
     // This should would in the absence of a spot effect on the viewer, using
@@ -32,14 +16,16 @@ export class StealthyPF2e extends StealthyBaseEngine {
     return false;
   }
 
-  basicVision(wrapped, visionSource, mode, config) {
-    // Any special filtering beyond stealth testing is handled here, like being invisible to darkvision/etc.
-    return wrapped(visionSource, mode, config);
+  makeHiddenEffect(label) {
+    console.error(`'${game.system.id}' can't make a Hidden effect. Heavy lifting goes here.`);
   }
 
-  seeInvisibility(wrapped, visionSource, mode, config) {
-    // Any special filtering beyond stealth testing is handled here.
-    return wrapped(visionSource, mode, config);
+  makeSpotEffect(label) {
+    console.error(`'${game.system.id}' isn't make a Spot effect. Heavy lifting goes here.`);
+  }
+
+  async updateOrCreateEffect({ label, actor, flag, makeEffect }) {
+    console.error(`'${game.system.id}' isn't compatible with Active Effect use. Heavy lifting goes here.`);
   }
 
   getHiddenFlagAndValue(hidden) {
