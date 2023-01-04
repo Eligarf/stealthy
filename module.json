@@ -34,7 +34,8 @@
     ]
   },
   "system": [
-    "dnd5e"
+    "dnd5e",
+    "pf1"
   ],
   "esmodules": [
     "scripts/config.js",
