@@ -12,7 +12,7 @@
       "flags": {}
     }
   ],
-  "version": "1.6.1",
+  "version": "2.0.0",
   "compatibility": {
     "minimum": "10.291",
     "verified": "10.291"
@@ -33,9 +33,18 @@
       }
     ]
   },
+  "system": [
+    "dnd5e",
+    "pf1"
+  ],
   "esmodules": [
     "scripts/config.js",
-    "scripts/stealthy.js"
+    "scripts/stealthy.js",
+    "scripts/hooks.js",
+    "scripts/patches.js",
+    "scripts/systems/dnd5e.js",
+    "scripts/systems/pf1.js",
+    "scripts/systems/pf2e.js"
   ],
   "languages": [
     {
@@ -46,7 +55,7 @@
     }
   ],
   "socket": true,
-  "download": "https://github.com/Eligarf/stealthy/releases/download/v1.6.1/stealthy.zip",
+  "download": "https://github.com/Eligarf/stealthy/releases/download/v2.0.0/stealthy.zip",
   "changelog": "https://raw.githubusercontent.com/eligarf/stealthy/release/ChangeLog.md",
   "url": "https://github.com/Eligarf/stealthy",
   "manifest": "https://github.com/Eligarf/stealthy/releases/latest/download/module.json",

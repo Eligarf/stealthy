@@ -14,14 +14,16 @@ Hooks.once('ready', () => {
     default: true,
   });
 
-  game.settings.register('stealthy', 'ignoreFriendlyUmbralSight', {
-    name: game.i18n.localize("stealthy-ignoreFriendlyUmbralSight-name"),
-    hint: game.i18n.localize("stealthy-ignoreFriendlyUmbralSight-hint"),
-    scope: 'world',
-    config: true,
-    type: Boolean,
-    default: false,
-  });
+  if (game.system.id === 'dnd5e') {
+    game.settings.register('stealthy', 'ignoreFriendlyUmbralSight', {
+      name: game.i18n.localize("stealthy-ignoreFriendlyUmbralSight-name"),
+      hint: game.i18n.localize("stealthy-ignoreFriendlyUmbralSight-hint"),
+      scope: 'world',
+      config: true,
+      type: Boolean,
+      default: false,
+    });
+  }
 
   let sources = {
     'none': game.i18n.localize("stealthy-source-min"),
@@ -60,14 +62,31 @@ Hooks.once('ready', () => {
     default: 'none'
   });
 
-  game.settings.register('stealthy', 'tokenLighting', {
-    name: game.i18n.localize("stealthy-tokenLighting-name"),
-    hint: game.i18n.localize("stealthy-tokenLighting-hint"),
-    scope: 'world',
-    config: true,
-    type: Boolean,
-    default: false,
-  });
+  if (game.system.id === 'dnd5e') {
+    game.settings.register('stealthy', 'tokenLighting', {
+      name: game.i18n.localize("stealthy-tokenLighting-name"),
+      hint: game.i18n.localize("stealthy-tokenLighting-hint"),
+      scope: 'world',
+      config: true,
+      type: Boolean,
+      default: false,
+    });
+
+    game.settings.register('stealthy', 'spotPair', {
+      name: game.i18n.localize("stealthy-spotPair-name"),
+      hint: game.i18n.localize("stealthy-spotPair-hint"),
+      scope: 'world',
+      config: true,
+      type: Boolean,
+      default: false,
+    });
+  }
 
   Stealthy.log(`Initialized ${moduleVersion}`);
+});
+
+Hooks.on('renderSettingsConfig', (app, html, data) => {
+  $('<div>').addClass('form-group group-header').html(game.i18n.localize("stealthy-config-general")).insertBefore($('[name="stealthy.ignoreFriendlyStealth"]').parents('div.form-group:first'));
+  $('<div>').addClass('form-group group-header').html(game.i18n.localize("stealthy-config-debug")).insertBefore($('[name="stealthy.logLevel"]').parents('div.form-group:first'));
+  $('<div>').addClass('form-group group-header').html(game.i18n.localize("stealthy-config-experimental")).insertBefore($('[name="stealthy.tokenLighting"]').parents('div.form-group:first'));
 });
