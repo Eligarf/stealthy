@@ -58,7 +58,12 @@ Stealthy will not automatically remove the Hidden condition - the dnd5e [Skulker
 D&D 5E treats skill contest ties as preserving the status quo, so use of passive value for either skill makes a claim of owning the status quo and thus winning ties. If Perception and Stealth are both passive, I assume Stealth takes the active role of wanting to change the status quo from visible to hidden. An active Perception check is only necessary if the passive Perception was beaten by Stealth, so in this case Hidden is now the status quo condition and Stealth wins ties with the active result. More simply, **ties are won by passive Perception and lost by active Perception.**
 
 ## Other systems
-I've isolated out all the specific dnd5e code I wrote into its own engine object, and have put in stubs for pf1 and pf2e as well, although I am unlikely to fill these out as I don't have active games using them. I'd be happy to take any help offered to make Stealthy work in other systems! Stealth engines don't have to live inside Stealthy's codebase - they can be added externally like below:
+- PF1 sort of works!
+  - I assume take-10 perception for tokens without an active spot effect. It isn't RAW, but perhaps this is acceptable to the PF1 community.
+  - the PF1 actor sheet UI doesn't seem to have a way to delete the effects once they've been added by rolling
+- PF2e seems to have completely replaced the Active Effect system which Stealthy uses as its backbone, so some heavy lifting has to be done to adapt it.
+
+I've isolated out all the specific dnd5e code I wrote into its own engine object and built a sort-of working implementation for PF1 - see changelog for caveats. I'd be happy to take any help offered to make Stealthy work in other systems! Stealth engines don't have to live inside Stealthy's codebase - they can be added externally like below:
 ```
 Hooks.once('init', () => {
   Stealthy.RegisterEngine('pf1', () => new StealthyPF1());
