@@ -46,7 +46,7 @@ export class StealthyBaseEngine {
     return wrapped(visionSource, mode, config);
   }
 
-  async UpdateOrCreateEffect({ label, actor, flag, makeEffect }) {
+  async updateOrCreateEffect({ label, actor, flag, makeEffect }) {
     let effect = actor.effects.find(e => e.label === label);
 
     if (!effect) {

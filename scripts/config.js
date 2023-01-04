@@ -14,14 +14,16 @@ Hooks.once('ready', () => {
     default: true,
   });
 
-  game.settings.register('stealthy', 'ignoreFriendlyUmbralSight', {
-    name: game.i18n.localize("stealthy-ignoreFriendlyUmbralSight-name"),
-    hint: game.i18n.localize("stealthy-ignoreFriendlyUmbralSight-hint"),
-    scope: 'world',
-    config: true,
-    type: Boolean,
-    default: false,
-  });
+  if (game.system.id === 'dnd5e') {
+    game.settings.register('stealthy', 'ignoreFriendlyUmbralSight', {
+      name: game.i18n.localize("stealthy-ignoreFriendlyUmbralSight-name"),
+      hint: game.i18n.localize("stealthy-ignoreFriendlyUmbralSight-hint"),
+      scope: 'world',
+      config: true,
+      type: Boolean,
+      default: false,
+    });
+  }
 
   let sources = {
     'none': game.i18n.localize("stealthy-source-min"),
@@ -60,23 +62,25 @@ Hooks.once('ready', () => {
     default: 'none'
   });
 
-  game.settings.register('stealthy', 'tokenLighting', {
-    name: game.i18n.localize("stealthy-tokenLighting-name"),
-    hint: game.i18n.localize("stealthy-tokenLighting-hint"),
-    scope: 'world',
-    config: true,
-    type: Boolean,
-    default: false,
-  });
+  if (game.system.id === 'dnd5e') {
+    game.settings.register('stealthy', 'tokenLighting', {
+      name: game.i18n.localize("stealthy-tokenLighting-name"),
+      hint: game.i18n.localize("stealthy-tokenLighting-hint"),
+      scope: 'world',
+      config: true,
+      type: Boolean,
+      default: false,
+    });
 
-  game.settings.register('stealthy', 'spotPair', {
-    name: game.i18n.localize("stealthy-spotPair-name"),
-    hint: game.i18n.localize("stealthy-spotPair-hint"),
-    scope: 'world',
-    config: true,
-    type: Boolean,
-    default: false,
-  });
+    game.settings.register('stealthy', 'spotPair', {
+      name: game.i18n.localize("stealthy-spotPair-name"),
+      hint: game.i18n.localize("stealthy-spotPair-hint"),
+      scope: 'world',
+      config: true,
+      type: Boolean,
+      default: false,
+    });
+  }
 
   Stealthy.log(`Initialized ${moduleVersion}`);
 });
