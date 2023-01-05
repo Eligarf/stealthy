@@ -2,10 +2,10 @@ import { Stealthy } from "./stealthy.js";
 
 Hooks.once('ready', () => {
 
-  const module = game.modules.get('stealthy');
+  const module = game.modules.get(Stealthy.MODULE_ID);
   const moduleVersion = module.version;
 
-  game.settings.register('stealthy', 'ignoreFriendlyStealth', {
+  game.settings.register(Stealthy.MODULE_ID, 'ignoreFriendlyStealth', {
     name: game.i18n.localize("stealthy.ignoreFriendlyStealth.name"),
     hint: game.i18n.localize("stealthy.ignoreFriendlyStealth.hint"),
     scope: 'world',
@@ -15,7 +15,7 @@ Hooks.once('ready', () => {
   });
 
   if (game.system.id === 'dnd5e') {
-    game.settings.register('stealthy', 'ignoreFriendlyUmbralSight', {
+    game.settings.register(Stealthy.MODULE_ID, 'ignoreFriendlyUmbralSight', {
       name: game.i18n.localize("stealthy.dnd5e.ignoreFriendlyUmbralSight.name"),
       hint: game.i18n.localize("stealthy.dnd5e.ignoreFriendlyUmbralSight.hint"),
       scope: 'world',
@@ -39,7 +39,7 @@ Hooks.once('ready', () => {
     defaultSource = 'ce';
   }
 
-  game.settings.register('stealthy', 'hiddenSource', {
+  game.settings.register(Stealthy.MODULE_ID, 'hiddenSource', {
     name: game.i18n.localize("stealthy.source.name"),
     hint: game.i18n.localize("stealthy.source.hint"),
     scope: 'world',
@@ -49,7 +49,7 @@ Hooks.once('ready', () => {
     default: defaultSource
   });
 
-  game.settings.register('stealthy', 'logLevel', {
+  game.settings.register(Stealthy.MODULE_ID, 'logLevel', {
     name: game.i18n.localize("stealthy.logLevel.name"),
     scope: 'client',
     config: true,
@@ -63,7 +63,7 @@ Hooks.once('ready', () => {
   });
 
   if (game.system.id === 'dnd5e') {
-    game.settings.register('stealthy', 'tokenLighting', {
+    game.settings.register(Stealthy.MODULE_ID, 'tokenLighting', {
       name: game.i18n.localize("stealthy.dnd5e.tokenLighting.name"),
       hint: game.i18n.localize("stealthy.dnd5e.tokenLighting.hint"),
       scope: 'world',
@@ -72,7 +72,7 @@ Hooks.once('ready', () => {
       default: false,
     });
 
-    game.settings.register('stealthy', 'spotPair', {
+    game.settings.register(Stealthy.MODULE_ID, 'spotPair', {
       name: game.i18n.localize("stealthy.dnd5e.spotPair.name"),
       hint: game.i18n.localize("stealthy.dnd5e.spotPair.hint"),
       scope: 'world',

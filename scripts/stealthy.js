@@ -16,7 +16,7 @@ export class StealthyBaseEngine {
   testStealth(visionSource, config) {
     const target = config.object?.actor;
     const ignoreFriendlyStealth =
-      game.settings.get('stealthy', 'ignoreFriendlyStealth') &&
+      game.settings.get(Stealthy.MODULE_ID, 'ignoreFriendlyStealth') &&
       config.object.document?.disposition === visionSource.object.document?.disposition;
 
     if (!ignoreFriendlyStealth) {
@@ -95,7 +95,7 @@ export class StealthyBaseEngine {
 
     if (!effect) {
       // See if we can source from outside
-      const source = game.settings.get('stealthy', 'hiddenSource');
+      const source = game.settings.get(Stealthy.MODULE_ID, 'hiddenSource');
       if (source === 'ce') {
         await game.dfreds.effectInterface.addEffect({ effectName: label, uuid: actor.uuid });
         effect = actor.effects.find(e => e.label === label);
@@ -148,11 +148,13 @@ export class StealthyBaseEngine {
 
 export class Stealthy {
 
+  static MODULE_ID = 'stealthy';
+  
   constructor(makeEngine) {
     this.engine = makeEngine();
     this.activeSpot = true;
     this.socket = null;
-    this.socket = socketlib.registerModule('stealthy');
+    this.socket = socketlib.registerModule(Stealthy.MODULE_ID);
     this.socket.register('ToggleActiveSpot', Stealthy.ToggleActiveSpot);
     this.socket.register('GetActiveSpot', Stealthy.GetActiveSpot);
   }
@@ -188,7 +190,7 @@ export class Stealthy {
   }
 
   static log(format, ...args) {
-    const level = game.settings.get('stealthy', 'logLevel');
+    const level = game.settings.get(Stealthy.MODULE_ID, 'logLevel');
     if (level !== 'none') {
 
       function colorizeOutput(format, ...args) {

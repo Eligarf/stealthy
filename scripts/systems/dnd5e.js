@@ -27,7 +27,7 @@ export class Stealthy5e extends StealthyBaseEngine {
     const spotPair = spot?.flags.stealthy?.spot;
     let perception;
 
-    if (game.settings.get('stealthy', 'tokenLighting')) {
+    if (game.settings.get(Stealthy.MODULE_ID, 'tokenLighting')) {
       perception = Stealthy5e.AdjustForLightingConditions(spotPair, visionSource, source, target);
     }
     else {
@@ -45,7 +45,7 @@ export class Stealthy5e extends StealthyBaseEngine {
     const target = config.object?.actor;
     let noDarkvision = false;
     const ignoreFriendlyUmbralSight =
-      game.settings.get('stealthy', 'ignoreFriendlyUmbralSight') &&
+      game.settings.get(Stealthy.MODULE_ID, 'ignoreFriendlyUmbralSight') &&
       config.object.document?.disposition === visionSource.object.document?.disposition;
     if (!ignoreFriendlyUmbralSight && visionSource.visionMode?.id === 'darkvision') {
       const umbralSight = target?.itemTypes?.feat?.find(f => f.name === game.i18n.localize('Umbral Sight'));
@@ -101,7 +101,7 @@ export class Stealthy5e extends StealthyBaseEngine {
     Stealthy.log('Stealthy5e.rollPerception', { actor, roll });
 
     let perception = { normal: roll.total, disadvantaged: roll.total };
-    if (!roll.hasDisadvantage && game.settings.get('stealthy', 'spotPair')) {
+    if (!roll.hasDisadvantage && game.settings.get(Stealthy.MODULE_ID, 'spotPair')) {
       const dice = roll.dice[0];
       if (roll.hasAdvantage) {
         const delta = dice.results[1].result - dice.results[0].result;
