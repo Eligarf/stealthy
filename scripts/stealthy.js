@@ -20,7 +20,7 @@ export class StealthyBaseEngine {
       config.object.document?.disposition === visionSource.object.document?.disposition;
 
     if (!ignoreFriendlyStealth) {
-      const hidden = target?.effects.find(e => e.label === game.i18n.localize("stealthy-hidden-label") && !e.disabled);
+      const hidden = target?.effects.find(e => e.label === game.i18n.localize("stealthy.hidden.label") && !e.disabled);
       if (hidden) {
         if (this.isHidden(visionSource, hidden, target, config)) return false;
       }
@@ -53,7 +53,7 @@ export class StealthyBaseEngine {
         icon: 'icons/magic/perception/shadow-stealth-eyes-purple.webp',
         changes: [],
         flags: {
-          convenientDescription: game.i18n.localize("stealthy-hidden-description"),
+          convenientDescription: game.i18n.localize("stealthy.hidden.description"),
           stealthy: flag,
           core: { statusId: '1' },
         },
@@ -84,7 +84,7 @@ export class StealthyBaseEngine {
       icon: 'icons/commodities/biological/eye-blue.webp',
       duration: { turns: 1, seconds: 6 },
       flags: {
-        convenientDescription: game.i18n.localize("stealthy-spot-description"),
+        convenientDescription: game.i18n.localize("stealthy.spot.description"),
         stealthy: flag
       },
     });
@@ -162,7 +162,7 @@ export class Stealthy {
     game.stealthy.activeSpot = toggled;
 
     if (!toggled && game.user.isGM) {
-      const label = game.i18n.localize('stealthy-spot-label');
+      const label = game.i18n.localize('stealthy.spot.label');
       for (let token of canvas.tokens.placeables) {
         const actor = token.actor;
         const spot = actor.effects.find(e => e.label === label);

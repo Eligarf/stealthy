@@ -76,7 +76,7 @@ For this approach we are only looking at dnd5e and we've broken this down into t
 'Remove Hidden' Script Macro:
 ```
 const controlled = canvas.tokens.controlled;
-const label = game.i18n.localize('stealthy-hidden-label');
+const label = game.i18n.localize('stealthy.hidden.label');
 controlled.forEach(token => {
   const actor = token.actor;
   const effects = actor.effects.filter(e => e.label === label).map(e => e.id);
@@ -85,7 +85,7 @@ controlled.forEach(token => {
   }
 });
 ```
-*Remove Spot is the same with a 'stealthy-spot-label' substitution*
+*Remove Spot is the same with a 'stealthy.spot.label' substitution*
 
 ## pf2e
 PF2e has overridden the Active Effect system which Stealthy uses as its backbone, so some heavy lifting has to be done to finish adapting it.

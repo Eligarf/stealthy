@@ -19,7 +19,7 @@ export class Stealthy5e extends StealthyBaseEngine {
   isHidden(visionSource, hidden, target, config) {
     const source = visionSource.object?.actor;
     const stealth = hidden.flags.stealthy?.hidden ?? target.system.skills.ste.passive;
-    const spot = source?.effects.find(e => e.label === game.i18n.localize("stealthy-spot-label") && !e.disabled);
+    const spot = source?.effects.find(e => e.label === game.i18n.localize("stealthy.spot.label") && !e.disabled);
 
     // active perception loses ties, passive perception wins ties to simulate the
     // idea that active skills need to win outright to change the status quo. Passive
@@ -119,7 +119,7 @@ export class Stealthy5e extends StealthyBaseEngine {
       }
     }
 
-    const label = game.i18n.localize("stealthy-spot-label");
+    const label = game.i18n.localize("stealthy.spot.label");
     await this.updateOrCreateEffect({
       label,
       actor,
@@ -131,7 +131,7 @@ export class Stealthy5e extends StealthyBaseEngine {
   async rollStealth(actor, roll) {
     Stealthy.log('Stealthy5e.rollStealth', { actor, roll });
 
-    const label = game.i18n.localize("stealthy-hidden-label");
+    const label = game.i18n.localize("stealthy.hidden.label");
     await this.updateOrCreateEffect({
       label,
       actor,
@@ -161,8 +161,8 @@ export class Stealthy5e extends StealthyBaseEngine {
 
     // What light band are we told we sit in?
     let lightBand = 2;
-    if (target?.effects.find(e => e.label === game.i18n.localize("stealthy-dark-label") && !e.disabled)) { lightBand = 0; }
-    if (target?.effects.find(e => e.label === game.i18n.localize("stealthy-dim-label") && !e.disabled)) { lightBand = 1; }
+    if (target?.effects.find(e => e.label === game.i18n.localize("stealthy.dnd5e.dark.label") && !e.disabled)) { lightBand = 0; }
+    if (target?.effects.find(e => e.label === game.i18n.localize("stealthy.dnd5e.dim.label") && !e.disabled)) { lightBand = 1; }
     debugData.lightLevel = Stealthy5e.LIGHT_LABELS[lightBand];
 
     // Adjust the light band based on conditions

@@ -16,11 +16,11 @@ Hooks.on('renderTokenHUD', (tokenHUD, html, app) => {
     const actor = token?.actor;
     const engine = game.stealthy.engine;
 
-    const hidden = actor?.effects.find(e => e.label === game.i18n.localize("stealthy-hidden-label") && !e.disabled);
+    const hidden = actor?.effects.find(e => e.label === game.i18n.localize("stealthy.hidden.label") && !e.disabled);
     if (hidden) {
       let { flag, value } = engine.getHiddenFlagAndValue(hidden);
       const inputBox = $(
-        `<input id="ste_hid_inp_box" title="${game.i18n.localize("stealthy-hidden-inputBox-title")}" type="text" name="hidden_value_inp_box" value="${value}"></input>`
+        `<input id="ste_hid_inp_box" title="${game.i18n.localize("stealthy.hidden.inputBox")}" type="text" name="hidden_value_inp_box" value="${value}"></input>`
       );
       html.find(".right").append(inputBox);
       inputBox.change(async (inputbox) => {
@@ -29,11 +29,11 @@ Hooks.on('renderTokenHUD', (tokenHUD, html, app) => {
       });
     }
 
-    const spot = actor?.effects.find(e => e.label === game.i18n.localize("stealthy-spot-label") && !e.disabled);
+    const spot = actor?.effects.find(e => e.label === game.i18n.localize("stealthy.spot.label") && !e.disabled);
     if (spot) {
       let { flag, value } = engine.getSpotFlagAndValue(spot);
       const inputBox = $(
-        `<input id="ste_spt_inp_box" title="${game.i18n.localize("stealthy-spot-inputBox-title")}" type="text" name="spot_value_inp_box" value="${value}"></input>`
+        `<input id="ste_spt_inp_box" title="${game.i18n.localize("stealthy.spot.inputBox")}" type="text" name="spot_value_inp_box" value="${value}"></input>`
       );
       html.find(".left").append(inputBox);
       inputBox.change(async (inputbox) => {
@@ -50,7 +50,7 @@ Hooks.on('getSceneControlButtons', (controls) => {
   tokenControls.tools.push({
     icon: 'fa-solid fa-eyes',
     name: 'stealthy-spotting',
-    title: game.i18n.localize("stealthy-active-spot"),
+    title: game.i18n.localize("stealthy.activeSpot"),
     toggle: true,
     active: game.stealthy.activeSpot,
     onClick: (toggled) => game.stealthy.socket.executeForEveryone('ToggleActiveSpot', toggled)
