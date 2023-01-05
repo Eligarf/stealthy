@@ -33,7 +33,7 @@ export class StealthyPF1 extends StealthyBaseEngine {
   }
 
   getHiddenFlagAndValue(hidden) {
-    const value = hidden.flags.stealthy?.hidden ?? actor.system.skills.ste.value;
+    const value = hidden.flags.stealthy?.hidden ?? (10 + actor.system.skills.ste.value);
     return { flag: { hidden: value }, value };
   }
 
@@ -44,7 +44,7 @@ export class StealthyPF1 extends StealthyBaseEngine {
   }
 
   getSpotFlagAndValue(spot) {
-    const value = spot.flags.stealthy?.spot ?? actor.system.attributes.perception.value;
+    const value = spot.flags.stealthy?.spot ?? (10 + actor.system.attributes.perception.value);
     return { flag: { spot: value }, value };
   }
 
