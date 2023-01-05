@@ -1,3 +1,6 @@
+# Pending
+* Organize keys in language file
+
 # v2.0.0
 * PF1 support - effect cleanup is macro based so buyer beware
 * PF2e support parked due to active effect incompatibility

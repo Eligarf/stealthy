@@ -19,7 +19,7 @@ export class Stealthy5e extends StealthyBaseEngine {
   isHidden(visionSource, hidden, target, config) {
     const source = visionSource.object?.actor;
     const stealth = hidden.flags.stealthy?.hidden ?? target.system.skills.ste.passive;
-    const spot = source?.effects.find(e => e.label === game.i18n.localize("stealthy-spot-label") && !e.disabled);
+    const spot = source?.effects.find(e => e.label === game.i18n.localize("stealthy.spot.label") && !e.disabled);
 
     // active perception loses ties, passive perception wins ties to simulate the
     // idea that active skills need to win outright to change the status quo. Passive
@@ -27,7 +27,7 @@ export class Stealthy5e extends StealthyBaseEngine {
     const spotPair = spot?.flags.stealthy?.spot;
     let perception;
 
-    if (game.settings.get('stealthy', 'tokenLighting')) {
+    if (game.settings.get(Stealthy.MODULE_ID, 'tokenLighting')) {
       perception = Stealthy5e.AdjustForLightingConditions(spotPair, visionSource, source, target);
     }
     else {
@@ -45,7 +45,7 @@ export class Stealthy5e extends StealthyBaseEngine {
     const target = config.object?.actor;
     let noDarkvision = false;
     const ignoreFriendlyUmbralSight =
-      game.settings.get('stealthy', 'ignoreFriendlyUmbralSight') &&
+      game.settings.get(Stealthy.MODULE_ID, 'ignoreFriendlyUmbralSight') &&
       config.object.document?.disposition === visionSource.object.document?.disposition;
     if (!ignoreFriendlyUmbralSight && visionSource.visionMode?.id === 'darkvision') {
       const umbralSight = target?.itemTypes?.feat?.find(f => f.name === game.i18n.localize('Umbral Sight'));
@@ -62,8 +62,8 @@ export class Stealthy5e extends StealthyBaseEngine {
     return super.basicVision(wrapped, visionSource, mode, config);
   }
 
-  getHiddenFlagAndValue(hidden) {
-    const value = hidden.flags.stealthy?.hidden ?? actor.system.skills.ste.passive;
+  getHiddenFlagAndValue(effect) {
+    const value = effect.flags.stealthy?.hidden ?? actor.system.skills.ste.passive;
     return { flag: { hidden: value }, value };
   }
 
@@ -73,12 +73,12 @@ export class Stealthy5e extends StealthyBaseEngine {
     await actor.updateEmbeddedDocuments('ActiveEffect', [effect]);
   }
 
-  getSpotFlagAndValue(spot) {
+  getSpotFlagAndValue(effect) {
     let flag = { normal: undefined, disadvantaged: undefined };
-    const active = spot.flags.stealthy?.spot?.normal ?? spot.flags.stealthy?.spot;
+    const active = effect.flags.stealthy?.spot?.normal ?? effect.flags.stealthy?.spot;
     if (active !== undefined) {
       flag.normal = active;
-      flag.disadvantaged = spot.flags.stealthy?.spot?.disadvantaged ?? active - 5;
+      flag.disadvantaged = effect.flags.stealthy?.spot?.disadvantaged ?? active - 5;
     }
     else {
       flag.normal = actor.system.skills.prc.passive;
@@ -101,7 +101,7 @@ export class Stealthy5e extends StealthyBaseEngine {
     Stealthy.log('Stealthy5e.rollPerception', { actor, roll });
 
     let perception = { normal: roll.total, disadvantaged: roll.total };
-    if (!roll.hasDisadvantage && game.settings.get('stealthy', 'spotPair')) {
+    if (!roll.hasDisadvantage && game.settings.get(Stealthy.MODULE_ID, 'spotPair')) {
       const dice = roll.dice[0];
       if (roll.hasAdvantage) {
         const delta = dice.results[1].result - dice.results[0].result;
@@ -119,7 +119,7 @@ export class Stealthy5e extends StealthyBaseEngine {
       }
     }
 
-    const label = game.i18n.localize("stealthy-spot-label");
+    const label = game.i18n.localize("stealthy.spot.label");
     await this.updateOrCreateEffect({
       label,
       actor,
@@ -131,7 +131,7 @@ export class Stealthy5e extends StealthyBaseEngine {
   async rollStealth(actor, roll) {
     Stealthy.log('Stealthy5e.rollStealth', { actor, roll });
 
-    const label = game.i18n.localize("stealthy-hidden-label");
+    const label = game.i18n.localize("stealthy.hidden.label");
     await this.updateOrCreateEffect({
       label,
       actor,
@@ -161,8 +161,8 @@ export class Stealthy5e extends StealthyBaseEngine {
 
     // What light band are we told we sit in?
     let lightBand = 2;
-    if (target?.effects.find(e => e.label === game.i18n.localize("stealthy-dark-label") && !e.disabled)) { lightBand = 0; }
-    if (target?.effects.find(e => e.label === game.i18n.localize("stealthy-dim-label") && !e.disabled)) { lightBand = 1; }
+    if (target?.effects.find(e => e.label === game.i18n.localize("stealthy.dnd5e.dark.label") && !e.disabled)) { lightBand = 0; }
+    if (target?.effects.find(e => e.label === game.i18n.localize("stealthy.dnd5e.dim.label") && !e.disabled)) { lightBand = 1; }
     debugData.lightLevel = Stealthy5e.LIGHT_LABELS[lightBand];
 
     // Adjust the light band based on conditions

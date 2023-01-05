@@ -16,11 +16,11 @@ export class StealthyBaseEngine {
   testStealth(visionSource, config) {
     const target = config.object?.actor;
     const ignoreFriendlyStealth =
-      game.settings.get('stealthy', 'ignoreFriendlyStealth') &&
+      game.settings.get(Stealthy.MODULE_ID, 'ignoreFriendlyStealth') &&
       config.object.document?.disposition === visionSource.object.document?.disposition;
 
     if (!ignoreFriendlyStealth) {
-      const hidden = target?.effects.find(e => e.label === game.i18n.localize("stealthy-hidden-label") && !e.disabled);
+      const hidden = target?.effects.find(e => e.label === game.i18n.localize("stealthy.hidden.label") && !e.disabled);
       if (hidden) {
         if (this.isHidden(visionSource, hidden, target, config)) return false;
       }
@@ -53,7 +53,7 @@ export class StealthyBaseEngine {
         icon: 'icons/magic/perception/shadow-stealth-eyes-purple.webp',
         changes: [],
         flags: {
-          convenientDescription: game.i18n.localize("stealthy-hidden-description"),
+          convenientDescription: game.i18n.localize("stealthy.hidden.description"),
           stealthy: flag,
           core: { statusId: '1' },
         },
@@ -84,7 +84,7 @@ export class StealthyBaseEngine {
       icon: 'icons/commodities/biological/eye-blue.webp',
       duration: { turns: 1, seconds: 6 },
       flags: {
-        convenientDescription: game.i18n.localize("stealthy-spot-description"),
+        convenientDescription: game.i18n.localize("stealthy.spot.description"),
         stealthy: flag
       },
     });
@@ -95,7 +95,7 @@ export class StealthyBaseEngine {
 
     if (!effect) {
       // See if we can source from outside
-      const source = game.settings.get('stealthy', 'hiddenSource');
+      const source = game.settings.get(Stealthy.MODULE_ID, 'hiddenSource');
       if (source === 'ce') {
         await game.dfreds.effectInterface.addEffect({ effectName: label, uuid: actor.uuid });
         effect = actor.effects.find(e => e.label === label);
@@ -119,7 +119,7 @@ export class StealthyBaseEngine {
     await actor.updateEmbeddedDocuments('ActiveEffect', [effect]);
   }
 
-  getHiddenFlagAndValue(hidden) {
+  getHiddenFlagAndValue(effect) {
     // Return the data necessary for storing data about hidden, and the
     // value that should be shown on the token button input
     return { flag: { hidden: undefined }, value: undefined };
@@ -132,7 +132,7 @@ export class StealthyBaseEngine {
     await actor.updateEmbeddedDocuments('ActiveEffect', [effect]);
   }
 
-  getSpotFlagAndValue(spot) {
+  getSpotFlagAndValue(effect) {
     // Return the data necessary for storing data about spot, and the
     // value that should be shown on the token button input
     return { flag: { spot: undefined }, value: undefined };
@@ -148,11 +148,13 @@ export class StealthyBaseEngine {
 
 export class Stealthy {
 
+  static MODULE_ID = 'stealthy';
+  
   constructor(makeEngine) {
     this.engine = makeEngine();
     this.activeSpot = true;
     this.socket = null;
-    this.socket = socketlib.registerModule('stealthy');
+    this.socket = socketlib.registerModule(Stealthy.MODULE_ID);
     this.socket.register('ToggleActiveSpot', Stealthy.ToggleActiveSpot);
     this.socket.register('GetActiveSpot', Stealthy.GetActiveSpot);
   }
@@ -162,7 +164,7 @@ export class Stealthy {
     game.stealthy.activeSpot = toggled;
 
     if (!toggled && game.user.isGM) {
-      const label = game.i18n.localize('stealthy-spot-label');
+      const label = game.i18n.localize('stealthy.spot.label');
       for (let token of canvas.tokens.placeables) {
         const actor = token.actor;
         const spot = actor.effects.find(e => e.label === label);
@@ -188,7 +190,7 @@ export class Stealthy {
   }
 
   static log(format, ...args) {
-    const level = game.settings.get('stealthy', 'logLevel');
+    const level = game.settings.get(Stealthy.MODULE_ID, 'logLevel');
     if (level !== 'none') {
 
       function colorizeOutput(format, ...args) {
