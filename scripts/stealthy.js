@@ -119,7 +119,7 @@ export class StealthyBaseEngine {
     await actor.updateEmbeddedDocuments('ActiveEffect', [effect]);
   }
 
-  getHiddenFlagAndValue(hidden) {
+  getHiddenFlagAndValue(effect) {
     // Return the data necessary for storing data about hidden, and the
     // value that should be shown on the token button input
     return { flag: { hidden: undefined }, value: undefined };
@@ -132,7 +132,7 @@ export class StealthyBaseEngine {
     await actor.updateEmbeddedDocuments('ActiveEffect', [effect]);
   }
 
-  getSpotFlagAndValue(spot) {
+  getSpotFlagAndValue(effect) {
     // Return the data necessary for storing data about spot, and the
     // value that should be shown on the token button input
     return { flag: { spot: undefined }, value: undefined };

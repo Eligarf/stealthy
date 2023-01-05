@@ -62,8 +62,8 @@ export class Stealthy5e extends StealthyBaseEngine {
     return super.basicVision(wrapped, visionSource, mode, config);
   }
 
-  getHiddenFlagAndValue(hidden) {
-    const value = hidden.flags.stealthy?.hidden ?? actor.system.skills.ste.passive;
+  getHiddenFlagAndValue(effect) {
+    const value = effect.flags.stealthy?.hidden ?? actor.system.skills.ste.passive;
     return { flag: { hidden: value }, value };
   }
 
@@ -73,12 +73,12 @@ export class Stealthy5e extends StealthyBaseEngine {
     await actor.updateEmbeddedDocuments('ActiveEffect', [effect]);
   }
 
-  getSpotFlagAndValue(spot) {
+  getSpotFlagAndValue(effect) {
     let flag = { normal: undefined, disadvantaged: undefined };
-    const active = spot.flags.stealthy?.spot?.normal ?? spot.flags.stealthy?.spot;
+    const active = effect.flags.stealthy?.spot?.normal ?? effect.flags.stealthy?.spot;
     if (active !== undefined) {
       flag.normal = active;
-      flag.disadvantaged = spot.flags.stealthy?.spot?.disadvantaged ?? active - 5;
+      flag.disadvantaged = effect.flags.stealthy?.spot?.disadvantaged ?? active - 5;
     }
     else {
       flag.normal = actor.system.skills.prc.passive;

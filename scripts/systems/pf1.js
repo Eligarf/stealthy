@@ -32,8 +32,8 @@ export class StealthyPF1 extends StealthyBaseEngine {
     return false;
   }
 
-  getHiddenFlagAndValue(hidden) {
-    const value = hidden.flags.stealthy?.hidden ?? (10 + actor.system.skills.ste.value);
+  getHiddenFlagAndValue(effect) {
+    const value = effect.flags.stealthy?.hidden ?? (10 + actor.system.skills.ste.value);
     return { flag: { hidden: value }, value };
   }
 
@@ -43,8 +43,8 @@ export class StealthyPF1 extends StealthyBaseEngine {
     await actor.updateEmbeddedDocuments('ActiveEffect', [effect]);
   }
 
-  getSpotFlagAndValue(spot) {
-    const value = spot.flags.stealthy?.spot ?? (10 + actor.system.attributes.perception.value);
+  getSpotFlagAndValue(effect) {
+    const value = effect.flags.stealthy?.spot ?? (10 + actor.system.attributes.perception.value);
     return { flag: { spot: value }, value };
   }
 
