@@ -6,11 +6,7 @@
 ![Total Downloads](https://img.shields.io/github/downloads/eligarf/stealthy/total?color=blue&label=total%20downloads)
 # Stealthy
 
-A module for [FoundryVTT](https://foundryvtt.com) that adds perception vs stealth testing to Foundry's visibility tests.
-
-# Purpose
-
-During visibility tests, Stealthy filters out any objects with the Hidden condition if the viewing Perception value fails to beat the object's Stealth value.
+A module for [FoundryVTT](https://foundryvtt.com) that adds perception vs stealth testing to Foundry's visibility tests. It filters out any objects with the Hidden condition if the viewing Perception value fails to beat the object's Stealth value.
 
 ## Features
 
@@ -26,10 +22,6 @@ Rolling a Perception check will add a Spot condition to the actor which records 
 
 A toggle named 'Active Spot' is available under token controls to suspend adding of the Spot condition as the GM sees fit. Toggling it off will also clear out all Spot effects.
 
-- dnd5e
-  - Stealthy's default Spot effect has a one turn/six second duration. This isn't from RAW, but is an approximation I've chosen that seems to work well in my games.
-  - The initial stored Perception value from the roll uses passive Perception as a floor.*
-
 ![perception](https://user-images.githubusercontent.com/16523503/209989470-aac2bdb4-fee4-44c0-a6b7-916e69353081.gif)
 ![control](https://user-images.githubusercontent.com/16523503/210176825-3fcb3183-81db-4f64-836a-81f29199b580.png)
 
@@ -37,11 +29,6 @@ A toggle named 'Active Spot' is available under token controls to suspend adding
 Once the Hidden or Spot conditions are applied, GMs will see token buttons with an input box on the bottom which shows the rolled values, or the passive values if the condition was added directly without rolling. Perception is on the left, Stealth is on the right. Changing the value in this input box will alter the stored results for future visibility tests while that condition remains.
 
 ![stealth-override](https://user-images.githubusercontent.com/16523503/209896031-675ab0e3-93e6-4d9c-8eeb-c11abe39fdab.gif)
-
-## **dnd5e: Umbral Sight affects darkvision**
-Characters with Umbral Sight will no longer be visible to the Darkvision mode, but they can still be seen if Basic Vision can see them. The GM has the option to disable this for friendly token visibility tests.
-
-![umbral-sight](https://user-images.githubusercontent.com/16523503/209987083-487aee33-b75e-452f-9433-7302ffdaeab3.gif)
 
 ## **Invisible characters can hide from See Invisibility**
 An invisible actor that also has the 'Hidden' condition will check Perception vs Stealth before showing up in the 'See Invisibility' vision mode.
@@ -51,14 +38,6 @@ An invisible actor that also has the 'Hidden' condition will check Perception vs
 ## **Friendly tokens can still be viewed**
 The GM has the option for allowing Hidden tokens to be seen by other tokens of the same disposition.
 
-# Limitations
-
-## Handling Hidden removal
-Stealthy will not automatically remove the Hidden condition - the dnd5e [Skulker](https://www.dndbeyond.com/feats/skulker) feat demonstrates why removing Hidden gets complicated without heavier automation support provided by modules like the excellent [Midi-QOL](https://foundryvtt.com/packages/midi-qol) which handles this for my games. I suggest [DFreds Effects Panel](https://foundryvtt.com/packages/dfreds-effects-panel) as an easier way to manually remove it, especially for low automation level games. 
-
-## Visibility changes are only reflected on token updates
-The visibility results are cached, so changes in visibility brought about by making skill checks, adjusting the result values manually, or removing the Spot/Hidden effects don't immediately change the visible state. This means sometimes you have force a token update by moving the token or selecting a different token. 
-
 # Systems
 I've isolated out all the specific dnd5e code I wrote into its own engine object and built a sort-of working implementation for PF1 - see changelog for caveats. I'd be happy to take any help offered to make Stealthy work in other systems! Stealth engines don't have to live inside Stealthy's codebase - they can be added externally like below:
 ```
@@ -67,6 +46,15 @@ Hooks.once('init', () => {
 });
 ```
 ## dnd5e
+### *Umbral Sight affects darkvision
+Characters with Umbral Sight will no longer be visible to the Darkvision mode, but they can still be seen if Basic Vision can see them. The GM has the option to disable this for friendly token visibility tests.
+
+![umbral-sight](https://user-images.githubusercontent.com/16523503/209987083-487aee33-b75e-452f-9433-7302ffdaeab3.gif)
+
+### Spot details
+- Stealthy's default Spot effect has a one turn/six second duration. This isn't from RAW, but is an approximation I've chosen that seems to work well in my games.
+- The initial stored Perception value from the roll uses passive Perception as a floor.
+
 ### Stealth vs Perception Ties
 D&D 5E treats skill contest ties as preserving the status quo, so use of passive value for either skill makes a claim of owning the status quo and thus winning ties. If Perception and Stealth are both passive, I assume Stealth takes the active role of wanting to change the status quo from visible to hidden. An active Perception check is only necessary if the passive Perception was beaten by Stealth, so in this case Hidden is now the status quo condition and Stealth wins ties with the active result. More simply, **ties are won by passive Perception and lost by active Perception.**
 
@@ -83,7 +71,7 @@ For this approach we are only looking at dnd5e and we've broken this down into t
 
 ## pf1
   - I assume take-10 perception for tokens without an active spot effect. It isn't RAW, but perhaps this is acceptable to the PF1 community.
-  - the PF1 actor sheet UI doesn't seem to have a way to delete the effects once they've been added by rolling, so I made this macro (I assume there is a smarter way)
+  - The Spot and Hidden effects aren't "Buff"-style effects, so the PF1 actor sheet UI doesn't have a way to delete the effects once they've been added by rolling. You could use [DFreds Effects Panel](https://foundryvtt.com/packages/dfreds-effects-panel), or I made this macro (I assume there is a smarter way)
 
 'Remove Hidden' Script Macro:
 ```
@@ -100,7 +88,18 @@ controlled.forEach(token => {
 *Remove Spot is the same with a 'stealthy-spot-label' substitution*
 
 ## pf2e
-PF2e seems to have completely replaced the Active Effect system which Stealthy uses as its backbone, so some heavy lifting has to be done to finish adapting it.
+PF2e has overridden the Active Effect system which Stealthy uses as its backbone, so some heavy lifting has to be done to finish adapting it.
+
+## dnd4e
+Dnd4e does not appear to run the Foundry v10 visibility detection code that Stealthy patches in order to do the skill comparisons.
+
+# Limitations
+
+## Handling Hidden removal
+Stealthy will not automatically remove the Hidden condition - the dnd5e [Skulker](https://www.dndbeyond.com/feats/skulker) feat demonstrates why removing Hidden gets complicated without heavier automation support provided by modules like the excellent [Midi-QOL](https://foundryvtt.com/packages/midi-qol), which handles this for my games. I suggest [DFreds Effects Panel](https://foundryvtt.com/packages/dfreds-effects-panel) as an easier way to manually remove them, especially for low automation level games. 
+
+## Visibility changes are only reflected on token updates
+The visibility results are cached, so changes in visibility brought about by making skill checks, adjusting the result values manually, or removing the Spot/Hidden effects don't immediately change the visible state. This means sometimes you have force a token update by moving the token or selecting a different token. 
 
 # Required modules
 * [lib-wrapper](https://foundryvtt.com/packages/lib-wrapper)
