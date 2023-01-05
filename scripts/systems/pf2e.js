@@ -21,7 +21,7 @@ export class StealthyPF2e extends StealthyBaseEngine {
   }
 
   makeSpotEffect(label) {
-    console.error(`'${game.system.id}' isn't make a Spot effect. Heavy lifting goes here.`);
+    console.error(`'${game.system.id}' can't make a Spot effect. Heavy lifting goes here.`);
   }
 
   async updateOrCreateEffect({ label, actor, flag, makeEffect }) {
