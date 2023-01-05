@@ -20,16 +20,24 @@ export class StealthyBaseEngine {
       config.object.document?.disposition === visionSource.object.document?.disposition;
 
     if (!ignoreFriendlyStealth) {
-      const hidden = target?.effects.find(e => e.label === game.i18n.localize("stealthy.hidden.label") && !e.disabled);
-      if (hidden) {
-        if (this.isHidden(visionSource, hidden, target, config)) return false;
+      const hiddenEffect = this.findHiddenEffect(target);
+      if (hiddenEffect) {
+        if (this.isHidden(visionSource, hiddenEffect, target, config)) return false;
       }
     }
 
     return true;
   }
 
-  isHidden(visionSource, hidden, target, config) {
+  findHiddenEffect(actor) {
+    return actor?.effects.find(e => e.label === game.i18n.localize("stealthy.hidden.label") && !e.disabled);
+  }
+
+  findSpotEffect(actor) {
+    return actor?.effects.find(e => e.label === game.i18n.localize("stealthy.spot.label") && !e.disabled);
+  }
+
+  isHidden(visionSource, hiddenEffect, target, config) {
     // Implement your system's method for testing spot data vs hidden data
     // This should would in the absence of a spot effect on the viewer, using
     // a passive or default value as necessary
@@ -119,7 +127,7 @@ export class StealthyBaseEngine {
     await actor.updateEmbeddedDocuments('ActiveEffect', [effect]);
   }
 
-  getHiddenFlagAndValue(effect) {
+  getHiddenFlagAndValue(actor, effect) {
     // Return the data necessary for storing data about hidden, and the
     // value that should be shown on the token button input
     return { flag: { hidden: undefined }, value: undefined };
@@ -132,7 +140,7 @@ export class StealthyBaseEngine {
     await actor.updateEmbeddedDocuments('ActiveEffect', [effect]);
   }
 
-  getSpotFlagAndValue(effect) {
+  getSpotFlagAndValue(actor, effect) {
     // Return the data necessary for storing data about spot, and the
     // value that should be shown on the token button input
     return { flag: { spot: undefined }, value: undefined };

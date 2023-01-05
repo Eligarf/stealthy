@@ -18,7 +18,7 @@ Hooks.on('renderTokenHUD', (tokenHUD, html, app) => {
 
     const hidden = actor?.effects.find(e => e.label === game.i18n.localize("stealthy.hidden.label") && !e.disabled);
     if (hidden) {
-      let { flag, value } = engine.getHiddenFlagAndValue(hidden);
+      let { flag, value } = engine.getHiddenFlagAndValue(actor, hidden);
       const inputBox = $(
         `<input id="ste_hid_inp_box" title="${game.i18n.localize("stealthy.hidden.inputBox")}" type="text" name="hidden_value_inp_box" value="${value}"></input>`
       );
@@ -31,7 +31,7 @@ Hooks.on('renderTokenHUD', (tokenHUD, html, app) => {
 
     const spot = actor?.effects.find(e => e.label === game.i18n.localize("stealthy.spot.label") && !e.disabled);
     if (spot) {
-      let { flag, value } = engine.getSpotFlagAndValue(spot);
+      let { flag, value } = engine.getSpotFlagAndValue(actor, spot);
       const inputBox = $(
         `<input id="ste_spt_inp_box" title="${game.i18n.localize("stealthy.spot.inputBox")}" type="text" name="spot_value_inp_box" value="${value}"></input>`
       );

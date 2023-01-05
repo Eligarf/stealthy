@@ -16,15 +16,15 @@ export class Stealthy5e extends StealthyBaseEngine {
 
   static LIGHT_LABELS = ['dark', 'dim', 'bright'];
 
-  isHidden(visionSource, hidden, target, config) {
+  isHidden(visionSource, hiddenEffect, target, config) {
     const source = visionSource.object?.actor;
-    const stealth = hidden.flags.stealthy?.hidden ?? target.system.skills.ste.passive;
-    const spot = source?.effects.find(e => e.label === game.i18n.localize("stealthy.spot.label") && !e.disabled);
+    const stealth = hiddenEffect.flags.stealthy?.hidden ?? target.system.skills.ste.passive;
+    const spotEffect = this.findSpotEffect(source);
 
     // active perception loses ties, passive perception wins ties to simulate the
     // idea that active skills need to win outright to change the status quo. Passive
     // perception means that stealth is being the active skill.
-    const spotPair = spot?.flags.stealthy?.spot;
+    const spotPair = spotEffect?.flags.stealthy?.spot;
     let perception;
 
     if (game.settings.get(Stealthy.MODULE_ID, 'tokenLighting')) {
@@ -62,7 +62,7 @@ export class Stealthy5e extends StealthyBaseEngine {
     return super.basicVision(wrapped, visionSource, mode, config);
   }
 
-  getHiddenFlagAndValue(effect) {
+  getHiddenFlagAndValue(actor, effect) {
     const value = effect.flags.stealthy?.hidden ?? actor.system.skills.ste.passive;
     return { flag: { hidden: value }, value };
   }
@@ -73,7 +73,7 @@ export class Stealthy5e extends StealthyBaseEngine {
     await actor.updateEmbeddedDocuments('ActiveEffect', [effect]);
   }
 
-  getSpotFlagAndValue(effect) {
+  getSpotFlagAndValue(actor, effect) {
     let flag = { normal: undefined, disadvantaged: undefined };
     const active = effect.flags.stealthy?.spot?.normal ?? effect.flags.stealthy?.spot;
     if (active !== undefined) {
