@@ -64,7 +64,7 @@ Characters with Umbral Sight will no longer be visible to the Darkvision mode, b
 D&D 5E treats skill contest ties as preserving the status quo, so use of passive value for either skill makes a claim of owning the status quo and thus winning ties. If Perception and Stealth are both passive, I assume Stealth takes the active role of wanting to change the status quo from visible to hidden. An active Perception check is only necessary if the passive Perception was beaten by Stealth, so in this case Hidden is now the status quo effect and Stealth wins ties with the active result. More simply, **ties are won by passive Perception and lost by active Perception.**
 
 ### Experimental - Lighting effects on Perception vs Hidden token
-For this approach we are only looking at dnd5e and we've broken this down into three pieces:
+For this approach we've broken this down into three pieces:
 - Detecting the light level on the token itself, which is independant of viewer. Stealthy is decoupled from figuring that out by just looking for 'Dim' or 'Dark' effects on the token; a different module will manage this. Fingers crossed.
 - Remapping the dim/dark light level per viewer based on their viewing mode. At least 3 different mapping tables are needed:
   - Foundry Darkvision: Dark -> Dim; Dim -> Bright **(Current Implementation)**
@@ -76,7 +76,7 @@ For this approach we are only looking at dnd5e and we've broken this down into t
 
 ## pf1
   - I assume take-10 perception for tokens without an active spot effect. It isn't RAW, but perhaps this is acceptable to the PF1 community.
-  - the PF1 actor sheet UI doesn't seem to have a way to delete the effects once they've been added by rolling, so I made this macro (I assume there is a smarter way)
+  - The Hidden and Spot effects are not buff-type effects, so the PF1 actor sheet UI doesn't have a way to delete them once added. You can use [DFreds Effects Panel](https://foundryvtt.com/packages/dfreds-effects-panel), or I made this macro (I assume there is a smarter way)
 
 'Remove Hidden' Script Macro:
 ```
