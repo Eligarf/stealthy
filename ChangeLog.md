@@ -1,3 +1,6 @@
+# Pending
+* Added Brazilian Portuguese support (thanks lucaspicerni)
+
 # v2.1.0
 * Dnd4e supported
 * Fixed bug in PF1 where it used the wrong actor source for the take-10 perception tests
