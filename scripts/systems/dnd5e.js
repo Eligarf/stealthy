@@ -62,6 +62,14 @@ export class Stealthy5e extends StealthyBaseEngine {
     return super.basicVision(wrapped, visionSource, mode, config);
   }
 
+  makeSpotEffectMaker(label) {
+    return (flag, source) => {
+      let effect = super.makeSpotEffectMaker(label)(flag, source);
+      effect.duration = { turns: 1, seconds: 6 };
+      return effect;
+    };
+  }
+
   getHiddenFlagAndValue(actor, effect) {
     const value = effect.flags.stealthy?.hidden ?? actor.system.skills.ste.passive;
     return { flag: { hidden: value }, value };
@@ -124,7 +132,7 @@ export class Stealthy5e extends StealthyBaseEngine {
       label,
       actor,
       flag: { spot: perception },
-      makeEffect: this.makeSpotEffect(label)
+      makeEffect: this.makeSpotEffectMaker(label)
     });
   }
 
@@ -136,7 +144,7 @@ export class Stealthy5e extends StealthyBaseEngine {
       label,
       actor,
       flag: { hidden: roll.total },
-      makeEffect: this.makeHiddenEffect(label)
+      makeEffect: this.makeHiddenEffectMaker(label)
     });
   }
 

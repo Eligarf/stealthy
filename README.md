@@ -87,7 +87,7 @@ controlled.forEach(token => {
 *Remove Spot is the same with a 'stealthy.spot.label' substitution*
 
 ## pf2e
-In progress. There are complications getting Stealthy to work in PF2e since the Active Effect system has been overridden and there are complications with how DetectionMode.testVisibility results are handled. 
+In progress. There are complications getting Stealthy to work in PF2e given the level of customization within that system.
 
 # Limitations
 
