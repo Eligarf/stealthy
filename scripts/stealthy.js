@@ -54,7 +54,7 @@ export class StealthyBaseEngine {
     return wrapped(visionSource, mode, config);
   }
 
-  makeHiddenEffect(label) {
+  makeHiddenEffectMaker(label) {
     return (flag, source) => {
       let hidden = {
         label,
@@ -86,13 +86,14 @@ export class StealthyBaseEngine {
     };
   }
 
-  makeSpotEffect(label) {
+  makeSpotEffectMaker(label) {
     return (flag, source) => ({
       label,
       icon: 'icons/commodities/biological/eye-blue.webp',
       flags: {
         convenientDescription: game.i18n.localize("stealthy.spot.description"),
-        stealthy: flag
+        stealthy: flag,
+        core: { statusId: '1' },
       },
     });
   }

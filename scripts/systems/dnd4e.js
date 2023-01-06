@@ -22,11 +22,10 @@ export class StealthyDnd4e extends StealthyBaseEngine {
   isHidden(visionSource, hiddenEffect, target, config) {
     // Never gets called, neither do the patches for the v10 vision modes
     // dead in the water
-    Stealthy.log('StealthyDnd4e', { visionSource, hidden: hiddenEffect, target, config });
     const source = visionSource.object?.actor;
-    const stealth = hiddenEffect.flags.stealthy?.hidden ?? (10 + actor.system.skills.stl.total);
+    const stealth = hiddenEffect.flags.stealthy?.hidden ?? (10 + target.system.skills.stl.total);
     const spotEffect = this.findSpotEffect(source);
-    const perception = spotEffect?.flags.stealthy?.spot ?? (10 + actor.system.skills.prc.total);
+    const perception = spotEffect?.flags.stealthy?.spot ?? (10 + source.system.skills.prc.total);
 
     if (perception <= stealth) {
       Stealthy.log(`${visionSource.object.name}'s ${perception} can't see ${config.object.name}'s ${stealth}`);
@@ -67,7 +66,7 @@ export class StealthyDnd4e extends StealthyBaseEngine {
       label,
       actor,
       flag: { spot: message.rolls[0].total },
-      makeEffect: this.makeSpotEffect(label)
+      makeEffect: this.makeSpotEffectMaker(label)
     });
   }
 
@@ -81,7 +80,7 @@ export class StealthyDnd4e extends StealthyBaseEngine {
       label,
       actor,
       flag: { hidden: message.rolls[0].total },
-      makeEffect: this.makeHiddenEffect(label)
+      makeEffect: this.makeHiddenEffectMaker(label)
     });
   }
 }

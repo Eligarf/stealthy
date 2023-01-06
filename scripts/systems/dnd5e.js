@@ -62,17 +62,11 @@ export class Stealthy5e extends StealthyBaseEngine {
     return super.basicVision(wrapped, visionSource, mode, config);
   }
 
-  makeSpotEffect(label) {
+  makeSpotEffectMaker(label) {
     return (flag, source) => {
-      return {
-        label,
-        icon: 'icons/commodities/biological/eye-blue.webp',
-        duration: { turns: 1, seconds: 6 },
-        flags: {
-          convenientDescription: game.i18n.localize("stealthy.spot.description"),
-          stealthy: flag
-        },
-      };
+      let effect = super.makeSpotEffectMaker(label)(flag, source);
+      effect.duration = { turns: 1, seconds: 6 };
+      return effect;
     };
   }
 
@@ -138,7 +132,7 @@ export class Stealthy5e extends StealthyBaseEngine {
       label,
       actor,
       flag: { spot: perception },
-      makeEffect: this.makeSpotEffect(label)
+      makeEffect: this.makeSpotEffectMaker(label)
     });
   }
 
@@ -150,7 +144,7 @@ export class Stealthy5e extends StealthyBaseEngine {
       label,
       actor,
       flag: { hidden: roll.total },
-      makeEffect: this.makeHiddenEffect(label)
+      makeEffect: this.makeHiddenEffectMaker(label)
     });
   }
 

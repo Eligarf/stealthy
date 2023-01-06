@@ -16,12 +16,12 @@ export class StealthyPF2e extends StealthyBaseEngine {
     return false;
   }
 
-  makeHiddenEffect(label) {
-    console.error(`'${game.system.id}' can't make a Hidden effect. Heavy lifting goes here.`);
+  makeHiddenEffectMaker(label) {
+    console.error(`'${game.system.id}' can't make a Hidden effect maker. Heavy lifting goes here.`);
   }
 
-  makeSpotEffect(label) {
-    console.error(`'${game.system.id}' can't make a Spot effect. Heavy lifting goes here.`);
+  makeSpotEffectMaker(label) {
+    console.error(`'${game.system.id}' can't make a Spot effect maker. Heavy lifting goes here.`);
   }
 
   async updateOrCreateEffect({ label, actor, flag, makeEffect }) {

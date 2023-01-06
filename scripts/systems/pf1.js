@@ -23,7 +23,7 @@ export class StealthyPF1 extends StealthyBaseEngine {
     const source = visionSource.object?.actor;
     const stealth = hiddenEffect.flags.stealthy?.hidden ?? (10 + target.system.skills.ste.mod);
     const spotEffect = this.findSpotEffect(source);
-    const perception = spotEffect?.flags.stealthy?.spot ?? (10 + target.system.skills.per.mod);
+    const perception = spotEffect?.flags.stealthy?.spot ?? (10 + source.system.skills.per.mod);
 
     if (perception <= stealth) {
       Stealthy.log(`${visionSource.object.name}'s ${perception} can't see ${config.object.name}'s ${stealth}`);
@@ -62,7 +62,7 @@ export class StealthyPF1 extends StealthyBaseEngine {
       label,
       actor,
       flag: { spot: message.rolls[0].total },
-      makeEffect: this.makeSpotEffect(label)
+      makeEffect: this.makeSpotEffectMaker(label)
     });
   }
 
@@ -74,7 +74,7 @@ export class StealthyPF1 extends StealthyBaseEngine {
       label,
       actor,
       flag: { hidden: message.rolls[0].total },
-      makeEffect: this.makeHiddenEffect(label)
+      makeEffect: this.makeHiddenEffectMaker(label)
     });
   }
 }
