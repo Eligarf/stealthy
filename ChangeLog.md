@@ -1,5 +1,6 @@
 # Pending
 * Added Brazilian Portuguese support (thanks lucaspicerni)
+* Verify that CUB/CE still has the desired effect before trying to create one with them (#63). Falls back to default in these cases.
 
 # v2.1.0
 * Dnd4e supported

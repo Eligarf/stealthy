@@ -104,11 +104,11 @@ export class StealthyBaseEngine {
     if (!effect) {
       // See if we can source from outside
       const source = game.settings.get(Stealthy.MODULE_ID, 'hiddenSource');
-      if (source === 'ce') {
+      if (source === 'ce' && game.dfreds?.effectInterface?.findEffectByName(label)) {
         await game.dfreds.effectInterface.addEffect({ effectName: label, uuid: actor.uuid });
         effect = actor.effects.find(e => e.label === label);
       }
-      else if (source === 'cub') {
+      else if (source === 'cub' && game.cub?.getCondition(label)) {
         await game.cub.applyCondition(label, actor);
         effect = actor.effects.find(e => e.label === label);
       }
