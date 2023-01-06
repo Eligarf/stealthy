@@ -1,4 +1,5 @@
 # Pending
+* Dnd4e supported
 * Organize keys in language file
 
 # v2.0.0
