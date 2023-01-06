@@ -1,0 +1,54 @@
+{
+  "stealthy": {
+    "hidden": {
+      "label": "Escondido",
+      "description": "Requer teste de Percepção para detectar",
+      "inputBox": "Furtividade atual"
+    },
+    "spot": {
+      "label": "Percebido",
+      "description": "Resultado do teste ativo de Percepção",
+      "inputBox": "Percepção atual"
+    },
+    "activeSpot": "Ativamente percebido",
+    "ignoreFriendlyStealth": {
+      "name": "Ignorar Furtividade aliada",
+      "hint": "Testes de Percepção vs Furtividade serão ignorados para tokens com a mesma disposição"
+    },
+    "source": {
+      "name": "Fonte dos efeitos Escondido e Percebido",
+      "hint": "Precisará recarregar após adicionar o(s) efeito(s) ao CE ou CUB",
+      "ce": "Convenient Effects",
+      "cub": "Combat Utility Belt",
+      "ae": "Stealthy",
+      "min": "Stealthy - apenas um ícone"
+    },
+    "logLevel": {
+      "name": "Nível de registro",
+      "none": "Sem log",
+      "debug": "Debug",
+      "log": "Com log"
+    },
+    "config": {
+      "general": "Opções gerais",
+      "debug": "Opções de depuração"
+    },
+    "dnd5e": {
+      "ignoreFriendlyUmbralSight": {
+        "name": "Ignorar Visão Umbral aliada",
+        "hint": "No modo de visão no escuro, ignorar a habilidade Visão Umbral para tokens com a mesma disposição"
+      },
+      "config.experimental": "Experimental",
+      "tokenLighting": {
+        "name": "Verificar as condições de iluminação dos tokens",
+        "hint": "Verificar se há efeitos de token que indicam a condição de iluminação dos tokens. AVISO - atualmente lida apenas com Percepção passiva"
+      },
+      "dark.label": "Escuro",
+      "dim.label": "Penumbra",
+      "spotPair": {
+        "name": "Registar Percepção com desvantagem ao rolar um teste",
+        "hint": "Analisar os resultados do teste de Percepção para obter um resultado normal e um com desvantagem, rolando um segundo dado se necessário"
+      }
+    }
+  }
+}
