@@ -58,6 +58,8 @@ Hooks.on('getSceneControlButtons', (controls) => {
 });
 
 Hooks.once('ready', async () => {
+  if (!game.modules.get('lib-wrapper')?.active && game.user.isGM)
+    ui.notifications.error("Stealthy requires the 'libWrapper' module. Please install and activate it.");
   if (!game.user.isGM)
     game.stealthy.activeSpot = await game.stealthy.socket.executeAsGM('GetActiveSpot');
 });

@@ -39,12 +39,11 @@ An invisible actor that also has the 'Hidden' effect will check Perception vs St
 The GM has the option for allowing Hidden tokens to be seen by other tokens of the same disposition.
 
 # Systems
-I've isolated out all the specific dnd5e code I wrote into its own engine object and built a sort-of working implementation for PF1 - see changelog for caveats. I'd be happy to take any help offered to make Stealthy work in other systems! Stealth engines don't have to live inside Stealthy's codebase - they can be added externally like below:
-```
-Hooks.once('init', () => {
-  Stealthy.RegisterEngine('pf1', () => new StealthyPF1());
-});
-```
+Stealthy currently works in the following systems (specific notes about a given system are below):
+- dnd4e
+- dnd5e
+- pf1
+
 ## dnd5e
 ### *Umbral Sight affects darkvision
 Characters with Umbral Sight will no longer be visible to the Darkvision mode, but they can still be seen if Basic Vision can see them. The GM has the option to disable this for friendly token visibility tests.
@@ -88,10 +87,7 @@ controlled.forEach(token => {
 *Remove Spot is the same with a 'stealthy.spot.label' substitution*
 
 ## pf2e
-PF2e has overridden the Active Effect system which Stealthy uses as its backbone, so some heavy lifting has to be done to finish adapting it.
-
-## dnd4e
-Dnd4e does not appear to run the Foundry v10 visibility detection code that Stealthy patches in order to do the skill comparisons.
+In progress. There are complications getting Stealthy to work in PF2e since the Active Effect system has been overridden and there are complications with how DetectionMode.testVisibility results are handled. 
 
 # Limitations
 
