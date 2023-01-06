@@ -19,14 +19,14 @@ export class StealthyDnd4e extends StealthyBaseEngine {
     });
   }
 
-  isHidden(visionSource, hidden, target, config) {
+  isHidden(visionSource, hiddenEffect, target, config) {
     // Never gets called, neither do the patches for the v10 vision modes
     // dead in the water
-    Stealthy.log('StealthyDnd4e', { visionSource, hidden, target, config });
+    Stealthy.log('StealthyDnd4e', { visionSource, hidden: hiddenEffect, target, config });
     const source = visionSource.object?.actor;
-    const stealth = hidden.flags.stealthy?.hidden ?? (10 + actor.system.skills.stl.total);
-    const spot = source?.effects.find(e => e.label === game.i18n.localize("stealthy-spot-label") && !e.disabled);
-    const perception = spot?.flags.stealthy?.spot ?? (10 + actor.system.skills.prc.total);
+    const stealth = hiddenEffect.flags.stealthy?.hidden ?? (10 + actor.system.skills.stl.total);
+    const spotEffect = this.findSpotEffect(source);
+    const perception = spotEffect?.flags.stealthy?.spot ?? (10 + actor.system.skills.prc.total);
 
     if (perception <= stealth) {
       Stealthy.log(`${visionSource.object.name}'s ${perception} can't see ${config.object.name}'s ${stealth}`);
@@ -35,8 +35,8 @@ export class StealthyDnd4e extends StealthyBaseEngine {
     return false;
   }
 
-  getHiddenFlagAndValue(hidden) {
-    const value = hidden.flags.stealthy?.hidden ?? (10 + actor.system.skills.stl.total);
+  getHiddenFlagAndValue(actor, effect) {
+    const value = effect.flags.stealthy?.hidden ?? (10 + actor.system.skills.stl.total);
     return { flag: { hidden: value }, value };
   }
 
@@ -46,8 +46,8 @@ export class StealthyDnd4e extends StealthyBaseEngine {
     await actor.updateEmbeddedDocuments('ActiveEffect', [effect]);
   }
 
-  getSpotFlagAndValue(spot) {
-    const value = spot.flags.stealthy?.spot ?? (10 + actor.system.skills.prc.total);
+  getSpotFlagAndValue(actor, effect) {
+    const value = effect.flags.stealthy?.spot ?? (10 + actor.system.skills.prc.total);
     return { flag: { spot: value }, value };
   }
 
@@ -62,7 +62,7 @@ export class StealthyDnd4e extends StealthyBaseEngine {
 
     const token = canvas.tokens.get(message.speaker.token);
     const actor = token.actor;
-    const label = game.i18n.localize("stealthy-spot-label");
+    const label = game.i18n.localize("stealthy.spot.label");
     await this.updateOrCreateEffect({
       label,
       actor,
@@ -76,7 +76,7 @@ export class StealthyDnd4e extends StealthyBaseEngine {
 
     const token = canvas.tokens.get(message.speaker.token);
     const actor = token.actor;
-    const label = game.i18n.localize("stealthy-hidden-label");
+    const label = game.i18n.localize("stealthy.hidden.label");
     await this.updateOrCreateEffect({
       label,
       actor,
