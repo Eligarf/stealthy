@@ -62,6 +62,20 @@ export class Stealthy5e extends StealthyBaseEngine {
     return super.basicVision(wrapped, visionSource, mode, config);
   }
 
+  makeSpotEffect(label) {
+    return (flag, source) => {
+      return {
+        label,
+        icon: 'icons/commodities/biological/eye-blue.webp',
+        duration: { turns: 1, seconds: 6 },
+        flags: {
+          convenientDescription: game.i18n.localize("stealthy.spot.description"),
+          stealthy: flag
+        },
+      };
+    };
+  }
+
   getHiddenFlagAndValue(actor, effect) {
     const value = effect.flags.stealthy?.hidden ?? actor.system.skills.ste.passive;
     return { flag: { hidden: value }, value };

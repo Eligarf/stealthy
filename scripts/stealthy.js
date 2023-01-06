@@ -90,7 +90,6 @@ export class StealthyBaseEngine {
     return (flag, source) => ({
       label,
       icon: 'icons/commodities/biological/eye-blue.webp',
-      duration: { turns: 1, seconds: 6 },
       flags: {
         convenientDescription: game.i18n.localize("stealthy.spot.description"),
         stealthy: flag
