@@ -19,11 +19,11 @@ export class StealthyPF1 extends StealthyBaseEngine {
     });
   }
 
-  isHidden(visionSource, hidden, target, config) {
+  isHidden(visionSource, hiddenEffect, target, config) {
     const source = visionSource.object?.actor;
-    const stealth = hidden.flags.stealthy?.hidden ?? (10 + target.system.skills.ste.mod);
-    const spot = source?.effects.find(e => e.label === game.i18n.localize("stealthy-spot-label") && !e.disabled);
-    const perception = spot?.flags.stealthy?.spot ?? (10 + target.system.skills.per.mod);
+    const stealth = hiddenEffect.flags.stealthy?.hidden ?? (10 + target.system.skills.ste.mod);
+    const spotEffect = this.findSpotEffect(source);
+    const perception = spotEffect?.flags.stealthy?.spot ?? (10 + target.system.skills.per.mod);
 
     if (perception <= stealth) {
       Stealthy.log(`${visionSource.object.name}'s ${perception} can't see ${config.object.name}'s ${stealth}`);
@@ -32,8 +32,8 @@ export class StealthyPF1 extends StealthyBaseEngine {
     return false;
   }
 
-  getHiddenFlagAndValue(hidden) {
-    const value = hidden.flags.stealthy?.hidden ?? actor.system.skills.ste.value;
+  getHiddenFlagAndValue(actor, effect) {
+    const value = effect.flags.stealthy?.hidden ?? (10 + actor.system.skills.ste.value);
     return { flag: { hidden: value }, value };
   }
 
@@ -43,8 +43,8 @@ export class StealthyPF1 extends StealthyBaseEngine {
     await actor.updateEmbeddedDocuments('ActiveEffect', [effect]);
   }
 
-  getSpotFlagAndValue(spot) {
-    const value = spot.flags.stealthy?.spot ?? actor.system.attributes.perception.value;
+  getSpotFlagAndValue(actor, effect) {
+    const value = effect.flags.stealthy?.spot ?? (10 + actor.system.attributes.perception.value);
     return { flag: { spot: value }, value };
   }
 
@@ -57,7 +57,7 @@ export class StealthyPF1 extends StealthyBaseEngine {
   async rollPerception(actor, message) {
     Stealthy.log('rollPerception', { actor, message });
 
-    const label = game.i18n.localize("stealthy-spot-label");
+    const label = game.i18n.localize("stealthy.spot.label");
     await this.updateOrCreateEffect({
       label,
       actor,
@@ -69,7 +69,7 @@ export class StealthyPF1 extends StealthyBaseEngine {
   async rollStealth(actor, message) {
     Stealthy.log('rollStealth', { actor, message });
 
-    const label = game.i18n.localize("stealthy-hidden-label");
+    const label = game.i18n.localize("stealthy.hidden.label");
     await this.updateOrCreateEffect({
       label,
       actor,

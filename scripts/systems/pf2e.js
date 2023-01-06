@@ -9,7 +9,7 @@ export class StealthyPF2e extends StealthyBaseEngine {
     console.warn(`Stealthy for '${game.system.id}' is stubbed out, needs development`);
   }
 
-  isHidden(visionSource, hidden, target, config) {
+  isHidden(visionSource, hiddenEffect, target, config) {
     // Implement your system's method for testing spot data vs hidden data
     // This should would in the absence of a spot effect on the viewer, using
     // a passive or default value as necessary
@@ -21,14 +21,14 @@ export class StealthyPF2e extends StealthyBaseEngine {
   }
 
   makeSpotEffect(label) {
-    console.error(`'${game.system.id}' isn't make a Spot effect. Heavy lifting goes here.`);
+    console.error(`'${game.system.id}' can't make a Spot effect. Heavy lifting goes here.`);
   }
 
   async updateOrCreateEffect({ label, actor, flag, makeEffect }) {
     console.error(`'${game.system.id}' isn't compatible with Active Effect use. Heavy lifting goes here.`);
   }
 
-  getHiddenFlagAndValue(hidden) {
+  getHiddenFlagAndValue(actor, hidden) {
     // Return the data necessary for storing data about hidden, and the
     // value that should be shown on the token button input
     return { flag: { hidden: undefined }, value: undefined };
@@ -41,7 +41,7 @@ export class StealthyPF2e extends StealthyBaseEngine {
     await actor.updateEmbeddedDocuments('ActiveEffect', [effect]);
   }
 
-  getSpotFlagAndValue(spot) {
+  getSpotFlagAndValue(actor, spot) {
     // Return the data necessary for storing data about spot, and the
     // value that should be shown on the token button input
     return { flag: { spot: undefined }, value: undefined };

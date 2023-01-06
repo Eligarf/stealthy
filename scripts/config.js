@@ -2,12 +2,12 @@ import { Stealthy } from "./stealthy.js";
 
 Hooks.once('ready', () => {
 
-  const module = game.modules.get('stealthy');
+  const module = game.modules.get(Stealthy.MODULE_ID);
   const moduleVersion = module.version;
 
-  game.settings.register('stealthy', 'ignoreFriendlyStealth', {
-    name: game.i18n.localize("stealthy-ignoreFriendlyStealth-name"),
-    hint: game.i18n.localize("stealthy-ignoreFriendlyStealth-hint"),
+  game.settings.register(Stealthy.MODULE_ID, 'ignoreFriendlyStealth', {
+    name: game.i18n.localize("stealthy.ignoreFriendlyStealth.name"),
+    hint: game.i18n.localize("stealthy.ignoreFriendlyStealth.hint"),
     scope: 'world',
     config: true,
     type: Boolean,
@@ -15,9 +15,9 @@ Hooks.once('ready', () => {
   });
 
   if (game.system.id === 'dnd5e') {
-    game.settings.register('stealthy', 'ignoreFriendlyUmbralSight', {
-      name: game.i18n.localize("stealthy-ignoreFriendlyUmbralSight-name"),
-      hint: game.i18n.localize("stealthy-ignoreFriendlyUmbralSight-hint"),
+    game.settings.register(Stealthy.MODULE_ID, 'ignoreFriendlyUmbralSight', {
+      name: game.i18n.localize("stealthy.dnd5e.ignoreFriendlyUmbralSight.name"),
+      hint: game.i18n.localize("stealthy.dnd5e.ignoreFriendlyUmbralSight.hint"),
       scope: 'world',
       config: true,
       type: Boolean,
@@ -26,22 +26,22 @@ Hooks.once('ready', () => {
   }
 
   let sources = {
-    'none': game.i18n.localize("stealthy-source-min"),
-    'ae': game.i18n.localize("stealthy-source-ae"),
-    'cub': game.i18n.localize("stealthy-source-cub"),
-    'ce': game.i18n.localize("stealthy-source-ce")
+    'none': game.i18n.localize("stealthy.source.min"),
+    'ae': game.i18n.localize("stealthy.source.ae"),
+    'cub': game.i18n.localize("stealthy.source.cub"),
+    'ce': game.i18n.localize("stealthy.source.ce")
   };
   let defaultSource = 'ae';
-  if (game.cub?.getCondition(game.i18n.localize("stealthy-hidden-label"))) {
+  if (game.cub?.getCondition(game.i18n.localize("stealthy.hidden.label"))) {
     defaultSource = 'cub';
   }
-  if (game.dfreds?.effectInterface?.findEffectByName(game.i18n.localize("stealthy-hidden-label"))) {
+  if (game.dfreds?.effectInterface?.findEffectByName(game.i18n.localize("stealthy.hidden.label"))) {
     defaultSource = 'ce';
   }
 
-  game.settings.register('stealthy', 'hiddenSource', {
-    name: game.i18n.localize("stealthy-source-name"),
-    hint: game.i18n.localize("stealthy-source-hint"),
+  game.settings.register(Stealthy.MODULE_ID, 'hiddenSource', {
+    name: game.i18n.localize("stealthy.source.name"),
+    hint: game.i18n.localize("stealthy.source.hint"),
     scope: 'world',
     config: true,
     type: String,
@@ -49,32 +49,32 @@ Hooks.once('ready', () => {
     default: defaultSource
   });
 
-  game.settings.register('stealthy', 'logLevel', {
-    name: game.i18n.localize("stealthy-logLevel-name"),
+  game.settings.register(Stealthy.MODULE_ID, 'logLevel', {
+    name: game.i18n.localize("stealthy.logLevel.name"),
     scope: 'client',
     config: true,
     type: String,
     choices: {
-      'none': game.i18n.localize("stealthy-logLevel-none-choice"),
-      'debug': game.i18n.localize("stealthy-logLevel-debuglevel-choice"),
-      'log': game.i18n.localize("stealthy-logLevel-loglevel-choice")
+      'none': game.i18n.localize("stealthy.logLevel.none"),
+      'debug': game.i18n.localize("stealthy.logLevel.debug"),
+      'log': game.i18n.localize("stealthy.logLevel.log")
     },
     default: 'none'
   });
 
   if (game.system.id === 'dnd5e') {
-    game.settings.register('stealthy', 'tokenLighting', {
-      name: game.i18n.localize("stealthy-tokenLighting-name"),
-      hint: game.i18n.localize("stealthy-tokenLighting-hint"),
+    game.settings.register(Stealthy.MODULE_ID, 'tokenLighting', {
+      name: game.i18n.localize("stealthy.dnd5e.tokenLighting.name"),
+      hint: game.i18n.localize("stealthy.dnd5e.tokenLighting.hint"),
       scope: 'world',
       config: true,
       type: Boolean,
       default: false,
     });
 
-    game.settings.register('stealthy', 'spotPair', {
-      name: game.i18n.localize("stealthy-spotPair-name"),
-      hint: game.i18n.localize("stealthy-spotPair-hint"),
+    game.settings.register(Stealthy.MODULE_ID, 'spotPair', {
+      name: game.i18n.localize("stealthy.dnd5e.spotPair.name"),
+      hint: game.i18n.localize("stealthy.dnd5e.spotPair.hint"),
       scope: 'world',
       config: true,
       type: Boolean,
@@ -86,7 +86,9 @@ Hooks.once('ready', () => {
 });
 
 Hooks.on('renderSettingsConfig', (app, html, data) => {
-  $('<div>').addClass('form-group group-header').html(game.i18n.localize("stealthy-config-general")).insertBefore($('[name="stealthy.ignoreFriendlyStealth"]').parents('div.form-group:first'));
-  $('<div>').addClass('form-group group-header').html(game.i18n.localize("stealthy-config-debug")).insertBefore($('[name="stealthy.logLevel"]').parents('div.form-group:first'));
-  $('<div>').addClass('form-group group-header').html(game.i18n.localize("stealthy-config-experimental")).insertBefore($('[name="stealthy.tokenLighting"]').parents('div.form-group:first'));
+  $('<div>').addClass('form-group group-header').html(game.i18n.localize("stealthy.config.general")).insertBefore($('[name="stealthy.ignoreFriendlyStealth"]').parents('div.form-group:first'));
+  $('<div>').addClass('form-group group-header').html(game.i18n.localize("stealthy.config.debug")).insertBefore($('[name="stealthy.logLevel"]').parents('div.form-group:first'));
+  if (game.system.id === 'dnd5e') {
+    $('<div>').addClass('form-group group-header').html(game.i18n.localize("stealthy.dnd5e.config.experimental")).insertBefore($('[name="stealthy.tokenLighting"]').parents('div.form-group:first'));
+  }
 });

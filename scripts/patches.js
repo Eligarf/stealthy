@@ -2,7 +2,7 @@ import { Stealthy } from "./stealthy.js";
 
 Hooks.once('setup', () => {
   libWrapper.register(
-    'stealthy',
+    Stealthy.MODULE_ID,
     'DetectionModeBasicSight.prototype.testVisibility',
     (wrapped, visionSource, mode, config = {}) => {
       const engine = game.stealthy.engine;
@@ -14,7 +14,7 @@ Hooks.once('setup', () => {
   );
 
   libWrapper.register(
-    'stealthy',
+    Stealthy.MODULE_ID,
     'DetectionModeInvisibility.prototype.testVisibility',
     (wrapped, visionSource, mode, config = {}) => {
       const engine = game.stealthy.engine;
