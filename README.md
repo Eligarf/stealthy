@@ -60,7 +60,7 @@ D&D 5E treats skill contest ties as preserving the status quo, so use of passive
 
 ### Experimental - Lighting effects on Perception vs Hidden token
 For this approach we are only looking at dnd5e and we've broken this down into three pieces:
-- Detecting the light level on the token itself, which is independant of viewer. Stealthy is decoupled from figuring that out by just looking for 'Dim' or 'Dark' conditions on the token; a different module will manage this. Fingers crossed.
+- Detecting the light level on the token itself, which is independant of viewer. Stealthy looks for 'Dim' or 'Dark' status effects on the token and does no light calculations itself; [Token Light Condition](https://foundryvtt.com/packages/tokenlightcondition) was written as a separate module to handle this.
 - Remapping the dim/dark light level per viewer based on their viewing mode. At least 3 different mapping tables are needed:
   - Foundry Darkvision: Dark -> Dim; Dim -> Bright **(Current Implementation)**
   - RAW 5E Darkvision: Dark -> Dim
