@@ -1,3 +1,8 @@
+# v2.1.0
+* Dnd4e supported
+* Fixed bug in PF1 where it used the wrong actor source for the take-10 perception tests
+* Organize keys in language file
+
 # v2.0.0
 * PF1 support - effect cleanup is macro based so buyer beware
 * PF2e support parked due to active effect incompatibility

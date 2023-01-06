@@ -4,26 +4,28 @@ import { Stealthy, StealthyBaseEngine } from '../stealthy.js';
 // of the Hidden effect once it is placed given the PF1 UI doesn't seem to show
 // active effects.
 
-export class StealthyPF1 extends StealthyBaseEngine {
+export class StealthyDnd4e extends StealthyBaseEngine {
 
   constructor() {
     super();
 
-    Hooks.on('pf1ActorRollSkill', async (actor, message, skill) => {
-      if (skill === 'ste') {
-        await this.rollStealth(actor, message);
+    Hooks.on('createChatMessage', async (message, options, id) => {
+      if (message.flavor.endsWith('uses Stealth.')) {
+        await this.rollStealth(message, options, id);
       }
-      else if (skill === 'per') {
-        await this.rollPerception(actor, message);
+      else if (message.flavor.endsWith('uses Perception.')) {
+        await this.rollPerception(message, options, id);
       }
     });
   }
 
   isHidden(visionSource, hiddenEffect, target, config) {
+    // Never gets called, neither do the patches for the v10 vision modes
+    // dead in the water
     const source = visionSource.object?.actor;
-    const stealth = hiddenEffect.flags.stealthy?.hidden ?? (10 + target.system.skills.ste.mod);
+    const stealth = hiddenEffect.flags.stealthy?.hidden ?? (10 + target.system.skills.stl.total);
     const spotEffect = this.findSpotEffect(source);
-    const perception = spotEffect?.flags.stealthy?.spot ?? (10 + source.system.skills.per.mod);
+    const perception = spotEffect?.flags.stealthy?.spot ?? (10 + source.system.skills.prc.total);
 
     if (perception <= stealth) {
       Stealthy.log(`${visionSource.object.name}'s ${perception} can't see ${config.object.name}'s ${stealth}`);
@@ -33,7 +35,7 @@ export class StealthyPF1 extends StealthyBaseEngine {
   }
 
   getHiddenFlagAndValue(actor, effect) {
-    const value = effect.flags.stealthy?.hidden ?? (10 + actor.system.skills.ste.value);
+    const value = effect.flags.stealthy?.hidden ?? (10 + actor.system.skills.stl.total);
     return { flag: { hidden: value }, value };
   }
 
@@ -44,7 +46,7 @@ export class StealthyPF1 extends StealthyBaseEngine {
   }
 
   getSpotFlagAndValue(actor, effect) {
-    const value = effect.flags.stealthy?.spot ?? (10 + actor.system.attributes.perception.value);
+    const value = effect.flags.stealthy?.spot ?? (10 + actor.system.skills.prc.total);
     return { flag: { spot: value }, value };
   }
 
@@ -54,9 +56,11 @@ export class StealthyPF1 extends StealthyBaseEngine {
     await actor.updateEmbeddedDocuments('ActiveEffect', [effect]);
   }
 
-  async rollPerception(actor, message) {
-    Stealthy.log('rollPerception', { actor, message });
+  async rollPerception(message, options, id) {
+    Stealthy.log('rollPerception', { message, options, id });
 
+    const token = canvas.tokens.get(message.speaker.token);
+    const actor = token.actor;
     const label = game.i18n.localize("stealthy.spot.label");
     await this.updateOrCreateEffect({
       label,
@@ -66,9 +70,11 @@ export class StealthyPF1 extends StealthyBaseEngine {
     });
   }
 
-  async rollStealth(actor, message) {
-    Stealthy.log('rollStealth', { actor, message });
+  async rollStealth(message, options, id) {
+    Stealthy.log('rollStealth', { message, options, id });
 
+    const token = canvas.tokens.get(message.speaker.token);
+    const actor = token.actor;
     const label = game.i18n.localize("stealthy.hidden.label");
     await this.updateOrCreateEffect({
       label,
@@ -80,5 +86,5 @@ export class StealthyPF1 extends StealthyBaseEngine {
 }
 
 Hooks.once('init', () => {
-  Stealthy.RegisterEngine('pf1', () => new StealthyPF1());
+  Stealthy.RegisterEngine('dnd4e', () => new StealthyDnd4e());
 });
