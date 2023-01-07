@@ -57,25 +57,13 @@ export class StealthyPF1 extends StealthyBaseEngine {
   async rollPerception(actor, message) {
     Stealthy.log('rollPerception', { actor, message });
 
-    const label = game.i18n.localize("stealthy.spot.label");
-    await this.updateOrCreateEffect({
-      label,
-      actor,
-      flag: { spot: message.rolls[0].total },
-      makeEffect: this.makeSpotEffectMaker(label)
-    });
+    await this.updateOrCreateSpotEffect(actor, { spot: message.rolls[0].total });
   }
 
   async rollStealth(actor, message) {
     Stealthy.log('rollStealth', { actor, message });
 
-    const label = game.i18n.localize("stealthy.hidden.label");
-    await this.updateOrCreateEffect({
-      label,
-      actor,
-      flag: { hidden: message.rolls[0].total },
-      makeEffect: this.makeHiddenEffectMaker(label)
-    });
+    await this.updateOrCreateHiddenEffect(actor, { hidden: message.rolls[0].total });
   }
 }
 

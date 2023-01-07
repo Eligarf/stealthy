@@ -127,25 +127,13 @@ export class Stealthy5e extends StealthyBaseEngine {
       }
     }
 
-    const label = game.i18n.localize("stealthy.spot.label");
-    await this.updateOrCreateEffect({
-      label,
-      actor,
-      flag: { spot: perception },
-      makeEffect: this.makeSpotEffectMaker(label)
-    });
+    await this.updateOrCreateSpotEffect(actor, { spot: perception });
   }
 
   async rollStealth(actor, roll) {
     Stealthy.log('Stealthy5e.rollStealth', { actor, roll });
 
-    const label = game.i18n.localize("stealthy.hidden.label");
-    await this.updateOrCreateEffect({
-      label,
-      actor,
-      flag: { hidden: roll.total },
-      makeEffect: this.makeHiddenEffectMaker(label)
-    });
+    await this.updateOrCreateHiddenEffect(actor, { hidden: roll.total });
   }
 
   static GetPassivePerceptionWithDisadvantage(source) {

@@ -61,13 +61,7 @@ export class StealthyDnd4e extends StealthyBaseEngine {
 
     const token = canvas.tokens.get(message.speaker.token);
     const actor = token.actor;
-    const label = game.i18n.localize("stealthy.spot.label");
-    await this.updateOrCreateEffect({
-      label,
-      actor,
-      flag: { spot: message.rolls[0].total },
-      makeEffect: this.makeSpotEffectMaker(label)
-    });
+    await this.updateOrCreateSpotEffect(actor, { spot: message.rolls[0].total });
   }
 
   async rollStealth(message, options, id) {
@@ -75,13 +69,7 @@ export class StealthyDnd4e extends StealthyBaseEngine {
 
     const token = canvas.tokens.get(message.speaker.token);
     const actor = token.actor;
-    const label = game.i18n.localize("stealthy.hidden.label");
-    await this.updateOrCreateEffect({
-      label,
-      actor,
-      flag: { hidden: message.rolls[0].total },
-      makeEffect: this.makeHiddenEffectMaker(label)
-    });
+    await this.updateOrCreateHiddenEffect(actor, { hidden: message.rolls[0].total });
   }
 }
 

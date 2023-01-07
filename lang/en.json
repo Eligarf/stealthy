@@ -3,12 +3,14 @@
     "hidden": {
       "label": "Hidden",
       "description": "Requires perception check to detect",
-      "inputBox": "Current Stealth"
+      "inputBox": "Current Stealth",
+      "source": "Hidden effect source"
     },
     "spot": {
       "label": "Spot",
       "description": "Active Perception check result",
-      "inputBox": "Current Perception"
+      "inputBox": "Current Perception",
+      "source": "Spot effect source"
     },
     "activeSpot": "Active Spot",
     "ignoreFriendlyStealth": {
@@ -16,8 +18,7 @@
       "hint": "Perception vs Stealth tests will be ignored for tokens of the same disposition"
     },
     "source": {
-      "name": "Source for Hidden and Spot effects",
-      "hint": "Will need reload after adding the effect(s) to CE or CUB",
+      "hint": "Where to find the effect",
       "ce": {
         "name": "Convenient Effects",
         "beforeLabel": "Couldn't find effect",
