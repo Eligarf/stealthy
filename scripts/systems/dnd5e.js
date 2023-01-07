@@ -75,12 +75,6 @@ export class Stealthy5e extends StealthyBaseEngine {
     return { flag: { hidden: value }, value };
   }
 
-  async setHiddenValue(actor, effect, flag, value) {
-    flag.hidden = value;
-    effect.flags.stealthy = flag;
-    await actor.updateEmbeddedDocuments('ActiveEffect', [effect]);
-  }
-
   getSpotFlagAndValue(actor, effect) {
     let flag = { normal: undefined, disadvantaged: undefined };
     const active = effect.flags.stealthy?.spot?.normal ?? effect.flags.stealthy?.spot;

@@ -39,21 +39,9 @@ export class StealthyDnd4e extends StealthyBaseEngine {
     return { flag: { hidden: value }, value };
   }
 
-  async setHiddenValue(actor, effect, flag, value) {
-    flag.hidden = value;
-    effect.flags.stealthy = flag;
-    await actor.updateEmbeddedDocuments('ActiveEffect', [effect]);
-  }
-
   getSpotFlagAndValue(actor, effect) {
     const value = effect.flags.stealthy?.spot ?? (10 + actor.system.skills.prc.total);
     return { flag: { spot: value }, value };
-  }
-
-  async setSpotValue(actor, effect, flag, value) {
-    flag.spot = value;
-    effect.flags.stealthy = flag;
-    await actor.updateEmbeddedDocuments('ActiveEffect', [effect]);
   }
 
   async rollPerception(message, options, id) {
