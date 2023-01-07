@@ -11,6 +11,9 @@ export class StealthyBaseEngine {
     // Hooks.once('init', () => {
     //   Stealthy.engines['game-system-id'] = () => new StealthyGameSystem();
     // });
+
+    this.warnedMissingCE = false;
+    this.warnedMissingCUB = false;
   }
 
   testStealth(visionSource, config) {
@@ -104,13 +107,29 @@ export class StealthyBaseEngine {
     if (!effect) {
       // See if we can source from outside
       const source = game.settings.get(Stealthy.MODULE_ID, 'hiddenSource');
-      if (source === 'ce' && game.dfreds?.effectInterface?.findEffectByName(label)) {
-        await game.dfreds.effectInterface.addEffect({ effectName: label, uuid: actor.uuid });
-        effect = actor.effects.find(e => e.label === label);
+      if (source === 'ce') {
+        if (game.dfreds?.effectInterface?.findEffectByName(label)) {
+          await game.dfreds.effectInterface.addEffect({ effectName: label, uuid: actor.uuid });
+          effect = actor.effects.find(e => e.label === label);
+        }
+        if (!effect && !this.warnedMissingCE) {
+          this.warnedMissingCE = true;
+          if (game.user.isGM)
+            ui.notifications.warn(`Couldn't find effect '${label}' in Convenient Effects, using Stealthy's default instead`);
+          console.error(`stealthy | Convenient Effects couldn't find the '${label}' effect so Stealthy will use the default one. Add your customized effect to CE or select a different effect source in Game Settings`);
+        }
       }
-      else if (source === 'cub' && game.cub?.getCondition(label)) {
-        await game.cub.applyCondition(label, actor);
-        effect = actor.effects.find(e => e.label === label);
+      else if (source === 'cub') {
+        if (game.cub?.getCondition(label)) {
+          await game.cub.applyCondition(label, actor);
+          effect = actor.effects.find(e => e.label === label);
+        }
+        if (!effect && !this.warnedMissingCUB) {
+          this.warnedMissingCUB = true;
+          if (game.user.isGM)
+            ui.notifications.warn(`Couldn't find effect '${label}' in CUB, using Stealthy's default instead`);
+          console.error(`stealthy | Combat Utility Belt couldn't find the '${label}' effect so Stealthy will use the default one. Add your customized effect to CUB or select a different effect source in Game Settings`);
+        }
       }
 
       // If we haven't found an ouside source, create the default one
