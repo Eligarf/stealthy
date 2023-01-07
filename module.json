@@ -12,31 +12,42 @@
       "flags": {}
     }
   ],
-  "version": "2.1.0",
+  "version": "2.2.0",
   "compatibility": {
     "minimum": "10.291",
     "verified": "10.291"
   },
   "relationships": {
+    "systems": [
+      {
+        "id": "dnd4e",
+        "type": "system",
+        "compatibility": {}
+      },
+      {
+        "id": "dnd5e",
+        "type": "system",
+        "compatibility": {}
+      },
+      {
+        "id": "pf1",
+        "type": "system",
+        "compatibility": {}
+      }
+    ],
     "requires": [
       {
         "id": "lib-wrapper",
         "type": "module",
-        "manifest": "https://github.com/ruipin/fvtt-lib-wrapper",
         "compatibility": {}
       },
       {
         "id": "socketlib",
         "type": "module",
-        "manifest": "https://raw.githubusercontent.com/manuelVo/foundryvtt-socketlib/master/module.json",
         "compatibility": {}
       }
     ]
   },
-  "system": [
-    "dnd5e",
-    "pf1"
-  ],
   "esmodules": [
     "scripts/config.js",
     "scripts/stealthy.js",
@@ -52,10 +63,16 @@
       "name": "English",
       "path": "lang/en.json",
       "flags": {}
+    },
+    {
+      "lang": "pt-BR",
+      "name": "Português Brasileiro",
+      "path": "lang/pt-BR.json",
+      "flags": {}
     }
   ],
   "socket": true,
-  "download": "https://github.com/Eligarf/stealthy/releases/download/v2.1.0/stealthy.zip",
+  "download": "https://github.com/Eligarf/stealthy/releases/download/v2.2.0/stealthy.zip",
   "changelog": "https://raw.githubusercontent.com/eligarf/stealthy/release/ChangeLog.md",
   "url": "https://github.com/Eligarf/stealthy",
   "manifest": "https://github.com/Eligarf/stealthy/releases/latest/download/module.json",
