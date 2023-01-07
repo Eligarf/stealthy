@@ -12,7 +12,7 @@
       "flags": {}
     }
   ],
-  "version": "2.2.0",
+  "version": "autoreplaced",
   "compatibility": {
     "minimum": "10.291",
     "verified": "10.291"
@@ -72,10 +72,10 @@
     }
   ],
   "socket": true,
-  "download": "https://github.com/Eligarf/stealthy/releases/download/v2.2.0/stealthy.zip",
+  "url": "autoreplaced",
+  "manifest": "autoreplaced",
+  "download": "autoreplaced",
   "changelog": "https://raw.githubusercontent.com/eligarf/stealthy/release/ChangeLog.md",
-  "url": "https://github.com/Eligarf/stealthy",
-  "manifest": "https://github.com/Eligarf/stealthy/releases/latest/download/module.json",
   "bugs": "https://github.com/Eligarf/stealthy/issues",
   "readme": "https://raw.githubusercontent.com/eligarf/stealthy/release/README.md",
   "license": "https://raw.githubusercontent.com/eligarf/stealthy/release/LICENSE"
