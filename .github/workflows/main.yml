@@ -31,7 +31,7 @@ jobs:
         bugs: https://github.com/${{github.repository}}/issues
 
     # Create a zip file with all files required by the module to add to the release
-    - run: zip -r ./stealthy.zip module.json README.md LICENSE ChangeLog.md scripts/ lang/
+    - run: zip -r ./stealthy.zip module.json README.md LICENSE ChangeLog.md scripts/ languages/
 
     # Create a release for this specific version
     - name: Update Release with Files

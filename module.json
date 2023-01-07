@@ -61,13 +61,13 @@
     {
       "lang": "en",
       "name": "English",
-      "path": "lang/en.json",
+      "path": "languages/en.json",
       "flags": {}
     },
     {
       "lang": "pt-BR",
       "name": "Português Brasileiro",
-      "path": "lang/pt-BR.json",
+      "path": "languages/pt-BR.json",
       "flags": {}
     }
   ],
