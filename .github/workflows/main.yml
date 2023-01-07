@@ -3,7 +3,7 @@ name: Module Builder
 on: 
   push:
     tags:
-      - '*'
+      - 'v*'
 
 jobs:
   build:
