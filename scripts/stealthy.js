@@ -115,7 +115,8 @@ export class StealthyBaseEngine {
         if (!effect && !this.warnedMissingCE) {
           this.warnedMissingCE = true;
           if (game.user.isGM)
-            ui.notifications.warn(`Couldn't find effect '${label}' in Convenient Effects, using Stealthy's default instead`);
+            ui.notifications.warn(
+              `${game.i18n.localize('stealthy.source.ce.beforeLabel')} '${label}' ${game.i18n.localize('stealthy.source.ce.afterLabel')}`);
           console.error(`stealthy | Convenient Effects couldn't find the '${label}' effect so Stealthy will use the default one. Add your customized effect to CE or select a different effect source in Game Settings`);
         }
       }
@@ -127,7 +128,8 @@ export class StealthyBaseEngine {
         if (!effect && !this.warnedMissingCUB) {
           this.warnedMissingCUB = true;
           if (game.user.isGM)
-            ui.notifications.warn(`Couldn't find effect '${label}' in CUB, using Stealthy's default instead`);
+            ui.notifications.warn(
+              `${game.i18n.localize('stealthy.source.cub.beforeLabel')} '${label}' ${game.i18n.localize('stealthy.source.cub.afterLabel')}`);
           console.error(`stealthy | Combat Utility Belt couldn't find the '${label}' effect so Stealthy will use the default one. Add your customized effect to CUB or select a different effect source in Game Settings`);
         }
       }

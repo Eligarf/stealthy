@@ -28,8 +28,8 @@ Hooks.once('ready', () => {
   let sources = {
     'none': game.i18n.localize("stealthy.source.min"),
     'ae': game.i18n.localize("stealthy.source.ae"),
-    'cub': game.i18n.localize("stealthy.source.cub"),
-    'ce': game.i18n.localize("stealthy.source.ce")
+    'cub': game.i18n.localize("stealthy.source.cub.name"),
+    'ce': game.i18n.localize("stealthy.source.ce.name")
   };
   let defaultSource = 'ae';
   if (game.cub?.getCondition(game.i18n.localize("stealthy.hidden.label"))) {

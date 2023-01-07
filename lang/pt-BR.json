@@ -18,8 +18,16 @@
     "source": {
       "name": "Fonte dos efeitos Escondido e Percebido",
       "hint": "Precisará recarregar após adicionar o(s) efeito(s) ao CE ou CUB",
-      "ce": "Convenient Effects",
-      "cub": "Combat Utility Belt",
+      "ce": {
+        "name": "Convenient Effects",
+        "beforeLabel": "Não foi possível encontrar o efeito",
+        "afterLabel": "no CE, usando o padrão do Stealthy"
+      },
+      "cub": {
+        "name": "Combat Utility Belt",
+        "beforeLabel": "Não foi possível encontrar o efeito",
+        "afterLabel": "no CUB, usando o padrão do Stealthy"
+      },
       "ae": "Stealthy",
       "min": "Stealthy - apenas um ícone"
     },
