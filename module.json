@@ -75,8 +75,8 @@
   "url": "autoreplaced",
   "manifest": "autoreplaced",
   "download": "autoreplaced",
-  "changelog": "https://raw.githubusercontent.com/eligarf/stealthy/release/ChangeLog.md",
-  "bugs": "https://github.com/Eligarf/stealthy/issues",
-  "readme": "https://raw.githubusercontent.com/eligarf/stealthy/release/README.md",
-  "license": "https://raw.githubusercontent.com/eligarf/stealthy/release/LICENSE"
+  "changelog": "ChangeLog.md",
+  "bugs": "autoreplaced",
+  "readme": "README.md",
+  "license": "LICENSE"
 }
