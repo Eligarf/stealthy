@@ -101,12 +101,11 @@ export class StealthyBaseEngine {
     });
   }
 
-  async updateOrCreateEffect({ label, actor, flag, makeEffect }) {
+  async updateOrCreateEffect({ label, actor, flag, source, makeEffect }) {
     let effect = actor.effects.find(e => e.label === label);
 
     if (!effect) {
       // See if we can source from outside
-      const source = game.settings.get(Stealthy.MODULE_ID, 'hiddenSource');
       if (source === 'ce') {
         if (game.dfreds?.effectInterface?.findEffectByName(label)) {
           await game.dfreds.effectInterface.addEffect({ effectName: label, uuid: actor.uuid });
@@ -148,6 +147,27 @@ export class StealthyBaseEngine {
     await actor.updateEmbeddedDocuments('ActiveEffect', [effect]);
   }
 
+  async updateOrCreateSpotEffect(actor, flag) {
+    const label = game.i18n.localize("stealthy.spot.label");
+    await this.updateOrCreateEffect({
+      label,
+      actor,
+      flag,
+      source: game.settings.get(Stealthy.MODULE_ID, 'spotSource'),
+      makeEffect: this.makeSpotEffectMaker(label)
+    });
+  }
+
+  async updateOrCreateHiddenEffect(actor, flag) {
+    const label = game.i18n.localize("stealthy.hidden.label");
+    await this.updateOrCreateEffect({
+      label,
+      actor,
+      flag,
+      source: game.settings.get(Stealthy.MODULE_ID, 'hiddenSource'),
+      makeEffect: this.makeHiddenEffectMaker(label)
+    });
+  }
   getHiddenFlagAndValue(actor, effect) {
     // Return the data necessary for storing data about hidden, and the
     // value that should be shown on the token button input

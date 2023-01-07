@@ -3,12 +3,14 @@
     "hidden": {
       "label": "Escondido",
       "description": "Requer teste de Percepção para detectar",
-      "inputBox": "Furtividade atual"
+      "inputBox": "Furtividade atual",
+      "source": "Fonte de efeito Escondido"
     },
     "spot": {
       "label": "Percebido",
       "description": "Resultado do teste ativo de Percepção",
-      "inputBox": "Percepção atual"
+      "inputBox": "Percepção atual",
+      "source": "Fonte de efeito Percebido"
     },
     "activeSpot": "Ativamente percebido",
     "ignoreFriendlyStealth": {
@@ -16,8 +18,7 @@
       "hint": "Testes de Percepção vs Furtividade serão ignorados para tokens com a mesma disposição"
     },
     "source": {
-      "name": "Fonte dos efeitos Escondido e Percebido",
-      "hint": "Precisará recarregar após adicionar o(s) efeito(s) ao CE ou CUB",
+      "hint": "Onde encontrar o efeito",
       "ce": {
         "name": "Convenient Effects",
         "beforeLabel": "Não foi possível encontrar o efeito",

@@ -31,22 +31,25 @@ Hooks.once('ready', () => {
     'cub': game.i18n.localize("stealthy.source.cub.name"),
     'ce': game.i18n.localize("stealthy.source.ce.name")
   };
-  let defaultSource = 'ae';
-  if (game.cub?.getCondition(game.i18n.localize("stealthy.hidden.label"))) {
-    defaultSource = 'cub';
-  }
-  if (game.dfreds?.effectInterface?.findEffectByName(game.i18n.localize("stealthy.hidden.label"))) {
-    defaultSource = 'ce';
-  }
 
   game.settings.register(Stealthy.MODULE_ID, 'hiddenSource', {
-    name: game.i18n.localize("stealthy.source.name"),
+    name: game.i18n.localize("stealthy.hidden.source"),
     hint: game.i18n.localize("stealthy.source.hint"),
     scope: 'world',
     config: true,
     type: String,
     choices: sources,
-    default: defaultSource
+    default: 'ae'
+  });
+
+  game.settings.register(Stealthy.MODULE_ID, 'spotSource', {
+    name: game.i18n.localize("stealthy.spot.source"),
+    hint: game.i18n.localize("stealthy.source.hint"),
+    scope: 'world',
+    config: true,
+    type: String,
+    choices: sources,
+    default: 'ae'
   });
 
   game.settings.register(Stealthy.MODULE_ID, 'logLevel', {
