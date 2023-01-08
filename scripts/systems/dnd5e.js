@@ -4,6 +4,25 @@ export class Stealthy5e extends StealthyBaseEngine {
 
   constructor() {
     super();
+
+    game.settings.register(Stealthy.MODULE_ID, 'tokenLighting', {
+      name: game.i18n.localize("stealthy.dnd5e.tokenLighting.name"),
+      hint: game.i18n.localize("stealthy.dnd5e.tokenLighting.hint"),
+      scope: 'world',
+      config: true,
+      type: Boolean,
+      default: false,
+    });
+
+    game.settings.register(Stealthy.MODULE_ID, 'spotPair', {
+      name: game.i18n.localize("stealthy.dnd5e.spotPair.name"),
+      hint: game.i18n.localize("stealthy.dnd5e.spotPair.hint"),
+      scope: 'world',
+      config: true,
+      type: Boolean,
+      default: false,
+    });
+
     Hooks.on('dnd5e.rollSkill', async (actor, roll, skill) => {
       if (skill === 'ste') {
         await this.rollStealth(actor, roll);
@@ -204,4 +223,8 @@ export class Stealthy5e extends StealthyBaseEngine {
 
 Hooks.once('init', () => {
   Stealthy.RegisterEngine('dnd5e', () => new Stealthy5e());
+});
+
+Hooks.on('renderSettingsConfig', (app, html, data) => {
+  $('<div>').addClass('form-group group-header').html(game.i18n.localize("stealthy.dnd5e.config.experimental")).insertBefore($('[name="stealthy.tokenLighting"]').parents('div.form-group:first'));
 });
