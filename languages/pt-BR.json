@@ -4,13 +4,20 @@
       "label": "Escondido",
       "description": "Requer teste de Percepção para detectar",
       "inputBox": "Furtividade atual",
-      "source": "Fonte de efeito Escondido"
+      "source": "Fonte de efeito Escondido",
+      "preloc": {
+        "key": "Chave de localização para o rótulo Escondido",
+        "hint": "Esta string será enviada através de i18n.localize(). Mudar isso pode afetar a automação geral dos efeitos do Stealthy."
+      }
     },
     "spot": {
       "label": "Percebido",
       "description": "Resultado do teste ativo de Percepção",
       "inputBox": "Percepção atual",
-      "source": "Fonte de efeito Percebido"
+      "source": "Fonte de efeito Percebido",
+      "preloc": {
+        "key": "Chave de localização para o rótulo Percebido"
+      }
     },
     "activeSpot": "Ativamente percebido",
     "ignoreFriendlyStealth": {
@@ -40,7 +47,8 @@
     },
     "config": {
       "general": "Opções gerais",
-      "debug": "Opções de depuração"
+      "debug": "Opções de depuração",
+      "advanced": "Opções avançadas"
     },
     "dnd5e": {
       "ignoreFriendlyUmbralSight": {

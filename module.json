@@ -49,7 +49,6 @@
     ]
   },
   "esmodules": [
-    "scripts/config.js",
     "scripts/stealthy.js",
     "scripts/hooks.js",
     "scripts/patches.js",

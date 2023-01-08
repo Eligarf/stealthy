@@ -14,6 +14,8 @@ export class StealthyBaseEngine {
 
     this.warnedMissingCE = false;
     this.warnedMissingCUB = false;
+    this.hiddenLabel = game.i18n.localize(game.settings.get(Stealthy.MODULE_ID, 'hiddenLabel'));
+    this.spotLabel = game.i18n.localize(game.settings.get(Stealthy.MODULE_ID, 'spotLabel'));
   }
 
   testStealth(visionSource, config) {
@@ -33,11 +35,11 @@ export class StealthyBaseEngine {
   }
 
   findHiddenEffect(actor) {
-    return actor?.effects.find(e => e.label === game.i18n.localize("stealthy.hidden.label") && !e.disabled);
+    return actor?.effects.find(e => e.label === this.hiddenLabel && !e.disabled);
   }
 
   findSpotEffect(actor) {
-    return actor?.effects.find(e => e.label === game.i18n.localize("stealthy.spot.label") && !e.disabled);
+    return actor?.effects.find(e => e.label === this.spotLabel && !e.disabled);
   }
 
   isHidden(visionSource, hiddenEffect, target, config) {
@@ -148,24 +150,22 @@ export class StealthyBaseEngine {
   }
 
   async updateOrCreateSpotEffect(actor, flag) {
-    const label = game.i18n.localize("stealthy.spot.label");
     await this.updateOrCreateEffect({
-      label,
+      label: this.spotLabel,
       actor,
       flag,
       source: game.settings.get(Stealthy.MODULE_ID, 'spotSource'),
-      makeEffect: this.makeSpotEffectMaker(label)
+      makeEffect: this.makeSpotEffectMaker(this.spotLabel)
     });
   }
 
   async updateOrCreateHiddenEffect(actor, flag) {
-    const label = game.i18n.localize("stealthy.hidden.label");
     await this.updateOrCreateEffect({
-      label,
+      label: this.hiddenLabel,
       actor,
       flag,
       source: game.settings.get(Stealthy.MODULE_ID, 'hiddenSource'),
-      makeEffect: this.makeHiddenEffectMaker(label)
+      makeEffect: this.makeHiddenEffectMaker(this.hiddenLabel)
     });
   }
   getHiddenFlagAndValue(actor, effect) {
