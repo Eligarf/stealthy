@@ -7,7 +7,7 @@
       "source": "Hidden effect source",
       "preloc": {
         "key": "Localization key for the Hidden label",
-        "hint": "This string will be sent through i18n.localize()"
+        "hint": "This string will be sent through i18n.localize(). Changing these may affect overall automation of Stealthy's effects."
       }
     },
     "spot": {
@@ -16,8 +16,7 @@
       "inputBox": "Current Perception",
       "source": "Spot effect source",
       "preloc": {
-        "key": "Localization key for the Spot label",
-        "hint": "This string will be sent through i18n.localize()"
+        "key": "Localization key for the Spot label"
       }
     },
     "activeSpot": "Active Spot",

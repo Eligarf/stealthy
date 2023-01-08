@@ -65,7 +65,6 @@ Hooks.once('setup', () => {
 
   game.settings.register(Stealthy.MODULE_ID, 'spotLabel', {
     name: game.i18n.localize("stealthy.spot.preloc.key"),
-    hint: game.i18n.localize("stealthy.spot.preloc.hint"),
     scope: 'world',
     config: true,
     type: String,
