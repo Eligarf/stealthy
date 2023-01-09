@@ -22,17 +22,23 @@
       {
         "id": "dnd4e",
         "type": "system",
-        "compatibility": {}
+        "compatibility": {
+          "verified": "0.3.18"
+        }
       },
       {
         "id": "dnd5e",
         "type": "system",
-        "compatibility": {}
+        "compatibility": {
+          "verified": "2.0.3"
+        }
       },
       {
         "id": "pf1",
         "type": "system",
-        "compatibility": {}
+        "compatibility": {
+          "verified": "0.82.5"
+        }
       }
     ],
     "requires": [
@@ -52,9 +58,9 @@
     "scripts/stealthy.js",
     "scripts/hooks.js",
     "scripts/patches.js",
+    "scripts/systems/dnd4e.js",
     "scripts/systems/dnd5e.js",
-    "scripts/systems/pf1.js",
-    "scripts/systems/dnd4e.js"
+    "scripts/systems/pf1.js"
   ],
   "languages": [
     {
