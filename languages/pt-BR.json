@@ -6,7 +6,7 @@
       "inputBox": "Furtividade atual",
       "source": "Fonte de efeito Escondido",
       "preloc": {
-        "key": "Chave de localização para o rótulo Escondido",
+        "key": "Chave de localização para rótulo Escondido",
         "hint": "Esta string será enviada através de i18n.localize(). Mudar isso pode afetar a automação geral dos efeitos do Stealthy."
       }
     },
@@ -16,7 +16,7 @@
       "inputBox": "Percepção atual",
       "source": "Fonte de efeito Percebido",
       "preloc": {
-        "key": "Chave de localização para o rótulo Percebido"
+        "key": "Chave de localização para rótulo Percebido"
       }
     },
     "activeSpot": "Ativamente percebido",

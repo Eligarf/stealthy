@@ -1,4 +1,4 @@
-# Pending
+# v2.3.0
 * Spot and Hidden effects can have different sources.
 * Spot and Hidden effect label can be customized.
 
