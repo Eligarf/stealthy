@@ -1,5 +1,6 @@
-# Pending
-* Spot and Hidden effects can have different sources
+# v2.3.0
+* Spot and Hidden effects can have different sources.
+* Spot and Hidden effect label can be customized.
 
 # v2.2.0
 * Added Brazilian Portuguese support (thanks lucaspicerni)

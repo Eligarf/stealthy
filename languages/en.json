@@ -4,13 +4,20 @@
       "label": "Hidden",
       "description": "Requires perception check to detect",
       "inputBox": "Current Stealth",
-      "source": "Hidden effect source"
+      "source": "Hidden effect source",
+      "preloc": {
+        "key": "Localization key for Hidden label",
+        "hint": "This string will be sent through i18n.localize(). Changing these may affect overall automation of Stealthy's effects."
+      }
     },
     "spot": {
       "label": "Spot",
       "description": "Active Perception check result",
       "inputBox": "Current Perception",
-      "source": "Spot effect source"
+      "source": "Spot effect source",
+      "preloc": {
+        "key": "Localization key for Spot label"
+      }
     },
     "activeSpot": "Active Spot",
     "ignoreFriendlyStealth": {
@@ -40,7 +47,8 @@
     },
     "config": {
       "general": "General Options",
-      "debug": "Debug Options"
+      "debug": "Debug Options",
+      "advanced": "Advanced Options"
     },
     "dnd5e": {
       "ignoreFriendlyUmbralSight": {

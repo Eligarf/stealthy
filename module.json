@@ -12,7 +12,7 @@
       "flags": {}
     }
   ],
-  "version": "2.2.0",
+  "version": "autoreplaced",
   "compatibility": {
     "minimum": "10.291",
     "verified": "10.291"
@@ -49,7 +49,6 @@
     ]
   },
   "esmodules": [
-    "scripts/config.js",
     "scripts/stealthy.js",
     "scripts/hooks.js",
     "scripts/patches.js",
@@ -61,22 +60,22 @@
     {
       "lang": "en",
       "name": "English",
-      "path": "lang/en.json",
+      "path": "languages/en.json",
       "flags": {}
     },
     {
       "lang": "pt-BR",
       "name": "Português Brasileiro",
-      "path": "lang/pt-BR.json",
+      "path": "languages/pt-BR.json",
       "flags": {}
     }
   ],
   "socket": true,
-  "download": "https://github.com/Eligarf/stealthy/releases/download/v2.2.0/stealthy.zip",
-  "changelog": "https://raw.githubusercontent.com/eligarf/stealthy/release/ChangeLog.md",
-  "url": "https://github.com/Eligarf/stealthy",
-  "manifest": "https://github.com/Eligarf/stealthy/releases/latest/download/module.json",
-  "bugs": "https://github.com/Eligarf/stealthy/issues",
-  "readme": "https://raw.githubusercontent.com/eligarf/stealthy/release/README.md",
-  "license": "https://raw.githubusercontent.com/eligarf/stealthy/release/LICENSE"
+  "url": "autoreplaced",
+  "manifest": "autoreplaced",
+  "download": "autoreplaced",
+  "changelog": "ChangeLog.md",
+  "bugs": "autoreplaced",
+  "readme": "README.md",
+  "license": "LICENSE"
 }
