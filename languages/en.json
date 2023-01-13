@@ -58,13 +58,23 @@
       "config.experimental": "Experimental",
       "tokenLighting": {
         "name": "Check token lighting conditions",
-        "hint": "Check for token effects that indicate lighting condition of the token. WARNING - only currently handles passive perception"
+        "hint": "Check for token effects that indicate lighting condition of the token."
       },
-      "dark.label": "Dark",
-      "dim.label": "Dim",
+      "dark": {
+        "label": "Dark",
+        "key": "Localization key for Dark label"
+      },
+      "dim": {
+        "label": "Dim",
+        "key": "Localization key for Dim label"
+      },
       "spotPair": {
         "name": "Record disadvantaged Perception when rolling a check",
         "hint": "Parse Perception roll results to have both a normal and disadvantaged result, rolling a second die if necessary"
+      },
+      "dimIsBright": {
+        "name": "Treat Dim as Bright in Darkvision",
+        "hint": "Enabling this matches Foundry Darkvision behavior, disabling this matches 5E rules. Install the 'Adequate Vision' module if you wish Foundry visuals to more closely match 5E rules."
       }
     }
   }
