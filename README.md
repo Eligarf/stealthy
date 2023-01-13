@@ -64,7 +64,7 @@ For this approach we are only looking at dnd5e and we've broken this down into t
 - Capturing the advantage/disadvantage state of the viewers perception in order to do the right thing when applying disadvantage in dim vision. We get these flags on the active rolls, and can generate an extra roll result we can store in our flag so that we have a result for disadvantage should we need it. **We haven't yet figured out how to handle pre-existing passive disadvantage on perception inside the visibility test itself, so this edge case will cause those tokens to end up taking the -5 penalty twice. You have been warned.**
 
 ## pf1
-  - I assume take-10 perception for tokens without an active spot effect. It isn't RAW, but perhaps this is acceptable to the PF1 community.
+  - Perception take-10. A Hidden token will not be seen by a viewing token without a Spot effect unless the Perception take-10 setting is enabled.
   - The Spot and Hidden effects aren't "Buff"-style effects, so the PF1 actor sheet UI doesn't have a way to delete the effects once they've been added by rolling. You could use [DFreds Effects Panel](https://foundryvtt.com/packages/dfreds-effects-panel), or I made this macro (I assume there is a smarter way)
 
 'Remove Hidden' Script Macro:

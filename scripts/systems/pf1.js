@@ -9,6 +9,15 @@ export class StealthyPF1 extends StealthyBaseEngine {
   constructor() {
     super();
 
+    game.settings.register(Stealthy.MODULE_ID, 'spotTake10', {
+      name: game.i18n.localize("stealthy.pf1.spotTake10.name"),
+      hint: game.i18n.localize("stealthy.pf1.spotTake10.hint"),
+      scope: 'world',
+      config: true,
+      type: Boolean,
+      default: false,
+    });
+
     Hooks.on('pf1ActorRollSkill', async (actor, message, skill) => {
       if (skill === 'ste') {
         await this.rollStealth(actor, message);
@@ -23,9 +32,11 @@ export class StealthyPF1 extends StealthyBaseEngine {
     const source = visionSource.object?.actor;
     const stealth = hiddenEffect.flags.stealthy?.hidden ?? (10 + target.system.skills.ste.mod);
     const spotEffect = this.findSpotEffect(source);
-    const perception = spotEffect?.flags.stealthy?.spot ?? (10 + source.system.skills.per.mod);
+    const spotTake10 = game.settings.get(Stealthy.MODULE_ID, 'spotTake10');
+    const perception = spotEffect?.flags.stealthy?.spot
+      ?? (spotTake10 ? 10 + source.system.skills.per.mod : undefined);
 
-    if (perception <= stealth) {
+    if (perception === undefined || perception <= stealth) {
       Stealthy.log(`${visionSource.object.name}'s ${perception} can't see ${config.object.name}'s ${stealth}`);
       return true;
     }
@@ -38,7 +49,7 @@ export class StealthyPF1 extends StealthyBaseEngine {
   }
 
   getSpotFlagAndValue(actor, effect) {
-    const value = effect.flags.stealthy?.spot ?? (10 + actor.system.attributes.perception.value);
+    const value = effect.flags.stealthy.spot;
     return { flag: { spot: value }, value };
   }
 

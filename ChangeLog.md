@@ -1,6 +1,7 @@
-# pending
+# Pending
 * Add choice to match Foundry lighting or 5E rules for perception tests in dim lighting
 * Added settings for changing localization keys for dim/dark
+* PF1: Remove take-10 default; an active Spot roll is required to reveal Hidden tokens.
 
 # v2.3.0
 * Spot and Hidden effects can have different sources.

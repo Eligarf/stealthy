@@ -76,6 +76,12 @@
         "name": "Treat Dim as Bright in Darkvision",
         "hint": "Enabling this matches Foundry Darkvision behavior, disabling this matches 5E rules. Install the 'Adequate Vision' module if you wish Foundry visuals to more closely match 5E rules."
       }
+    },
+    "pf1": {
+      "spotTake10": {
+        "name": "Perception take-10",
+        "hint": "If no Spot effect is active, assume the Perception take-10 result for the visibility test. If disabled, Hidden tokens will not be seen without an active Spot effect."
+      }
     }
   }
 }

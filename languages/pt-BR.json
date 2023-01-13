@@ -76,6 +76,12 @@
         "name": "Trate Penumbra como Escuro em Visão Escura",
         "hint": "Habilitar isso corresponde ao comportamento do Foundry, desabilitar isso corresponde às regras 5E. Instale o módulo 'Adequate Vision' se desejar que os visuais do Foundry correspondam mais às regras 5E."
       }
+    },
+    "pf1": {
+      "spotTake10": {
+        "name": "Percepção pegue-10",
+        "hint": "Se nenhum efeito Percebido estiver ativo, assuma o resultado de Percepção - 10 para o teste de visibilidade. Se desativado, os tokens Escondido não serão vistos sem um efeito Percebido ativo."
+      }
     }
   }
 }
