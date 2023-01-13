@@ -21,7 +21,9 @@ export class StealthyPf2e extends StealthyBaseEngine {
       Stealthy.MODULE_ID,
       'DetectionModeBasicSight.prototype._canDetect',
       function (wrapped, visionSource, target) {
-        Stealthy.log('DetectionModeBasicSight.prototype._canDetect', { visionSource, target });
+        // Stealthy.log('DetectionModeBasicSight.prototype._canDetect', { visionSource, target });
+        const engine = game.stealthy.engine;
+        if (!engine.testStealth(visionSource, target)) return false;
         return wrapped(visionSource, target);
       },
       libWrapper.MIXED,
@@ -37,14 +39,14 @@ export class StealthyPf2e extends StealthyBaseEngine {
     return actor.getFlag(Stealthy.MODULE_ID, 'spot');
   }
 
-  isHidden(visionSource, hiddenEffect, target, config) {
+  isHidden(visionSource, hiddenEffect, target) {
     const source = visionSource.object?.actor;
-    const stealth = hiddenEffect ?? (10 + target.system.skills.ste.value);
+    const stealth = hiddenEffect ?? (10 + target.actor.system.skills.ste.value);
     const spotEffect = this.findSpotEffect(source);
-    const perception = spotEffect ?? (10 + target.system.attributes.perception.value);
+    const perception = spotEffect ?? (10 + target.actor.system.attributes.perception.value);
 
     if (perception <= stealth) {
-      Stealthy.log(`${visionSource.object.name}'s ${perception} can't see ${config.object.name}'s ${stealth}`);
+      Stealthy.log(`${visionSource.object.name}'s ${perception} can't see ${target.name}'s ${stealth}`);
       return true;
     }
     return false;

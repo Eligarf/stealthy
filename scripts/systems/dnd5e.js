@@ -69,9 +69,9 @@ export class Stealthy5e extends StealthyBaseEngine {
 
   static LIGHT_LABELS = ['dark', 'dim', 'bright'];
 
-  isHidden(visionSource, hiddenEffect, target, config) {
+  isHidden(visionSource, hiddenEffect, target) {
     const source = visionSource.object?.actor;
-    const stealth = hiddenEffect.flags.stealthy?.hidden ?? target.system.skills.ste.passive;
+    const stealth = hiddenEffect.flags.stealthy?.hidden ?? target.actor.system.skills.ste.passive;
     const spotEffect = this.findSpotEffect(source);
 
     // active perception loses ties, passive perception wins ties to simulate the
@@ -81,14 +81,14 @@ export class Stealthy5e extends StealthyBaseEngine {
     let perception;
 
     if (game.settings.get(Stealthy.MODULE_ID, 'tokenLighting')) {
-      perception = Stealthy5e.AdjustForLightingConditions(spotPair, visionSource, source, target);
+      perception = Stealthy5e.AdjustForLightingConditions(spotPair, visionSource, source, target.actor);
     }
     else {
-      perception = Stealthy5e.AdjustForDefaultConditions(spotPair, visionSource, source, target);
+      perception = Stealthy5e.AdjustForDefaultConditions(spotPair, visionSource, source, target.actor);
     }
 
     if (perception <= stealth) {
-      Stealthy.log(`${visionSource.object.name}'s ${perception} can't see ${config.object.name}'s ${stealth}`);
+      Stealthy.log(`${visionSource.object.name}'s ${perception} can't see ${target.name}'s ${stealth}`);
       return true;
     }
     return false;

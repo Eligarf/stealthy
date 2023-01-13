@@ -89,9 +89,7 @@ Hooks.once('setup', () => {
 
   const systemEngine = Stealthy.engines[game.system.id];
   if (systemEngine) {
-    let engine = new Stealthy(systemEngine);
-    engine.patchFoundry();
-    window.game.stealthy = engine;
+    window.game.stealthy = new Stealthy(systemEngine);
   }
   else {
     console.error(`Stealthy doesn't yet support system id '${game.system.id}'`);

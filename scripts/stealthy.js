@@ -23,8 +23,9 @@ export class StealthyBaseEngine {
       Stealthy.MODULE_ID,
       'DetectionModeBasicSight.prototype.testVisibility',
       function (wrapped, visionSource, mode, config = {}) {
-        if (!this.testStealth(visionSource, config)) return false;
-        return this.basicVision(wrapped, visionSource, mode, config);
+        const engine = game.stealthy.engine;
+        if (!engine.testStealth(visionSource, config.object)) return false;
+        return engine.basicVision(wrapped, visionSource, mode, config);
       },
       libWrapper.MIXED,
       { perf_mode: libWrapper.PERF_FAST }
@@ -34,24 +35,24 @@ export class StealthyBaseEngine {
       Stealthy.MODULE_ID,
       'DetectionModeInvisibility.prototype.testVisibility',
       function (wrapped, visionSource, mode, config = {}) {
-        if (!this.testStealth(visionSource, config)) return false;
-        return this.seeInvisibility(wrapped, visionSource, mode, config);
+        const engine = game.stealthy.engine;
+        if (!engine.testStealth(visionSource, config.object)) return false;
+        return engine.seeInvisibility(wrapped, visionSource, mode, config);
       },
       libWrapper.MIXED,
       { perf_mode: libWrapper.PERF_FAST }
     );
   }
 
-  testStealth(visionSource, config) {
-    const target = config.object?.actor;
+  testStealth(visionSource, target) {
     const ignoreFriendlyStealth =
       game.settings.get(Stealthy.MODULE_ID, 'ignoreFriendlyStealth') &&
-      config.object.document?.disposition === visionSource.object.document?.disposition;
+      target.document?.disposition === visionSource.object.document?.disposition;
 
     if (!ignoreFriendlyStealth) {
-      const hiddenEffect = this.findHiddenEffect(target);
+      const hiddenEffect = this.findHiddenEffect(target?.actor);
       if (hiddenEffect) {
-        if (this.isHidden(visionSource, hiddenEffect, target, config)) return false;
+        if (this.isHidden(visionSource, hiddenEffect, target)) return false;
       }
     }
 
@@ -66,7 +67,7 @@ export class StealthyBaseEngine {
     return actor?.effects.find(e => e.label === this.spotLabel && !e.disabled);
   }
 
-  isHidden(visionSource, hiddenEffect, target, config) {
+  isHidden(visionSource, hiddenEffect, target) {
     // Implement your system's method for testing spot data vs hidden data
     // This should would in the absence of a spot effect on the viewer, using
     // a passive or default value as necessary
@@ -225,6 +226,7 @@ export class Stealthy {
   
   constructor(makeEngine) {
     this.engine = makeEngine();
+    this.engine.patchFoundry();
     this.activeSpot = true;
     this.socket = null;
     this.socket = socketlib.registerModule(Stealthy.MODULE_ID);

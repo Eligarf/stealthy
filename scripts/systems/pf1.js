@@ -28,16 +28,16 @@ export class StealthyPF1 extends StealthyBaseEngine {
     });
   }
 
-  isHidden(visionSource, hiddenEffect, target, config) {
+  isHidden(visionSource, hiddenEffect, target) {
     const source = visionSource.object?.actor;
-    const stealth = hiddenEffect.flags.stealthy?.hidden ?? (10 + target.system.skills.ste.mod);
+    const stealth = hiddenEffect.flags.stealthy?.hidden ?? (10 + target.actor.system.skills.ste.mod);
     const spotEffect = this.findSpotEffect(source);
     const spotTake10 = game.settings.get(Stealthy.MODULE_ID, 'spotTake10');
     const perception = spotEffect?.flags.stealthy?.spot
       ?? (spotTake10 ? 10 + source.system.skills.per.mod : undefined);
 
     if (perception === undefined || perception <= stealth) {
-      Stealthy.log(`${visionSource.object.name}'s ${perception} can't see ${config.object.name}'s ${stealth}`);
+      Stealthy.log(`${visionSource.object.name}'s ${perception} can't see ${target.name}'s ${stealth}`);
       return true;
     }
     return false;
