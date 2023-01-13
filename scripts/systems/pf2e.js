@@ -16,6 +16,19 @@ export class StealthyPf2e extends StealthyBaseEngine {
     });
   }
 
+  patchFoundry() {
+    libWrapper.register(
+      Stealthy.MODULE_ID,
+      'DetectionModeBasicSight.prototype._canDetect',
+      function (wrapped, visionSource, target) {
+        Stealthy.log('DetectionModeBasicSight.prototype._canDetect', { visionSource, target });
+        return wrapped(visionSource, target);
+      },
+      libWrapper.MIXED,
+      { perf_mode: libWrapper.PERF_FAST }
+    );
+  }
+
   findHiddenEffect(actor) {
     return actor.getFlag(Stealthy.MODULE_ID, 'hidden');
   }

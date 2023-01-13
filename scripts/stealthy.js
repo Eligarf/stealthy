@@ -18,6 +18,30 @@ export class StealthyBaseEngine {
     this.spotLabel = game.i18n.localize(game.settings.get(Stealthy.MODULE_ID, 'spotLabel'));
   }
 
+  patchFoundry() {
+    libWrapper.register(
+      Stealthy.MODULE_ID,
+      'DetectionModeBasicSight.prototype.testVisibility',
+      function (wrapped, visionSource, mode, config = {}) {
+        if (!this.testStealth(visionSource, config)) return false;
+        return this.basicVision(wrapped, visionSource, mode, config);
+      },
+      libWrapper.MIXED,
+      { perf_mode: libWrapper.PERF_FAST }
+    );
+
+    libWrapper.register(
+      Stealthy.MODULE_ID,
+      'DetectionModeInvisibility.prototype.testVisibility',
+      function (wrapped, visionSource, mode, config = {}) {
+        if (!this.testStealth(visionSource, config)) return false;
+        return this.seeInvisibility(wrapped, visionSource, mode, config);
+      },
+      libWrapper.MIXED,
+      { perf_mode: libWrapper.PERF_FAST }
+    );
+  }
+
   testStealth(visionSource, config) {
     const target = config.object?.actor;
     const ignoreFriendlyStealth =
