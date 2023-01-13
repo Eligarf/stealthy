@@ -1,6 +1,6 @@
 import { Stealthy, StealthyBaseEngine } from '../stealthy.js';
 
-export class StealthyPf2e extends StealthyBaseEngine {
+export class StealthyPF2e extends StealthyBaseEngine {
 
   constructor() {
     super();
@@ -103,5 +103,5 @@ export class StealthyPf2e extends StealthyBaseEngine {
 }
 
 Hooks.once('init', () => {
-  Stealthy.RegisterEngine('pf2e', () => new StealthyPf2e());
+  Stealthy.RegisterEngine('pf2e', () => new StealthyPF2e());
 });
