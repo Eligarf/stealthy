@@ -4,6 +4,56 @@ export class Stealthy5e extends StealthyBaseEngine {
 
   constructor() {
     super();
+
+    game.settings.register(Stealthy.MODULE_ID, 'tokenLighting', {
+      name: game.i18n.localize("stealthy.dnd5e.tokenLighting.name"),
+      hint: game.i18n.localize("stealthy.dnd5e.tokenLighting.hint"),
+      scope: 'world',
+      config: true,
+      type: Boolean,
+      default: false,
+    });
+
+    game.settings.register(Stealthy.MODULE_ID, 'spotPair', {
+      name: game.i18n.localize("stealthy.dnd5e.spotPair.name"),
+      hint: game.i18n.localize("stealthy.dnd5e.spotPair.hint"),
+      scope: 'world',
+      config: true,
+      type: Boolean,
+      default: false,
+    });
+
+    game.settings.register(Stealthy.MODULE_ID, 'darkLabel', {
+      name: game.i18n.localize("stealthy.hidden.dark.key"),
+      scope: 'world',
+      config: true,
+      type: String,
+      default: 'stealthy.dnd5e.dark.label',
+      onChange: value => {
+        debouncedReload();
+      }
+    });
+
+    game.settings.register(Stealthy.MODULE_ID, 'dimLabel', {
+      name: game.i18n.localize("stealthy.dnd5e.dim.key"),
+      scope: 'world',
+      config: true,
+      type: String,
+      default: 'stealthy.dnd5e.dim.label',
+      onChange: value => {
+        debouncedReload();
+      }
+    });
+
+    game.settings.register(Stealthy.MODULE_ID, 'dimIsBright', {
+      name: game.i18n.localize("stealthy.dnd5e.dimIsBright.name"),
+      hint: game.i18n.localize("stealthy.dnd5e.dimIsBright.hint"),
+      scope: 'world',
+      config: true,
+      type: Boolean,
+      default: false,
+    });
+
     Hooks.on('dnd5e.rollSkill', async (actor, roll, skill) => {
       if (skill === 'ste') {
         await this.rollStealth(actor, roll);
@@ -12,6 +62,9 @@ export class Stealthy5e extends StealthyBaseEngine {
         await this.rollPerception(actor, roll);
       }
     });
+
+    this.dimLabel = game.i18n.localize(game.settings.get(Stealthy.MODULE_ID, 'dimLabel'));
+    this.darkLabel = game.i18n.localize(game.settings.get(Stealthy.MODULE_ID, 'darkLabel'));
   }
 
   static LIGHT_LABELS = ['dark', 'dim', 'bright'];
@@ -73,12 +126,6 @@ export class Stealthy5e extends StealthyBaseEngine {
   getHiddenFlagAndValue(actor, effect) {
     const value = effect.flags.stealthy?.hidden ?? actor.system.skills.ste.passive;
     return { flag: { hidden: value }, value };
-  }
-
-  async setHiddenValue(actor, effect, flag, value) {
-    flag.hidden = value;
-    effect.flags.stealthy = flag;
-    await actor.updateEmbeddedDocuments('ActiveEffect', [effect]);
   }
 
   getSpotFlagAndValue(actor, effect) {
@@ -157,13 +204,14 @@ export class Stealthy5e extends StealthyBaseEngine {
 
     // What light band are we told we sit in?
     let lightBand = 2;
-    if (target?.effects.find(e => e.label === game.i18n.localize("stealthy.dnd5e.dark.label") && !e.disabled)) { lightBand = 0; }
-    if (target?.effects.find(e => e.label === game.i18n.localize("stealthy.dnd5e.dim.label") && !e.disabled)) { lightBand = 1; }
+    if (target?.effects.find(e => e.label === this.darkLabel && !e.disabled)) { lightBand = 0; }
+    if (target?.effects.find(e => e.label === this.dimLabel && !e.disabled)) { lightBand = 1; }
     debugData.lightLevel = Stealthy5e.LIGHT_LABELS[lightBand];
 
     // Adjust the light band based on conditions
     if (visionSource.visionMode?.id === 'darkvision') {
-      lightBand = lightBand + 1;
+      if (game.settings.get(Stealthy.MODULE_ID, 'tokenLighting')) lightBand = lightBand + 1;
+      else if (!lightBand) lightBand = 1;
       debugData.foundryDarkvision = Stealthy5e.LIGHT_LABELS[lightBand];
     }
 
@@ -210,4 +258,8 @@ export class Stealthy5e extends StealthyBaseEngine {
 
 Hooks.once('init', () => {
   Stealthy.RegisterEngine('dnd5e', () => new Stealthy5e());
+});
+
+Hooks.on('renderSettingsConfig', (app, html, data) => {
+  $('<div>').addClass('form-group group-header').html(game.i18n.localize("stealthy.dnd5e.config.experimental")).insertBefore($('[name="stealthy.tokenLighting"]').parents('div.form-group:first'));
 });

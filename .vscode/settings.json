@@ -1,5 +1,47 @@
 {
-  "githubPullRequests.ignoredPullRequestBranches": [
-    "dev"
-  ]
+  "C_Cpp.updateChannel": "Insiders",
+  "C_Cpp.vcFormat.newLine.beforeOpenBrace.block": "sameLine",
+  "C_Cpp.vcFormat.newLine.beforeOpenBrace.function": "sameLine",
+  "C_Cpp.vcFormat.newLine.beforeOpenBrace.lambda": "sameLine",
+  "C_Cpp.vcFormat.newLine.beforeOpenBrace.namespace": "sameLine",
+  "C_Cpp.vcFormat.newLine.beforeOpenBrace.type": "sameLine",
+  "C_Cpp.vcFormat.newLine.closeBraceSameLine.emptyFunction": true,
+  "C_Cpp.vcFormat.newLine.closeBraceSameLine.emptyType": true,
+  "C_Cpp.vcFormat.space.betweenEmptyBraces": true,
+  "C_Cpp.vcFormat.indent.namespaceContents": false,
+  "C_Cpp.vcFormat.space.pointerReferenceAlignment": "right",
+  "C_Cpp.vcFormat.indent.lambdaBracesWhenParameter": false,
+  "workbench.iconTheme": "vscode-icons",
+  "editor.formatOnPaste": true,
+  "C_Cpp.vcFormat.space.aroundBinaryOperator": "remove",
+  "editor.formatOnType": true,
+  "editor.suggestSelection": "first",
+  "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
+  "vsicons.dontShowNewVersionMessage": true,
+  "editor.largeFileOptimizations": false,
+  "editor.renderControlCharacters": true,
+  "git.confirmSync": false,
+  "javascript.format.semicolons": "insert",
+  "[javascript]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features"
+  },
+  "diffEditor.codeLens": true,
+  "[json]": {
+    "editor.defaultFormatter": "vscode.json-language-features"
+  },
+  "explorer.confirmDragAndDrop": false,
+  "window.autoDetectColorScheme": true,
+  "gitlens.gitCommands.skipConfirmations": [
+    "fetch:command",
+    "stash-push:command",
+    "switch:command",
+    "pull:command",
+    "branch-create:command"
+  ],
+  "diffEditor.ignoreTrimWhitespace": false,
+  "editor.detectIndentation": false,
+  "editor.tabSize": 2,
+  "javascript.updateImportsOnFileMove.enabled": "always",
+  "typescript.format.semicolons": "insert",
+  "githubPullRequests.createOnPublishBranch": "never"
 }
