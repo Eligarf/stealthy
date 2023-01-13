@@ -58,13 +58,23 @@
       "config.experimental": "Experimental",
       "tokenLighting": {
         "name": "Verificar as condições de iluminação dos tokens",
-        "hint": "Verificar se há efeitos de token que indicam a condição de iluminação dos tokens. AVISO - atualmente lida apenas com Percepção passiva"
+        "hint": "Verificar se há efeitos de token que indicam a condição de iluminação dos tokens."
       },
-      "dark.label": "Escuro",
-      "dim.label": "Penumbra",
+      "dark": {
+        "label": "Escuro",
+        "key": "Chave de localização para rótulo Escuro"
+      },
+      "dim": {
+        "label": "Penumbra",
+        "key": "Chave de localização para rótulo Penumbra"
+      },
       "spotPair": {
         "name": "Registar Percepção com desvantagem ao rolar um teste",
         "hint": "Analisar os resultados do teste de Percepção para obter um resultado normal e um com desvantagem, rolando um segundo dado se necessário"
+      },
+      "dimIsBright": {
+        "name": "Trate Penumbra como Escuro em Visão Escura",
+        "hint": "Habilitar isso corresponde ao comportamento do Foundry, desabilitar isso corresponde às regras 5E. Instale o módulo 'Adequate Vision' se desejar que os visuais do Foundry correspondam mais às regras 5E."
       }
     }
   }
