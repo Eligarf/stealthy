@@ -19,16 +19,16 @@ export class StealthyDnd4e extends StealthyBaseEngine {
     });
   }
 
-  isHidden(visionSource, hiddenEffect, target, config) {
+  isHidden(visionSource, hiddenEffect, target) {
     // Never gets called, neither do the patches for the v10 vision modes
     // dead in the water
     const source = visionSource.object?.actor;
-    const stealth = hiddenEffect.flags.stealthy?.hidden ?? (10 + target.system.skills.stl.total);
+    const stealth = hiddenEffect.flags.stealthy?.hidden ?? (10 + target.actor.system.skills.stl.total);
     const spotEffect = this.findSpotEffect(source);
     const perception = spotEffect?.flags.stealthy?.spot ?? (10 + source.system.skills.prc.total);
 
     if (perception <= stealth) {
-      Stealthy.log(`${visionSource.object.name}'s ${perception} can't see ${config.object.name}'s ${stealth}`);
+      Stealthy.log(`${visionSource.object.name}'s ${perception} can't see ${target.name}'s ${stealth}`);
       return true;
     }
     return false;
