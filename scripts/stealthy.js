@@ -9,7 +9,7 @@ export class StealthyBaseEngine {
     // setup
 
     // Hooks.once('init', () => {
-    //   Stealthy.engines['game-system-id'] = () => new StealthyGameSystem();
+    //   Stealthy.RegisterEngine('system-id', () => new StealthyNewSystem());
     // });
 
     this.warnedMissingCE = false;
