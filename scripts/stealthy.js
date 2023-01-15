@@ -48,9 +48,7 @@ export class StealthyBaseEngine {
         Stealthy.MODULE_ID,
         'Wall.prototype.createDoorControl',
         function (wrapped) {
-          this.doorControl = canvas.controls.doors.addChild(new DoorControl(this));
-          this.doorControl.draw();
-          return this.doorControl;
+          return StealthyBaseEngine.BaseWallCreateDoorControlSansGmCheck(this);
         },
         libWrapper.OVERRIDE,
         { perf_mode: libWrapper.PERF_AUTO }
@@ -63,11 +61,7 @@ export class StealthyBaseEngine {
           Stealthy.log('DoorControl.prototype.isVisible', this);
 
           if ((this.wall.document.door === CONST.WALL_DOOR_TYPES.SECRET)) {
-            const secret = 14;
-
             let tokens = canvas.tokens.controlled;
-
-            // Players will need to test against the highest spot value
             if (!tokens.length) {
               if (!game.user.isGM) {
                 tokens = canvas.scene.tokens.filter(t => {
@@ -79,34 +73,17 @@ export class StealthyBaseEngine {
               }
             }
 
+            // Players only see secret doors if they control one unit
             if (tokens.length === 1) {
               const engine = game.stealthy.engine;
-              const spotter = tokens[0].actor;
-              const { value: perception } = engine.getSpotFlagAndValue(spotter, engine.findSpotEffect(spotter));
-              if (perception < secret) {
-                return false;
-              }
-              Stealthy.log(`${tokens[0].name}'s ${perception} sees DC${secret} secret door`);
-            }
+              if (!engine.doorIsSpotted(this, tokens)) return false;
+              Stealthy.log(`Secret door DC${secret} is found`, tokens);
 
+            }
             else if (!game.user.isGM) return false;
           }
 
-          // Test two points which are perpendicular to the door midpoint
-          const w = this.wall;
-          const ray = this.wall.toRay();
-          const [x, y] = w.midpoint;
-          const [dx, dy] = [-ray.dy, ray.dx];
-          const t = 3 / (Math.abs(dx) + Math.abs(dy)); // Approximate with Manhattan distance for speed
-          const points = [
-            { x: x + (t * dx), y: y + (t * dy) },
-            { x: x - (t * dx), y: y - (t * dy) }
-          ];
-
-          // Test each point for visibility
-          return points.some(p => {
-            return canvas.effects.visibility.testVisibility(p, { object: this, tolerance: 0 });
-          });
+          return StealthyBaseEngine.BaseDoorControlIsVisibleSansGmCheck(this);
         },
         libWrapper.OVERRIDE,
         { perf_mode: libWrapper.PERF_AUTO }
@@ -287,6 +264,37 @@ export class StealthyBaseEngine {
     flag.spot = value;
     effect.flags.stealthy = flag;
     await actor.updateEmbeddedDocuments('ActiveEffect', [effect]);
+  }
+
+  static BaseWallCreateDoorControlSansGmCheck(wall) {
+    wall.doorControl = canvas.controls.doors.addChild(new DoorControl(wall));
+    wall.doorControl.draw();
+    return wall.doorControl;
+  }
+
+  static BaseDoorControlIsVisibleSansGmCheck(doorControl) {
+    // Test two points which are perpendicular to the door midpoint
+    const w = doorControl.wall;
+    const ray = w.toRay();
+    const [x, y] = w.midpoint;
+    const [dx, dy] = [-ray.dy, ray.dx];
+    const t = 3 / (Math.abs(dx) + Math.abs(dy)); // Approximate with Manhattan distance for speed
+    const points = [
+      { x: x + (t * dx), y: y + (t * dy) },
+      { x: x - (t * dx), y: y - (t * dy) }
+    ];
+
+    // Test each point for visibility
+    return points.some(p => {
+      return canvas.effects.visibility.testVisibility(p, { object: doorControl, tolerance: 0 });
+    });
+  }
+
+  doorIsSpotted(doorControl, tokens) {
+    const secret = 14;
+    const spotter = tokens[0].actor;
+    const { value: perception } = engine.getSpotFlagAndValue(spotter, engine.findSpotEffect(spotter));
+    return perception >= secret;
   }
 }
 
