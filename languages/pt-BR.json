@@ -51,11 +51,11 @@
       "advanced": "Opções avançadas"
     },
     "dnd5e": {
+      "name": "Dnd5e",
       "ignoreFriendlyUmbralSight": {
         "name": "Ignorar Visão Umbral aliada",
         "hint": "No modo de visão no escuro, ignorar a habilidade Visão Umbral para tokens com a mesma disposição"
       },
-      "config.experimental": "Experimental",
       "tokenLighting": {
         "name": "Verificar as condições de iluminação dos tokens",
         "hint": "Verificar se há efeitos de token que indicam a condição de iluminação dos tokens."
@@ -78,7 +78,7 @@
       }
     },
     "pf1": {
-      "config": "Pathfinder",
+      "name": "Pathfinder",
       "spotTake10": {
         "name": "Percepção pegue-10",
         "hint": "Se nenhum efeito Percebido estiver ativo, assuma o resultado de Percepção - 10 para o teste de visibilidade. Se desativado, os tokens Escondido não serão vistos sem um efeito Percebido ativo."

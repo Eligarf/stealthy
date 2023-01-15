@@ -5,6 +5,15 @@ export class Stealthy5e extends StealthyBaseEngine {
   constructor() {
     super();
 
+    game.settings.register(Stealthy.MODULE_ID, 'ignoreFriendlyUmbralSight', {
+      name: game.i18n.localize("stealthy.dnd5e.ignoreFriendlyUmbralSight.name"),
+      hint: game.i18n.localize("stealthy.dnd5e.ignoreFriendlyUmbralSight.hint"),
+      scope: 'world',
+      config: true,
+      type: Boolean,
+      default: false,
+    });
+
     game.settings.register(Stealthy.MODULE_ID, 'tokenLighting', {
       name: game.i18n.localize("stealthy.dnd5e.tokenLighting.name"),
       hint: game.i18n.localize("stealthy.dnd5e.tokenLighting.hint"),
@@ -65,6 +74,13 @@ export class Stealthy5e extends StealthyBaseEngine {
 
     this.dimLabel = game.i18n.localize(game.settings.get(Stealthy.MODULE_ID, 'dimLabel'));
     this.darkLabel = game.i18n.localize(game.settings.get(Stealthy.MODULE_ID, 'darkLabel'));
+
+    Hooks.on('renderSettingsConfig', (app, html, data) => {
+      $('<div>').addClass('form-group group-header')
+        .html(game.i18n.localize("stealthy.dnd5e.name"))
+        .insertBefore($('[name="stealthy.ignoreFriendlyUmbralSight"]')
+          .parents('div.form-group:first'));
+    });
   }
 
   static LIGHT_LABELS = ['dark', 'dim', 'bright'];
@@ -130,14 +146,14 @@ export class Stealthy5e extends StealthyBaseEngine {
 
   getSpotFlagAndValue(actor, effect) {
     let flag = { normal: undefined, disadvantaged: undefined };
-    const active = effect.flags.stealthy?.spot?.normal ?? effect.flags.stealthy?.spot;
+    const active = effect?.flags.stealthy?.spot?.normal ?? effect?.flags.stealthy?.spot;
     if (active !== undefined) {
       flag.normal = active;
       flag.disadvantaged = effect.flags.stealthy?.spot?.disadvantaged ?? active - 5;
     }
     else {
       flag.normal = actor.system.skills.prc.passive;
-      disadvantaged = Stealthy5e.GetPassivePerceptionWithDisadvantage(actor);
+      flag.disadvantaged = Stealthy5e.GetPassivePerceptionWithDisadvantage(actor);
     }
     return { flag: { spot: flag }, value: flag.normal };
   }
@@ -258,8 +274,4 @@ export class Stealthy5e extends StealthyBaseEngine {
 
 Hooks.once('init', () => {
   Stealthy.RegisterEngine('dnd5e', () => new Stealthy5e());
-});
-
-Hooks.on('renderSettingsConfig', (app, html, data) => {
-  $('<div>').addClass('form-group group-header').html(game.i18n.localize("stealthy.dnd5e.config.experimental")).insertBefore($('[name="stealthy.tokenLighting"]').parents('div.form-group:first'));
 });

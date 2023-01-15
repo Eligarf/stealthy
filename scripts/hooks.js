@@ -13,17 +13,6 @@ Hooks.once('setup', () => {
     default: true,
   });
 
-  if (game.system.id === 'dnd5e') {
-    game.settings.register(Stealthy.MODULE_ID, 'ignoreFriendlyUmbralSight', {
-      name: game.i18n.localize("stealthy.dnd5e.ignoreFriendlyUmbralSight.name"),
-      hint: game.i18n.localize("stealthy.dnd5e.ignoreFriendlyUmbralSight.hint"),
-      scope: 'world',
-      config: true,
-      type: Boolean,
-      default: false,
-    });
-  }
-
   let sources = {
     'none': game.i18n.localize("stealthy.source.min"),
     'ae': game.i18n.localize("stealthy.source.ae"),

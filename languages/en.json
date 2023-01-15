@@ -51,11 +51,11 @@
       "advanced": "Advanced Options"
     },
     "dnd5e": {
+      "name": "Dnd5e",
       "ignoreFriendlyUmbralSight": {
         "name": "Ignore friendly Umbral Sight",
         "hint": "In darkvision mode, ignore the Umbral Sight feature for tokens of the same disposition"
       },
-      "config.experimental": "Experimental",
       "tokenLighting": {
         "name": "Check token lighting conditions",
         "hint": "Check for token effects that indicate lighting condition of the token."
@@ -78,7 +78,7 @@
       }
     },
     "pf1": {
-      "config": "Pathfinder",
+      "name": "Pathfinder",
       "spotTake10": {
         "name": "Perception take-10",
         "hint": "If no Spot effect is active, assume the Perception take-10 result for the visibility test. If disabled, Hidden tokens will not be seen without an active Spot effect."
