@@ -13,6 +13,15 @@ Hooks.once('setup', () => {
     default: true,
   });
 
+  game.settings.register(Stealthy.MODULE_ID, 'spotSecretDoors', {
+    name: game.i18n.localize("stealthy.spotSecretDoors.name"),
+    hint: game.i18n.localize("stealthy.spotSecretDoors.hint"),
+    scope: 'world',
+    config: true,
+    type: Boolean,
+    default: false,
+  });
+
   let sources = {
     'none': game.i18n.localize("stealthy.source.min"),
     'ae': game.i18n.localize("stealthy.source.ae"),

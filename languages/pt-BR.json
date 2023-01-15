@@ -20,6 +20,10 @@
       }
     },
     "activeSpot": "Ativamente percebido",
+    "spotSecretDoors": {
+      "name": "Detecção automática de porta secreta",
+      "hint": "Os atores podem localizar portas ocultas se seu teste de percepção vencer a porta secreta"
+    },
     "ignoreFriendlyStealth": {
       "name": "Ignorar Furtividade aliada",
       "hint": "Testes de Percepção vs Furtividade serão ignorados para tokens com a mesma disposição"

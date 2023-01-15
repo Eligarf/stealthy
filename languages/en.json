@@ -20,6 +20,10 @@
       }
     },
     "activeSpot": "Active Spot",
+    "spotSecretDoors": {
+      "name": "Automatic secret door detection",
+      "hint": "Actors can spot hidden doors if their perception check beats the secret door"
+    },
     "ignoreFriendlyStealth": {
       "name": "Ignore friendly stealth",
       "hint": "Perception vs Stealth tests will be ignored for tokens of the same disposition"
