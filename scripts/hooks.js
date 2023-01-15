@@ -20,6 +20,9 @@ Hooks.once('setup', () => {
     config: true,
     type: Boolean,
     default: false,
+    onChange: value => {
+      debouncedReload();
+    },
   });
 
   let sources = {
