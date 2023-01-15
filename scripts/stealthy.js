@@ -60,34 +60,91 @@ export class StealthyBaseEngine {
         function (wrapped) {
           Stealthy.log('DoorControl.prototype.isVisible', this);
 
-          if ((this.wall.document.door === CONST.WALL_DOOR_TYPES.SECRET)) {
-            let tokens = canvas.tokens.controlled;
-            if (!tokens.length) {
-              if (!game.user.isGM) {
-                tokens = canvas.scene.tokens.filter(t => {
-                  const userId = game.user.id;
-                  const ownership = t.actor.ownership[userId] ?? t.actor.ownership.default;
-                  return ownership >= 2;
-                });
-                if (!tokens.length) return false;
+          const wallDoc = this.wall.document;
+          if (wallDoc.door === CONST.WALL_DOOR_TYPES.SECRET) {
+
+            // If the door doesn't have a stealthy flag, only GMs can see like Foundry wants
+            const dc = wallDoc.flags.stealthy?.dc;
+            if (dc === undefined || dc === null) {
+              if (!game.user.isGM) return false;
+            }
+
+            // Otherwise, find the controlled tokens
+            else {
+              let tokens = canvas.tokens.controlled;
+              if (!tokens.length) {
+                if (!game.user.isGM) {
+                  tokens = canvas.scene.tokens.filter(t => {
+                    const userId = game.user.id;
+                    const ownership = t.actor.ownership[userId] ?? t.actor.ownership.default;
+                    return ownership >= 2;
+                  });
+                  if (!tokens.length) return false;
+                }
               }
-            }
 
-            // Players only see secret doors if they control one unit
-            if (tokens.length === 1) {
-              const engine = game.stealthy.engine;
-              if (!engine.doorIsSpotted(this, tokens)) return false;
-              Stealthy.log(`Secret door DC${secret} is found`, tokens);
-
+              // Players only see secret doors if they control one unit
+              if (tokens.length === 1) {
+                const engine = game.stealthy.engine;
+                if (!engine.doorIsSpotted(this, tokens)) return false;
+                Stealthy.log(`Secret door DC${wallDoc.flags.stealthy?.dc} is found`, tokens);
+              }
+              else if (!game.user.isGM) return false;
             }
-            else if (!game.user.isGM) return false;
           }
 
+          // We've handled the GM check, do all the other stuff Foundry wants
           return StealthyBaseEngine.BaseDoorControlIsVisibleSansGmCheck(this);
         },
         libWrapper.OVERRIDE,
         { perf_mode: libWrapper.PERF_AUTO }
       );
+
+      libWrapper.register(
+        Stealthy.MODULE_ID,
+        "WallConfig.prototype._updateObject",
+        async function (wrapped, event, formData) {
+          await wrapped(event, formData);
+          Stealthy.log(formData.dc);
+          const updateData =
+          {
+            flags:
+            {
+              stealthy:
+              {
+                dc: formData.dc,
+              }
+            }
+          };
+          let ids = this.editTargets;
+          if (ids.length == 0) {
+            ids = [this.object.id];
+          }
+
+          // Update all the edited walls
+          const updateDataset = ids.map(id => { return { _id: id, ...updateData }; });
+          const updateResult = await canvas.scene.updateEmbeddedDocuments("Wall", updateDataset);
+
+          return updateResult;
+        },
+        "WRAPPER"
+      );
+
+      // Inject custom settings into the wall config diallog
+      Hooks.on("renderWallConfig", (wallConfig, html, css) => {
+        Stealthy.log('renderWallConfig', { wallConfig, html, css });
+        if (css.document.door == 2) {
+          const dcBlock = `
+                  <div class="form-group">
+                    <label for="generateKey">${game.i18n.localize("stealthy.door.dc")}</label>
+                    <input type="number" name="dc"/ value="${css.object.flags.stealthy?.dc}">
+                  </div>`;
+          html.find(".form-group").last().after(dcBlock);
+
+          // Force config window to resize
+          wallConfig.setPosition({ height: "auto" });
+        }
+      });
     }
   }
 
@@ -291,10 +348,10 @@ export class StealthyBaseEngine {
   }
 
   doorIsSpotted(doorControl, tokens) {
-    const secret = 14;
+    const dc = doorControl.wall.document.flags.stealthy.dc;
     const spotter = tokens[0].actor;
-    const { value: perception } = engine.getSpotFlagAndValue(spotter, engine.findSpotEffect(spotter));
-    return perception >= secret;
+    const { value: perception } = this.getSpotFlagAndValue(spotter, this.findSpotEffect(spotter));
+    return perception >= dc;
   }
 }
 

@@ -54,6 +54,9 @@
       "debug": "Debug Options",
       "advanced": "Advanced Options"
     },
+    "door": {
+      "dc": "Required Perception"
+    },
     "dnd5e": {
       "name": "Dnd5e",
       "ignoreFriendlyUmbralSight": {

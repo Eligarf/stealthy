@@ -54,6 +54,9 @@
       "debug": "Opções de depuração",
       "advanced": "Opções avançadas"
     },
+    "door": {
+      "dc": "Percepção Necessária"
+    },
     "dnd5e": {
       "name": "Dnd5e",
       "ignoreFriendlyUmbralSight": {
