@@ -1,3 +1,6 @@
+# Pending
+* GMs can enable Players to automatically spot secret doors by beating the door's DC with perception.
+
 # v2.4.0
 * Add choice to match Foundry lighting or 5E rules for perception tests in dim lighting
 * Added settings for changing localization keys for dim/dark

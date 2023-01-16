@@ -26,6 +26,13 @@ export class StealthyPF1 extends StealthyBaseEngine {
         await this.rollPerception(actor, message);
       }
     });
+
+    Hooks.on('renderSettingsConfig', (app, html, data) => {
+      $('<div>').addClass('form-group group-header')
+        .html(game.i18n.localize("stealthy.pf1.name"))
+        .insertBefore($('[name="stealthy.spotTake10"]')
+          .parents('div.form-group:first'));
+    });
   }
 
   isHidden(visionSource, hiddenEffect, target) {
@@ -68,8 +75,4 @@ export class StealthyPF1 extends StealthyBaseEngine {
 
 Hooks.once('init', () => {
   Stealthy.RegisterEngine('pf1', () => new StealthyPF1());
-});
-
-Hooks.on('renderSettingsConfig', (app, html, data) => {
-  $('<div>').addClass('form-group group-header').html(game.i18n.localize("stealthy.pf1.config")).insertBefore($('[name="stealthy.spotTake10"]').parents('div.form-group:first'));
 });
