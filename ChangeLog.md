@@ -1,5 +1,5 @@
-# Pending
-* GMs can enable Players to automatically spot secret doors by beating the door's DC with perception.
+# v3.0.0
+* Secret doors can be Stealthy too! GMs can enable Players to automatically spot secret doors by beating the door's perception DC.
 
 # v2.4.0
 * Add choice to match Foundry lighting or 5E rules for perception tests in dim lighting
