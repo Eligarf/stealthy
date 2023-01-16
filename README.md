@@ -36,7 +36,7 @@ An invisible actor that also has the 'Hidden' effect will check Perception vs St
 ![invisible](https://user-images.githubusercontent.com/16523503/210176827-03fda57a-6d09-4144-8253-b8b7cd9155ac.gif)
 
 ## **Secret doors can be seen based on Spot roll**
-If enabled, secret doors can now specify a perception DC, allowing them to be seen only by viewing actors with a sufficiently high perception result. The behavior of secret doors with a required perception value is unchanged.
+If enabled, secret doors can now specify a perception DC, allowing them to be seen only by viewing actors with a sufficiently high perception result. The behavior of secret doors without a required perception value is unchanged.
 
 ![secret-doors](https://user-images.githubusercontent.com/16523503/212574216-6cc5b0ad-f432-441e-b11a-f4aa2b15cbd1.gif)
 
