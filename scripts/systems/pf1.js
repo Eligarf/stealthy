@@ -26,18 +26,25 @@ export class StealthyPF1 extends StealthyBaseEngine {
         await this.rollPerception(actor, message);
       }
     });
+
+    Hooks.on('renderSettingsConfig', (app, html, data) => {
+      $('<div>').addClass('form-group group-header')
+        .html(game.i18n.localize("stealthy.pf1.name"))
+        .insertBefore($('[name="stealthy.spotTake10"]')
+          .parents('div.form-group:first'));
+    });
   }
 
-  isHidden(visionSource, hiddenEffect, target, config) {
+  isHidden(visionSource, hiddenEffect, target) {
     const source = visionSource.object?.actor;
-    const stealth = hiddenEffect.flags.stealthy?.hidden ?? (10 + target.system.skills.ste.mod);
+    const stealth = hiddenEffect.flags.stealthy?.hidden ?? (10 + target.actor.system.skills.ste.mod);
     const spotEffect = this.findSpotEffect(source);
     const spotTake10 = game.settings.get(Stealthy.MODULE_ID, 'spotTake10');
     const perception = spotEffect?.flags.stealthy?.spot
       ?? (spotTake10 ? 10 + source.system.skills.per.mod : undefined);
 
     if (perception === undefined || perception <= stealth) {
-      Stealthy.log(`${visionSource.object.name}'s ${perception} can't see ${config.object.name}'s ${stealth}`);
+      Stealthy.log(`${visionSource.object.name}'s ${perception} can't see ${target.name}'s ${stealth}`);
       return true;
     }
     return false;
@@ -68,8 +75,4 @@ export class StealthyPF1 extends StealthyBaseEngine {
 
 Hooks.once('init', () => {
   Stealthy.RegisterEngine('pf1', () => new StealthyPF1());
-});
-
-Hooks.on('renderSettingsConfig', (app, html, data) => {
-  $('<div>').addClass('form-group group-header').html(game.i18n.localize("stealthy.pf1.config")).insertBefore($('[name="stealthy.spotTake10"]').parents('div.form-group:first'));
 });

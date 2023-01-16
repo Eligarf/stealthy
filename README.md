@@ -35,6 +35,12 @@ An invisible actor that also has the 'Hidden' effect will check Perception vs St
 
 ![invisible](https://user-images.githubusercontent.com/16523503/210176827-03fda57a-6d09-4144-8253-b8b7cd9155ac.gif)
 
+## **Secret Doors can be stealthy too**
+If enabled, secret doors can now specify a perception DC, allowing them to be seen only by viewing actors with a sufficiently high perception result. The behavior of secret doors without a required perception value is unchanged.
+
+![secret-doors](https://user-images.githubusercontent.com/16523503/212574216-6cc5b0ad-f432-441e-b11a-f4aa2b15cbd1.gif)
+![doorcontrol](https://user-images.githubusercontent.com/16523503/212717654-444ef8b3-3770-43b2-a324-b15769f1404f.PNG)
+
 ## **Friendly tokens can still be viewed**
 The GM has the option for allowing Hidden tokens to be seen by other tokens of the same disposition.
 
