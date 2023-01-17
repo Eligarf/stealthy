@@ -91,6 +91,8 @@ export class StealthyPF2e extends StealthyBaseEngine {
     const token = canvas.tokens.get(message.speaker.token);
     const actor = token.actor;
     await this.updateOrCreateSpotEffect(actor, { spot: Number(message.content) });
+
+    super.rollPerception();
   }
 
   async rollStealth(message, options, id) {

@@ -191,6 +191,8 @@ export class Stealthy5e extends StealthyBaseEngine {
     }
 
     await this.updateOrCreateSpotEffect(actor, { spot: perception });
+
+    super.rollPerception();
   }
 
   async rollStealth(actor, roll) {
