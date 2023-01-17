@@ -50,6 +50,8 @@ export class StealthyDnd4e extends StealthyBaseEngine {
     const token = canvas.tokens.get(message.speaker.token);
     const actor = token.actor;
     await this.updateOrCreateSpotEffect(actor, { spot: message.rolls[0].total });
+
+    super.rollPerception();
   }
 
   async rollStealth(message, options, id) {

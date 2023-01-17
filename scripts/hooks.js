@@ -128,6 +128,7 @@ Hooks.on('renderTokenHUD', (tokenHUD, html, app) => {
       inputBox.change(async (inputbox) => {
         if (token === undefined) return;
         await engine.setSpotValue(actor, duplicate(spotEffect), flag, Number(inputbox.target.value));
+        canvas.perception.update({ initializeVision: true }, true);
       });
     }
   }
