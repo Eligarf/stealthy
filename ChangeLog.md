@@ -1,3 +1,7 @@
+# Pending
+* Maintain player visibility of secret door control after interaction
+* Initiate a perception refresh after changing or rolling Perception check.
+
 # v3.0.0
 * Secret doors can be Stealthy too! GMs can enable Players to automatically spot secret doors by beating the door's perception DC.
 

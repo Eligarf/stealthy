@@ -64,6 +64,8 @@ export class StealthyPF1 extends StealthyBaseEngine {
     Stealthy.log('rollPerception', { actor, message });
 
     await this.updateOrCreateSpotEffect(actor, { spot: message.rolls[0].total });
+
+    super.rollPerception();
   }
 
   async rollStealth(actor, message) {
