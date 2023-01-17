@@ -16,6 +16,7 @@ export class StealthyBaseEngine {
     this.warnedMissingCUB = false;
     this.hiddenLabel = game.i18n.localize(game.settings.get(Stealthy.MODULE_ID, 'hiddenLabel'));
     this.spotLabel = game.i18n.localize(game.settings.get(Stealthy.MODULE_ID, 'spotLabel'));
+    Stealthy.log(`hiddenLabel='${this.hiddenLabel}', spotLabel='${this.spotLabel}'`);
   }
 
   patchFoundry() {

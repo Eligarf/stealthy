@@ -1,6 +1,8 @@
-# Pending
+# v3.0.1
 * Maintain player visibility of secret door control after interaction
-* Initiate a perception refresh after changing or rolling Perception check.
+* Initiate a vision refresh after changing or rolling Perception check.
+* Added logging to show translated labels
+* Fixed dark label localization key in settings
 
 # v3.0.0
 * Secret doors can be Stealthy too! GMs can enable Players to automatically spot secret doors by beating the door's perception DC.

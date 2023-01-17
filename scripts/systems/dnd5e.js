@@ -33,7 +33,7 @@ export class Stealthy5e extends StealthyBaseEngine {
     });
 
     game.settings.register(Stealthy.MODULE_ID, 'darkLabel', {
-      name: game.i18n.localize("stealthy.hidden.dark.key"),
+      name: game.i18n.localize("stealthy.dnd5e.dark.key"),
       scope: 'world',
       config: true,
       type: String,
@@ -75,6 +75,8 @@ export class Stealthy5e extends StealthyBaseEngine {
     this.dimLabel = game.i18n.localize(game.settings.get(Stealthy.MODULE_ID, 'dimLabel'));
     this.darkLabel = game.i18n.localize(game.settings.get(Stealthy.MODULE_ID, 'darkLabel'));
 
+    Stealthy.log(`dimLabel='${this.dimLabel}', darkLabel='${this.darkLabel}'`);
+
     Hooks.on('renderSettingsConfig', (app, html, data) => {
       $('<div>').addClass('form-group group-header')
         .html(game.i18n.localize("stealthy.dnd5e.name"))
@@ -97,10 +99,10 @@ export class Stealthy5e extends StealthyBaseEngine {
     let perception;
 
     if (game.settings.get(Stealthy.MODULE_ID, 'tokenLighting')) {
-      perception = Stealthy5e.AdjustForLightingConditions(spotPair, visionSource, source, target.actor);
+      perception = this.adjustForLightingConditions(spotPair, visionSource, source, target.actor);
     }
     else {
-      perception = Stealthy5e.AdjustForDefaultConditions(spotPair, visionSource, source, target.actor);
+      perception = this.adjustForDefaultConditions(spotPair, visionSource, source, target.actor);
     }
 
     if (perception <= stealth) {
@@ -206,7 +208,7 @@ export class Stealthy5e extends StealthyBaseEngine {
     return source.system.skills.prc.passive - 5;
   }
 
-  static AdjustForDefaultConditions(spotPair, visionSource, source, target) {
+  adjustForDefaultConditions(spotPair, visionSource, source, target) {
     let perception = spotPair?.normal
       ?? spotPair
       ?? (source.system.skills.prc.passive + 1);
@@ -216,7 +218,7 @@ export class Stealthy5e extends StealthyBaseEngine {
 
   // check target Token Lighting conditions via effects usage
   // look for effects that indicate Dim or Dark condition on the token
-  static AdjustForLightingConditions(spotPair, visionSource, source, target) {
+  adjustForLightingConditions(spotPair, visionSource, source, target) {
     let debugData = { spotPair };
     let perception;
 
