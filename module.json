@@ -61,6 +61,9 @@
     "scripts/systems/dnd5e.js",
     "scripts/systems/pf1.js"
   ],
+  "styles": [
+    "styles/stealthy.css"
+  ],
   "languages": [
     {
       "lang": "en",

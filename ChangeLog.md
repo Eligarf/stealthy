@@ -1,3 +1,6 @@
+# Pending
+* Tightened input boxes to avoid overlaps (thanks LukasPrism)
+
 # v3.0.1
 * Maintain player visibility of secret door control after interaction
 * Initiate a vision refresh after changing or rolling Perception check.
