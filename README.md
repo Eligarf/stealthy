@@ -24,13 +24,13 @@ Rolling a Perception check will add a Spot effect to the actor which records the
 
 A toggle named 'Active Spot' is available under token controls to suspend adding of the Spot condition as the GM sees fit. Toggling it off will also clear out all Spot effects.
 
-![perception](https://user-images.githubusercontent.com/16523503/209989470-aac2bdb4-fee4-44c0-a6b7-916e69353081.gif)
+![perception](https://user-images.githubusercontent.com/16523503/213257350-e382f584-1c5c-41a8-bf00-60705ec89bd0.gif)
 ![control](https://user-images.githubusercontent.com/16523503/210176825-3fcb3183-81db-4f64-836a-81f29199b580.png)
 
 ## **GM Overrides**
 Once the Hidden or Spot effects are applied, GMs will see token buttons with an input box on the bottom which shows the rolled values, or the passive values if the effect was added directly without rolling. Perception is on the left, Stealth is on the right. Changing the value in this input box will alter the stored results for future visibility tests while that effect remains.
 
-![stealth-override](https://user-images.githubusercontent.com/16523503/209896031-675ab0e3-93e6-4d9c-8eeb-c11abe39fdab.gif)
+![override](https://user-images.githubusercontent.com/16523503/213258088-73098735-321f-4542-9c8a-433be26cd014.gif)
 
 ## **Invisible characters can hide from See Invisibility**
 An invisible actor that also has the 'Hidden' effect will check Perception vs Stealth before showing up in the 'See Invisibility' vision mode.
