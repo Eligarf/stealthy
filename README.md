@@ -8,6 +8,8 @@
 
 A module for [FoundryVTT](https://foundryvtt.com) that adds perception vs stealth testing to Foundry's visibility tests. It filters out any objects with the Hidden condition if the viewing Perception value fails to beat the object's Stealth value.
 
+[Stealthy Wiki](https://github.com/Eligarf/stealthy/wiki)
+
 ## Features
 
 ## **Rolling Stealth checks applies the Hidden effect**
@@ -45,50 +47,10 @@ If enabled, secret doors can now specify a perception DC, allowing them to be se
 The GM has the option for allowing Hidden tokens to be seen by other tokens of the same disposition.
 
 # Systems
-Stealthy currently works in the following systems (specific notes about a given system are below):
+Stealthy currently works in the following systems (specific notes about a given system are in the [Wiki](https://github.com/Eligarf/stealthy/wiki)):
 - dnd4e
 - dnd5e
 - pf1
-
-## dnd5e
-### *Umbral Sight affects darkvision
-Characters with Umbral Sight will no longer be visible to the Darkvision mode, but they can still be seen if Basic Vision can see them. The GM has the option to disable this for friendly token visibility tests.
-
-![umbral-sight](https://user-images.githubusercontent.com/16523503/209987083-487aee33-b75e-452f-9433-7302ffdaeab3.gif)
-
-### Spot details
-- Stealthy's default Spot effect has a one turn/six second duration. This isn't from RAW, but is an approximation I've chosen that seems to work well in my games.
-- The initial stored Perception value from the roll uses passive Perception as a floor.
-
-### Stealth vs Perception Ties
-D&D 5E treats skill contest ties as preserving the status quo, so use of passive value for either skill makes a claim of owning the status quo and thus winning ties. If Perception and Stealth are both passive, I assume Stealth takes the active role of wanting to change the status quo from visible to hidden. An active Perception check is only necessary if the passive Perception was beaten by Stealth, so in this case Hidden is now the status quo condition and Stealth wins ties with the active result. More simply, **ties are won by passive Perception and lost by active Perception.**
-
-### Experimental - Lighting effects on Perception vs Hidden token
-For this approach we are only looking at dnd5e and we've broken this down into three pieces:
-- Detecting the light level on the token itself, which is independant of viewer. Stealthy looks for 'Dim' or 'Dark' status effects on the token and does no light calculations itself - see [Token Light Condition](https://foundryvtt.com/packages/tokenlightcondition) for this work.
-- Remapping the dim/dark light level per viewer based on their viewing mode. After the light level is remapped, objects in 'Dark' get rejected and objects in 'Dim' would be tested against using disadvantaged perception.
-- Capturing the advantage/disadvantage state of the viewers perception in order to do the right thing when applying disadvantage in dim vision. We get these flags on the active rolls, and can generate an extra roll result we can store in our flag so that we have a result for disadvantage should we need it. **We haven't yet figured out how to handle pre-existing passive disadvantage on perception inside the visibility test itself, so this edge case will cause those tokens to end up taking the -5 penalty twice. You have been warned.**
-
-## pf1
-  - Perception take-10. A Hidden token will not be seen by a viewing token without a Spot effect unless the Perception take-10 setting is enabled.
-  - The Spot and Hidden effects aren't "Buff"-style effects, so the PF1 actor sheet UI doesn't have a way to delete the effects once they've been added by rolling. You could use [DFreds Effects Panel](https://foundryvtt.com/packages/dfreds-effects-panel), or I made this macro (I assume there is a smarter way)
-
-'Remove Hidden' Script Macro:
-```
-const controlled = canvas.tokens.controlled;
-const label = game.i18n.localize('stealthy.hidden.label');
-controlled.forEach(token => {
-  const actor = token.actor;
-  const effects = actor.effects.filter(e => e.label === label).map(e => e.id);
-  if (effects.length > 0) {
-    actor.deleteEmbeddedDocuments('ActiveEffect', effects);
-  }
-});
-```
-*Remove Spot is the same with a 'stealthy.spot.label' substitution*
-
-## pf2e
-In progress. There are complications getting Stealthy to work in PF2e given the level of customization within that system.
 
 # Limitations
 
@@ -106,3 +68,4 @@ The visibility results are cached, so changes in visibility brought about by mak
 * [Combat Utility Belt](https://foundryvtt.com/packages/combat-utility-belt)
 * [Token Magic FX](https://foundryvtt.com/packages/tokenmagic)
 * [Active Token Effects](https://foundryvtt.com/packages/ATL)
+* [Token Light Condition](https://foundryvtt.com/packages/tokenlightcondition)
