@@ -349,7 +349,6 @@ export class Stealthy {
   }
 
   static Wall_onModifyWallSansGmCheck(wall, doorChange) {
-    Stealthy.log('Wall.prototype._onModifyWall', wall, doorChange);
     const perceptionUpdate = {
       initializeLighting: true,
       initializeVision: true,
