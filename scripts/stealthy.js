@@ -270,10 +270,10 @@ export class StealthyBaseEngine {
     canvas.perception.update({ initializeVision: true }, true);
   }
 
-  doorIsSpotted(doorControl, tokens) {
+  isSecretDoorSpotted(doorControl, token) {
     const dc = doorControl.wall.document.flags.stealthy.dc;
-    const spotter = tokens[0].actor;
-    const { value: perception } = this.getSpotFlagAndValue(spotter, this.findSpotEffect(spotter));
+    const actor = token.actor;
+    const { value: perception } = this.getSpotFlagAndValue(actor, this.findSpotEffect(actor));
     return perception >= dc;
   }
 }
@@ -417,7 +417,12 @@ export class Stealthy {
         // Players only see secret doors if they control one unit
         if (tokens.length === 1) {
           const engine = game.stealthy.engine;
-          if (!engine.doorIsSpotted(doorControl, tokens)) return false;
+          const token = tokens[0];
+          const maxRange = doorControl.wall.document.flags.stealthy.maxRange ?? Infinity;
+          const ray = new Ray(doorControl.center, token.center);
+          const distance = canvas.grid.measureDistances([{ ray }])[0];
+          if (distance > maxRange) return false;
+          if (!engine.isSecretDoorSpotted(doorControl, token)) return false;
         }
         else if (!game.user.isGM) return false;
       }
@@ -426,14 +431,23 @@ export class Stealthy {
   }
 
   static async UpdateSecretDoorDc(wallConfig, formData) {
-    if (!('spotDc' in formData)) return true;
-    const updateData = { flags: { stealthy: { dc: formData.spotDc } } };
+    let update = false;
+    const updateData = { flags: { stealthy: {  } } };
+    if (formData.spotDc !== undefined) {
+      updateData.flags.stealthy.dc = formData.spotDc;
+      update = true;
+    }
+    if (formData.maxRange !== undefined) {
+      updateData.flags.stealthy.maxRange = formData.maxRange;
+      update = true;
+    }
+    if (!update) return true;
+
+    // Update all the edited walls
     let ids = wallConfig.editTargets;
     if (ids.length == 0) {
       ids = [wallConfig.object.id];
     }
-
-    // Update all the edited walls
     const updateDataset = ids.map(id => { return { _id: id, ...updateData }; });
     return await canvas.scene.updateEmbeddedDocuments("Wall", updateDataset);
   }
@@ -444,6 +458,10 @@ export class Stealthy {
         <div class="form-group">
           <label for="spotDc">${game.i18n.localize("stealthy.door.dc")}</label>
           <input type="number" name="spotDc"/ value="${css.object.flags.stealthy?.dc}">
+        </div>
+        <div class="form-group">
+          <label for="maxRange">${game.i18n.localize("stealthy.door.maxRange")}</label>
+          <input type="number" name="maxRange"/ value="${css.object.flags.stealthy?.maxRange}">
         </div>`;
       html.find(".form-group").last().after(dcBlock);
 

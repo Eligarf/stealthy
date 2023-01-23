@@ -55,7 +55,8 @@
       "advanced": "Advanced Options"
     },
     "door": {
-      "dc": "Required Perception"
+      "dc": "Required Perception",
+      "maxRange": "Detection distance"
     },
     "dnd5e": {
       "name": "Dnd5e",

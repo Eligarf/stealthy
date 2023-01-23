@@ -1,5 +1,6 @@
 # Pending
 * Tightened input boxes to avoid overlaps (thanks LukasPrism)
+* Added detection distance for secret doors
 
 # v3.0.1
 * Maintain player visibility of secret door control after interaction

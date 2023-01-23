@@ -55,7 +55,8 @@
       "advanced": "Opções avançadas"
     },
     "door": {
-      "dc": "Percepção Necessária"
+      "dc": "Percepção Necessária",
+      "maxRange": "Distância de detecção"
     },
     "dnd5e": {
       "name": "Dnd5e",
