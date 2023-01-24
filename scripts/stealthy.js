@@ -45,6 +45,7 @@ export class StealthyBaseEngine {
       { perf_mode: libWrapper.PERF_FAST }
     );
 
+    /*
     // Secret door patching/hooks
     if (game.settings.get(Stealthy.MODULE_ID, 'spotSecretDoors')) {
       libWrapper.register(
@@ -80,8 +81,8 @@ export class StealthyBaseEngine {
       libWrapper.register(
         Stealthy.MODULE_ID,
         "Wall.prototype._onModifyWall",
-        async function (wrapped, doorChange = false) {
-          return Stealthy.Wall_onModifyWallSansGmCheck(this, doorChange);
+        async function (wrapped, ...args) {
+          return Stealthy.Wall_onModifyWallSansGmCheck(this, ...args);
         },
         libWrapper.OVERRIDE
       );
@@ -89,6 +90,7 @@ export class StealthyBaseEngine {
       // Inject custom settings into the wall config diallog
       Hooks.on("renderWallConfig", Stealthy.RenderSpotDc);
     }
+    */
   }
 
   testStealth(visionSource, target) {
@@ -348,7 +350,7 @@ export class Stealthy {
     return wall.doorControl;
   }
 
-  static Wall_onModifyWallSansGmCheck(wall, doorChange) {
+  static Wall_onModifyWallSansGmCheck(wall, doorChange = false) {
     const perceptionUpdate = {
       initializeLighting: true,
       initializeVision: true,
