@@ -51,7 +51,7 @@ export class StealthyBaseEngine {
         Stealthy.MODULE_ID,
         'Wall.prototype.createDoorControl',
         function (wrapped) {
-          return Stealthy.WallCreateDoorControlSansGmCheck(this);
+          return Stealthy.Wall_CreateDoorControlSansGmCheck(this);
         },
         libWrapper.OVERRIDE
       );
@@ -61,7 +61,7 @@ export class StealthyBaseEngine {
         'DoorControl.prototype.isVisible',
         function (wrapped) {
           if (!Stealthy.CanDisplayDoorControl(this)) return false;
-          return Stealthy.DoorControlIsVisibleSansGmCheck(this);
+          return Stealthy.DoorControl_IsVisibleSansGmCheck(this);
         },
         libWrapper.OVERRIDE
       );
@@ -80,7 +80,7 @@ export class StealthyBaseEngine {
       libWrapper.register(
         Stealthy.MODULE_ID,
         "Wall.prototype._onModifyWall",
-        async function (wrapped, doorChange) {
+        async function (wrapped, doorChange = false) {
           return Stealthy.Wall_onModifyWallSansGmCheck(this, doorChange);
         },
         libWrapper.OVERRIDE
@@ -342,7 +342,7 @@ export class Stealthy {
     }
   }
 
-  static WallCreateDoorControlSansGmCheck(wall) {
+  static Wall_CreateDoorControlSansGmCheck(wall) {
     wall.doorControl = canvas.controls.doors.addChild(new DoorControl(wall));
     wall.doorControl.draw();
     return wall.doorControl;
@@ -372,7 +372,7 @@ export class Stealthy {
     canvas.perception.update(perceptionUpdate, true);
   }
 
-  static DoorControlIsVisibleSansGmCheck(doorControl) {
+  static DoorControl_IsVisibleSansGmCheck(doorControl) {
     // Test two points which are perpendicular to the door midpoint
     const w = doorControl.wall;
     const ray = w.toRay();
@@ -432,7 +432,7 @@ export class Stealthy {
 
   static async UpdateSecretDoorDc(wallConfig, formData) {
     let update = false;
-    const updateData = { flags: { stealthy: {  } } };
+    const updateData = { flags: { stealthy: {} } };
     if (formData.spotDc !== undefined) {
       updateData.flags.stealthy.dc = formData.spotDc;
       update = true;
