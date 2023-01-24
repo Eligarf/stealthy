@@ -45,13 +45,14 @@ export class StealthyBaseEngine {
       { perf_mode: libWrapper.PERF_FAST }
     );
 
+    /*
     // Secret door patching/hooks
     if (game.settings.get(Stealthy.MODULE_ID, 'spotSecretDoors')) {
       libWrapper.register(
         Stealthy.MODULE_ID,
         'Wall.prototype.createDoorControl',
         function (wrapped) {
-          return Stealthy.WallCreateDoorControlSansGmCheck(this);
+          return Stealthy.Wall_CreateDoorControlSansGmCheck(this);
         },
         libWrapper.OVERRIDE
       );
@@ -61,7 +62,7 @@ export class StealthyBaseEngine {
         'DoorControl.prototype.isVisible',
         function (wrapped) {
           if (!Stealthy.CanDisplayDoorControl(this)) return false;
-          return Stealthy.DoorControlIsVisibleSansGmCheck(this);
+          return Stealthy.DoorControl_IsVisibleSansGmCheck(this);
         },
         libWrapper.OVERRIDE
       );
@@ -80,8 +81,8 @@ export class StealthyBaseEngine {
       libWrapper.register(
         Stealthy.MODULE_ID,
         "Wall.prototype._onModifyWall",
-        async function (wrapped, doorChange) {
-          return Stealthy.Wall_onModifyWallSansGmCheck(this, doorChange);
+        async function (wrapped, ...args) {
+          return Stealthy.Wall_onModifyWallSansGmCheck(this, ...args);
         },
         libWrapper.OVERRIDE
       );
@@ -89,6 +90,7 @@ export class StealthyBaseEngine {
       // Inject custom settings into the wall config diallog
       Hooks.on("renderWallConfig", Stealthy.RenderSpotDc);
     }
+    */
   }
 
   testStealth(visionSource, target) {
@@ -342,13 +344,13 @@ export class Stealthy {
     }
   }
 
-  static WallCreateDoorControlSansGmCheck(wall) {
+  static Wall_CreateDoorControlSansGmCheck(wall) {
     wall.doorControl = canvas.controls.doors.addChild(new DoorControl(wall));
     wall.doorControl.draw();
     return wall.doorControl;
   }
 
-  static Wall_onModifyWallSansGmCheck(wall, doorChange) {
+  static Wall_onModifyWallSansGmCheck(wall, doorChange = false) {
     const perceptionUpdate = {
       initializeLighting: true,
       initializeVision: true,
@@ -372,7 +374,7 @@ export class Stealthy {
     canvas.perception.update(perceptionUpdate, true);
   }
 
-  static DoorControlIsVisibleSansGmCheck(doorControl) {
+  static DoorControl_IsVisibleSansGmCheck(doorControl) {
     // Test two points which are perpendicular to the door midpoint
     const w = doorControl.wall;
     const ray = w.toRay();
@@ -432,7 +434,7 @@ export class Stealthy {
 
   static async UpdateSecretDoorDc(wallConfig, formData) {
     let update = false;
-    const updateData = { flags: { stealthy: {  } } };
+    const updateData = { flags: { stealthy: {} } };
     if (formData.spotDc !== undefined) {
       updateData.flags.stealthy.dc = formData.spotDc;
       update = true;

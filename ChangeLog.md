@@ -1,5 +1,6 @@
-# Pending
-* Tightened input boxes to avoid overlaps (thanks LukasPrism)
+# v3.0.2
+* Disabled secret door detection for now due to unintended interactions with displaying door icon changes.
+* Tightened token stealth/perception input boxes to avoid overlaps (thanks LukasPrism)
 * Added detection distance for secret doors
 
 # v3.0.1
