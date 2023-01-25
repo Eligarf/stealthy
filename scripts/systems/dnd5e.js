@@ -201,6 +201,8 @@ export class Stealthy5e extends StealthyBaseEngine {
     Stealthy.log('Stealthy5e.rollStealth', { actor, roll });
 
     await this.updateOrCreateHiddenEffect(actor, { hidden: roll.total });
+
+    super.rollStealth();
   }
 
   static GetPassivePerceptionWithDisadvantage(source) {

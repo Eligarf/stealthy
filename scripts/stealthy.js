@@ -272,6 +272,10 @@ export class StealthyBaseEngine {
     canvas.perception.update({ initializeVision: true }, true);
   }
 
+  rollStealth() {
+    game.stealthy.socket.executeForEveryone('RefreshPerception');
+  }
+
   isSecretDoorSpotted(doorControl, token) {
     const dc = doorControl.wall.document.flags.stealthy.dc;
     const actor = token.actor;
@@ -292,6 +296,7 @@ export class Stealthy {
     this.socket = socketlib.registerModule(Stealthy.MODULE_ID);
     this.socket.register('ToggleActiveSpot', Stealthy.ToggleActiveSpot);
     this.socket.register('GetActiveSpot', Stealthy.GetActiveSpot);
+    this.socket.register('RefreshPerception', Stealthy.RefreshPerception);
   }
 
   static async ToggleActiveSpot(toggled) {
@@ -308,6 +313,11 @@ export class Stealthy {
         }
       }
     }
+  }
+
+  static RefreshPerception() {
+    Stealthy.log(`RefreshPerception`);
+    canvas.perception.update({ initializeVision: true }, true);
   }
 
   static async GetActiveSpot() {

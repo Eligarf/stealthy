@@ -51,9 +51,6 @@ Stealthy currently works in the following systems (specific notes about a given 
 ## Handling Hidden removal
 Stealthy will not automatically remove the Hidden effect - the dnd5e [Skulker](https://www.dndbeyond.com/feats/skulker) feat demonstrates why removing Hidden gets complicated without heavier automation support provided by modules like the excellent [Midi-QOL](https://foundryvtt.com/packages/midi-qol) which handles this for my games. I suggest [DFreds Effects Panel](https://foundryvtt.com/packages/dfreds-effects-panel) as an easier way to manually remove it, especially for low automation level games. 
 
-## Visibility changes are only reflected on token updates
-The visibility results are cached, so changes in visibility brought about by making skill checks, adjusting the result values manually, or removing the Spot/Hidden effects don't immediately change the visible state. A visibility refresh is done whenever the perception skill is rolled or changed, but sometimes you will still have force a token update by moving or selecting a different token.
-
 ## DISABLED: Secret Doors can be stealthy too
 If enabled, secret doors can now specify a perception DC, allowing them to be seen only by viewing actors with a sufficiently high perception result. The behavior of secret doors without a required perception value is unchanged.
 

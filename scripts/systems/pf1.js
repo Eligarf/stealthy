@@ -72,6 +72,8 @@ export class StealthyPF1 extends StealthyBaseEngine {
     Stealthy.log('rollStealth', { actor, message });
 
     await this.updateOrCreateHiddenEffect(actor, { hidden: message.rolls[0].total });
+    
+    super.rollStealth();
   }
 }
 

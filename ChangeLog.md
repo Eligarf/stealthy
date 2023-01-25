@@ -1,3 +1,6 @@
+# Pending
+* Broadcast an update perception request after stealth is rolled
+
 # v3.0.2
 * Disabled secret door detection for now due to unintended interactions with displaying door icon changes.
 * Tightened token stealth/perception input boxes to avoid overlaps (thanks LukasPrism)

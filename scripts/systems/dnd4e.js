@@ -60,6 +60,8 @@ export class StealthyDnd4e extends StealthyBaseEngine {
     const token = canvas.tokens.get(message.speaker.token);
     const actor = token.actor;
     await this.updateOrCreateHiddenEffect(actor, { hidden: message.rolls[0].total });
+
+    super.rollStealth();
   }
 }
 
