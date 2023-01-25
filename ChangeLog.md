@@ -1,5 +1,6 @@
 # Pending
 * Broadcast an update perception request after stealth is rolled
+* Add API to access current hidden and spot values from the active effects
 
 # v3.0.2
 * Disabled secret door detection for now due to unintended interactions with displaying door icon changes.

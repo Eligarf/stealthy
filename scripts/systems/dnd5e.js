@@ -142,8 +142,11 @@ export class Stealthy5e extends StealthyBaseEngine {
   }
 
   getHiddenFlagAndValue(actor, effect) {
-    const value = effect.flags.stealthy?.hidden ?? actor.system.skills.ste.passive;
-    return { flag: { hidden: value }, value };
+    const value = effect?.flags.stealthy?.hidden ?? actor.system.skills.ste.passive;
+    return {
+      flag: { hidden: value },
+      value
+    };
   }
 
   getSpotFlagAndValue(actor, effect) {
@@ -157,7 +160,10 @@ export class Stealthy5e extends StealthyBaseEngine {
       flag.normal = actor.system.skills.prc.passive;
       flag.disadvantaged = Stealthy5e.GetPassivePerceptionWithDisadvantage(actor);
     }
-    return { flag: { spot: flag }, value: flag.normal };
+    return {
+      flag: { spot: flag },
+      value: flag.normal
+    };
   }
 
   async setSpotValue(actor, effect, flag, value) {
@@ -167,6 +173,7 @@ export class Stealthy5e extends StealthyBaseEngine {
     effect.flags.stealthy = flag;
 
     await actor.updateEmbeddedDocuments('ActiveEffect', [effect]);
+    canvas.perception.update({ initializeVision: true }, true);
   }
 
   async rollPerception(actor, roll) {

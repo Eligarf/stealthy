@@ -117,7 +117,6 @@ Hooks.on('renderTokenHUD', (tokenHUD, html, app) => {
       inputBox.change(async (inputbox) => {
         if (token === undefined) return;
         await engine.setHiddenValue(actor, duplicate(hiddenEffect), flag, Number(inputbox.target.value));
-        game.stealthy.socket.executeForEveryone('RefreshPerception');
       });
     }
 
@@ -131,7 +130,6 @@ Hooks.on('renderTokenHUD', (tokenHUD, html, app) => {
       inputBox.change(async (inputbox) => {
         if (token === undefined) return;
         await engine.setSpotValue(actor, duplicate(spotEffect), flag, Number(inputbox.target.value));
-        canvas.perception.update({ initializeVision: true }, true);
       });
     }
   }
