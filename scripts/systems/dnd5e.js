@@ -142,7 +142,7 @@ export class Stealthy5e extends StealthyBaseEngine {
   }
 
   getHiddenFlagAndValue(actor, effect) {
-    const value = effect.flags.stealthy?.hidden ?? actor.system.skills.ste.passive;
+    const value = effect?.flags.stealthy?.hidden ?? actor.system.skills.ste.passive;
     return {
       flag: { hidden: value },
       value
