@@ -37,6 +37,13 @@ An invisible actor that also has the 'Hidden' effect will check Perception vs St
 
 ![invisible](https://user-images.githubusercontent.com/16523503/210176827-03fda57a-6d09-4144-8253-b8b7cd9155ac.gif)
 
+## API access for spot and hidden values
+```
+game.stealthy.getHiddenValue(actor)
+game.stealthy.getSpotValue(actor)
+```
+The values those shown for the GM overrides.
+
 ## Friendly tokens can still be viewed
 The GM has the option for allowing Hidden tokens to be seen by other tokens of the same disposition.
 

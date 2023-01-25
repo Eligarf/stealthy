@@ -146,18 +146,11 @@ export class StealthyBaseEngine {
         },
       };
       if (source === 'ae') {
-        if (typeof TokenMagic !== 'undefined') {
-          hidden.changes.push({
-            key: 'macro.tokenMagic',
-            mode: CONST.ACTIVE_EFFECT_MODES.CUSTOM,
-            value: 'fog'
-          });
-        }
-        else if (typeof ATLUpdate !== 'undefined') {
+        if (typeof ATLUpdate !== 'undefined') {
           hidden.changes.push({
             key: 'ATL.alpha',
             mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
-            value: '0.5'
+            value: '0.75'
           });
         }
       }
@@ -231,6 +224,7 @@ export class StealthyBaseEngine {
       source: game.settings.get(Stealthy.MODULE_ID, 'spotSource'),
       makeEffect: this.makeSpotEffectMaker(this.spotLabel)
     });
+    canvas.perception.update({ initializeVision: true }, true);
   }
 
   async updateOrCreateHiddenEffect(actor, flag) {
@@ -241,7 +235,9 @@ export class StealthyBaseEngine {
       source: game.settings.get(Stealthy.MODULE_ID, 'hiddenSource'),
       makeEffect: this.makeHiddenEffectMaker(this.hiddenLabel)
     });
+    game.stealthy.socket.executeForEveryone('RefreshPerception');
   }
+
   getHiddenFlagAndValue(actor, effect) {
     // Return the data necessary for storing data about hidden, and the
     // value that should be shown on the token button input
@@ -253,6 +249,7 @@ export class StealthyBaseEngine {
     flag.hidden = value;
     effect.flags.stealthy = flag;
     await actor.updateEmbeddedDocuments('ActiveEffect', [effect]);
+    game.stealthy.socket.executeForEveryone('RefreshPerception');
   }
 
   getSpotFlagAndValue(actor, effect) {
@@ -266,6 +263,7 @@ export class StealthyBaseEngine {
     flag.spot = value;
     effect.flags.stealthy = flag;
     await actor.updateEmbeddedDocuments('ActiveEffect', [effect]);
+    canvas.perception.update({ initializeVision: true }, true);
   }
 
   rollPerception() {
@@ -297,6 +295,18 @@ export class Stealthy {
     this.socket.register('ToggleActiveSpot', Stealthy.ToggleActiveSpot);
     this.socket.register('GetActiveSpot', Stealthy.GetActiveSpot);
     this.socket.register('RefreshPerception', Stealthy.RefreshPerception);
+  }
+
+  getSpotValue(actor) {
+    const effect = this.engine.findSpotEffect(actor);
+    const { value } = this.engine.getSpotFlagAndValue(actor, effect);
+    return value;
+  }
+
+  getHiddenValue(actor) {
+    const effect = this.engine.findHiddenEffect(actor);
+    const { value } = this.engine.getHiddenFlagAndValue(actor, effect);
+    return value;
   }
 
   static async ToggleActiveSpot(toggled) {
