@@ -1,4 +1,4 @@
-# Pending
+# v3.1.0
 * Broadcast an update perception request after stealth is rolled
 * Add API to access current hidden and spot values from the active effects
 
