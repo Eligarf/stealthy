@@ -74,6 +74,7 @@ export class StealthyPF2e extends StealthyBaseEngine {
 
   async setHiddenValue(actor, effect, flag, value) {
     await actor.setFlag(Stealthy.MODULE_ID, 'hidden', value);
+    game.stealthy.socket.executeForEveryone('RefreshPerception');
   }
 
   getSpotFlagAndValue(actor, effect) {
@@ -83,6 +84,7 @@ export class StealthyPF2e extends StealthyBaseEngine {
 
   async setSpotValue(actor, effect, flag, value) {
     await actor.setFlag(Stealthy.MODULE_ID, 'spot', value);
+    canvas.perception.update({ initializeVision: true }, true);
   }
 
   async rollPerception(message, options, id) {
@@ -101,7 +103,7 @@ export class StealthyPF2e extends StealthyBaseEngine {
     const token = canvas.tokens.get(message.speaker.token);
     const actor = token.actor;
     await this.updateOrCreateHiddenEffect(actor, { hidden: Number(message.content) });
-    
+
     super.rollStealth();
   }
 }
