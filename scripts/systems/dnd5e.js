@@ -239,7 +239,7 @@ export class Stealthy5e extends StealthyBaseEngine {
 
     // Adjust the light band based on conditions
     if (visionSource.visionMode?.id === 'darkvision') {
-      if (game.settings.get(Stealthy.MODULE_ID, 'tokenLighting')) lightBand = lightBand + 1;
+      if (game.settings.get(Stealthy.MODULE_ID, 'dimIsBright')) lightBand = lightBand + 1;
       else if (!lightBand) lightBand = 1;
       debugData.foundryDarkvision = Stealthy5e.LIGHT_LABELS[lightBand];
     }
