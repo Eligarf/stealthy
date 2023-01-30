@@ -51,10 +51,10 @@ Stealthy currently works in the following systems (specific notes about a given 
 ## Handling Hidden removal
 Stealthy will not automatically remove the Hidden effect - the dnd5e [Skulker](https://www.dndbeyond.com/feats/skulker) feat demonstrates why removing Hidden gets complicated without heavier automation support provided by modules like the excellent [Midi-QOL](https://foundryvtt.com/packages/midi-qol) which handles this for my games. I suggest [DFreds Effects Panel](https://foundryvtt.com/packages/dfreds-effects-panel) as an easier way to manually remove it, especially for low automation level games. 
 
-## DISABLED: Secret Doors can be stealthy too
-If enabled, secret doors can now specify a perception DC, allowing them to be seen only by viewing actors with a sufficiently high perception result. The behavior of secret doors without a required perception value is unchanged.
+## Automatic Secret Door detection
+Tokens with a sufficiently high perception effect will be able to see a secret door if it beats that door's perception DC and are within the detection radius specified for the door. Secret doors without perception DCs will not be seen by tokens.
 
-***I've disabled this while I work on my libWrapper vs object hierarchy kung fu.***
+Enabling this feature causes a side-effect where both regular door and secret door icons don't properly refresh, although they do show up properly after a reload. I don't have a solution in mind yet for this problem. 
 
 ![secret-doors](https://user-images.githubusercontent.com/16523503/212574216-6cc5b0ad-f432-441e-b11a-f4aa2b15cbd1.gif)
 ![doorcontrol](https://user-images.githubusercontent.com/16523503/212717654-444ef8b3-3770-43b2-a324-b15769f1404f.PNG)
@@ -66,6 +66,5 @@ If enabled, secret doors can now specify a perception DC, allowing them to be se
 ## Optional modules
 * [DFreds Convenient Effects](https://foundryvtt.com/packages/dfreds-convenient-effects)
 * [Combat Utility Belt](https://foundryvtt.com/packages/combat-utility-belt)
-* [Token Magic FX](https://foundryvtt.com/packages/tokenmagic)
 * [Active Token Effects](https://foundryvtt.com/packages/ATL)
 * [Token Light Condition](https://foundryvtt.com/packages/tokenlightcondition)
