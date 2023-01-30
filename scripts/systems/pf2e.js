@@ -22,7 +22,7 @@ export class StealthyPF2e extends StealthyBaseEngine {
       'DetectionModeBasicSight.prototype._canDetect',
       function (wrapped, visionSource, target) {
         // Stealthy.log('DetectionModeBasicSight.prototype._canDetect', { visionSource, target });
-        const engine = game.stealthy.engine;
+        const engine = stealthy.engine;
         if (!engine.testStealth(visionSource, target)) return false;
         return wrapped(visionSource, target);
       },
@@ -74,7 +74,7 @@ export class StealthyPF2e extends StealthyBaseEngine {
 
   async setHiddenValue(actor, effect, flag, value) {
     await actor.setFlag(Stealthy.MODULE_ID, 'hidden', value);
-    game.stealthy.socket.executeForEveryone('RefreshPerception');
+    stealthy.socket.executeForEveryone('RefreshPerception');
   }
 
   getSpotFlagAndValue(actor, effect) {

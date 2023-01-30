@@ -1,5 +1,6 @@
-# Pending
+# v3.1.2
 * Re-enable secret door detection with warning about the icon refresh bug
+* Moved stealthy object from window.game to window
 
 # v3.1.1
 * Fix missing use of dimAsBright setting.

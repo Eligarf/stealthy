@@ -177,7 +177,7 @@ export class Stealthy5e extends StealthyBaseEngine {
   }
 
   async rollPerception(actor, roll) {
-    if (!game.stealthy.activeSpot) return;
+    if (!stealthy.activeSpot) return;
     Stealthy.log('Stealthy5e.rollPerception', { actor, roll });
 
     let perception = { normal: roll.total, disadvantaged: roll.total };

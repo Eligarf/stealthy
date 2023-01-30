@@ -90,7 +90,7 @@ Hooks.once('setup', () => {
 
   const systemEngine = Stealthy.engines[game.system.id];
   if (systemEngine) {
-    window.game.stealthy = new Stealthy(systemEngine);
+    window[Stealthy.MODULE_ID] = new Stealthy(systemEngine);
   }
   else {
     console.error(`Stealthy doesn't yet support system id '${game.system.id}'`);
@@ -103,7 +103,7 @@ Hooks.on('renderTokenHUD', (tokenHUD, html, app) => {
   if (game.user.isGM == true) {
     const token = tokenHUD.object;
     const actor = token?.actor;
-    const engine = game.stealthy.engine;
+    const engine = stealthy.engine;
 
     const hiddenEffect = engine.findHiddenEffect(actor);
     if (hiddenEffect) {
@@ -141,8 +141,8 @@ Hooks.on('getSceneControlButtons', (controls) => {
     name: 'stealthy-spotting',
     title: game.i18n.localize("stealthy.activeSpot"),
     toggle: true,
-    active: game.stealthy.activeSpot,
-    onClick: (toggled) => game.stealthy.socket.executeForEveryone('ToggleActiveSpot', toggled)
+    active: stealthy.activeSpot,
+    onClick: (toggled) => stealthy.socket.executeForEveryone('ToggleActiveSpot', toggled)
   });
 });
 
@@ -156,5 +156,5 @@ Hooks.once('ready', async () => {
   if (!game.modules.get('lib-wrapper')?.active && game.user.isGM)
     ui.notifications.error("Stealthy requires the 'libWrapper' module. Please install and activate it.");
   if (!game.user.isGM)
-    game.stealthy.activeSpot = await game.stealthy.socket.executeAsGM('GetActiveSpot');
+    stealthy.activeSpot = await stealthy.socket.executeAsGM('GetActiveSpot');
 });

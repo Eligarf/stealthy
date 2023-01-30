@@ -25,7 +25,7 @@ export class StealthyBaseEngine {
       Stealthy.MODULE_ID,
       'DetectionModeBasicSight.prototype.testVisibility',
       function (wrapped, visionSource, mode, config = {}) {
-        const engine = game.stealthy.engine;
+        const engine = stealthy.engine;
         if (!engine.testStealth(visionSource, config.object)) return false;
         return engine.basicVision(wrapped, visionSource, mode, config);
       },
@@ -37,7 +37,7 @@ export class StealthyBaseEngine {
       Stealthy.MODULE_ID,
       'DetectionModeInvisibility.prototype.testVisibility',
       function (wrapped, visionSource, mode, config = {}) {
-        const engine = game.stealthy.engine;
+        const engine = stealthy.engine;
         if (!engine.testStealth(visionSource, config.object)) return false;
         return engine.seeInvisibility(wrapped, visionSource, mode, config);
       },
@@ -233,7 +233,7 @@ export class StealthyBaseEngine {
       source: game.settings.get(Stealthy.MODULE_ID, 'hiddenSource'),
       makeEffect: this.makeHiddenEffectMaker(this.hiddenLabel)
     });
-    game.stealthy.socket.executeForEveryone('RefreshPerception');
+    stealthy.socket.executeForEveryone('RefreshPerception');
   }
 
   getHiddenFlagAndValue(actor, effect) {
@@ -247,7 +247,7 @@ export class StealthyBaseEngine {
     flag.hidden = value;
     effect.flags.stealthy = flag;
     await actor.updateEmbeddedDocuments('ActiveEffect', [effect]);
-    game.stealthy.socket.executeForEveryone('RefreshPerception');
+    stealthy.socket.executeForEveryone('RefreshPerception');
   }
 
   getSpotFlagAndValue(actor, effect) {
@@ -269,7 +269,7 @@ export class StealthyBaseEngine {
   }
 
   rollStealth() {
-    game.stealthy.socket.executeForEveryone('RefreshPerception');
+    stealthy.socket.executeForEveryone('RefreshPerception');
   }
 
   isSecretDoorSpotted(doorControl, token) {
@@ -309,7 +309,7 @@ export class Stealthy {
 
   static async ToggleActiveSpot(toggled) {
     Stealthy.log(`ToggleActiveSpot <= ${toggled}`);
-    game.stealthy.activeSpot = toggled;
+    stealthy.activeSpot = toggled;
 
     if (!toggled && game.user.isGM) {
       const label = game.i18n.localize('stealthy.spot.label');
@@ -329,8 +329,8 @@ export class Stealthy {
   }
 
   static async GetActiveSpot() {
-    Stealthy.log(`GetActiveSpot => ${game.stealthy.activeSpot}`);
-    return game.stealthy.activeSpot;
+    Stealthy.log(`GetActiveSpot => ${stealthy.activeSpot}`);
+    return stealthy.activeSpot;
   }
 
   static CONSOLE_COLORS = ['background: #222; color: #80ffff', 'color: #fff'];
@@ -436,7 +436,7 @@ export class Stealthy {
 
         // Players only see secret doors if they control one unit
         if (tokens.length === 1) {
-          const engine = game.stealthy.engine;
+          const engine = stealthy.engine;
           const token = tokens[0];
           const maxRange = doorControl.wall.document.flags.stealthy.maxRange ?? Infinity;
           const ray = new Ray(doorControl.center, token.center);
