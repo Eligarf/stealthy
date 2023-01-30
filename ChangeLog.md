@@ -1,3 +1,6 @@
+# Pending
+* Re-enable secret door detection with warning about the icon refresh bug
+
 # v3.1.1
 * Fix missing use of dimAsBright setting.
 

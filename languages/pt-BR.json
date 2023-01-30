@@ -22,7 +22,7 @@
     "activeSpot": "Ativamente percebido",
     "spotSecretDoors": {
       "name": "Detecção automática de porta secreta",
-      "hint": "Os atores podem localizar portas ocultas se seu teste de percepção vencer a porta secreta"
+      "hint": "AVISO! Os atores podem localizar portas ocultas se seu teste de percepção vencer a porta secreta. Se você habilitar isso, os ícones de porta não serão mais atualizados corretamente"
     },
     "ignoreFriendlyStealth": {
       "name": "Ignorar Furtividade aliada",

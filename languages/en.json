@@ -22,7 +22,7 @@
     "activeSpot": "Active Spot",
     "spotSecretDoors": {
       "name": "Automatic secret door detection",
-      "hint": "Actors can spot hidden doors if their perception check beats the secret door"
+      "hint": "BUGGY! Actors can spot hidden doors if their perception check beats the secret door. If you enable this, door icons no longer refresh properly"
     },
     "ignoreFriendlyStealth": {
       "name": "Ignore friendly stealth",

@@ -45,7 +45,6 @@ export class StealthyBaseEngine {
       { perf_mode: libWrapper.PERF_FAST }
     );
 
-    /*
     // Secret door patching/hooks
     if (game.settings.get(Stealthy.MODULE_ID, 'spotSecretDoors')) {
       libWrapper.register(
@@ -90,7 +89,6 @@ export class StealthyBaseEngine {
       // Inject custom settings into the wall config diallog
       Hooks.on("renderWallConfig", Stealthy.RenderSpotDc);
     }
-    */
   }
 
   testStealth(visionSource, target) {
