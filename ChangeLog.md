@@ -1,3 +1,6 @@
+# v3.1.3
+* Updated dnd4e/dnd5e version compatibility
+
 # v3.1.2
 * Re-enable secret door detection with warning about the icon refresh bug
 * Moved stealthy object from window.game to window
