@@ -47,7 +47,7 @@ Doors can now have an optional stealth value; tokens with a sufficiently high pe
 
 
 ![secret-doors](https://user-images.githubusercontent.com/16523503/212574216-6cc5b0ad-f432-441e-b11a-f4aa2b15cbd1.gif)
-![doorcontrol](https://user-images.githubusercontent.com/16523503/212717654-444ef8b3-3770-43b2-a324-b15769f1404f.PNG)
+![hidden-door](https://user-images.githubusercontent.com/16523503/217671740-41aa7832-d495-49da-a149-948ebb6ccb2a.PNG)
 
 # Systems
 Stealthy currently works in the following systems (specific notes about a given system are in the [Wiki](https://github.com/Eligarf/stealthy/wiki)):
