@@ -20,9 +20,9 @@
       }
     },
     "activeSpot": "Active Spot",
-    "spotSecretDoors": {
-      "name": "Automatic secret door detection",
-      "hint": "BUGGY! Actors can spot hidden doors if their perception check beats the secret door. If you enable this, door icons no longer refresh properly"
+    "spotHiddenDoors": {
+      "name": "Automatic hidden door detection",
+      "hint": "Tokens can spot hidden doors if their perception check beats the door's stealth value"
     },
     "ignoreFriendlyStealth": {
       "name": "Ignore friendly stealth",
@@ -55,7 +55,7 @@
       "advanced": "Advanced Options"
     },
     "door": {
-      "dc": "Required Perception",
+      "stealth": "Stealth value",
       "maxRange": "Detection distance"
     },
     "dnd5e": {

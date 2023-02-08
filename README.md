@@ -40,6 +40,15 @@ An invisible actor that also has the 'Hidden' effect will check Perception vs St
 ## Friendly tokens can still be viewed
 The GM has the option for allowing Hidden tokens to be seen by other tokens of the same disposition.
 
+## Automatic Hidden Door detection
+Doors can now have an optional stealth value; tokens with a sufficiently high perception effect will be able to see a hidden door if it beats that door's stealth. Doors can also have a detection range (hidden or not) that will hide the door control until the viewing token is within the given range.
+
+**THIS DOES NOT APPLY TO FOUNDRY'S SECRET DOORS!!!** Counter-intuitive? Yes, but I tried and failed to to get the secret doors to play nice - turns out to be way easier to hide a door than to show a secret door.
+
+
+![secret-doors](https://user-images.githubusercontent.com/16523503/212574216-6cc5b0ad-f432-441e-b11a-f4aa2b15cbd1.gif)
+![doorcontrol](https://user-images.githubusercontent.com/16523503/212717654-444ef8b3-3770-43b2-a324-b15769f1404f.PNG)
+
 # Systems
 Stealthy currently works in the following systems (specific notes about a given system are in the [Wiki](https://github.com/Eligarf/stealthy/wiki)):
 - dnd4e
@@ -50,15 +59,6 @@ Stealthy currently works in the following systems (specific notes about a given 
 
 ## Handling Hidden removal
 Stealthy will not automatically remove the Hidden effect - the dnd5e [Skulker](https://www.dndbeyond.com/feats/skulker) feat demonstrates why removing Hidden gets complicated without heavier automation support provided by modules like the excellent [Midi-QOL](https://foundryvtt.com/packages/midi-qol) which handles this for my games. I suggest [DFreds Effects Panel](https://foundryvtt.com/packages/dfreds-effects-panel) as an easier way to manually remove it, especially for low automation level games. 
-
-## Automatic Secret Door detection
-Tokens with a sufficiently high perception effect will be able to see a secret door if it beats that door's perception DC and are within the detection radius specified for the door. Secret doors without perception DCs will not be seen by tokens.
-
-Enabling this feature causes a side-effect where both regular door and secret door icons don't properly refresh, although they do show up properly after a reload. I don't have a solution in mind yet for this problem. 
-
-![secret-doors](https://user-images.githubusercontent.com/16523503/212574216-6cc5b0ad-f432-441e-b11a-f4aa2b15cbd1.gif)
-![doorcontrol](https://user-images.githubusercontent.com/16523503/212717654-444ef8b3-3770-43b2-a324-b15769f1404f.PNG)
-
 
 # Required modules
 * [lib-wrapper](https://foundryvtt.com/packages/lib-wrapper)

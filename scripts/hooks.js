@@ -14,8 +14,8 @@ Hooks.once('setup', () => {
   });
 
   game.settings.register(Stealthy.MODULE_ID, 'spotSecretDoors', {
-    name: game.i18n.localize("stealthy.spotSecretDoors.name"),
-    hint: game.i18n.localize("stealthy.spotSecretDoors.hint"),
+    name: game.i18n.localize("stealthy.spotHiddenDoors.name"),
+    hint: game.i18n.localize("stealthy.spotHiddenDoors.hint"),
     scope: 'world',
     config: true,
     type: Boolean,

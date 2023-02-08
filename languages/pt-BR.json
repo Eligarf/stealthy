@@ -20,9 +20,9 @@
       }
     },
     "activeSpot": "Ativamente percebido",
-    "spotSecretDoors": {
-      "name": "Detecção automática de porta secreta",
-      "hint": "AVISO! Os atores podem localizar portas ocultas se seu teste de percepção vencer a porta secreta. Se você habilitar isso, os ícones de porta não serão mais atualizados corretamente"
+    "spotHiddenDoors": {
+      "name": "Detecção automática de portas escondidas",
+      "hint": "Os tokens podem identificar portas ocultas se seu teste de percepção superar o valor furtivo da porta"
     },
     "ignoreFriendlyStealth": {
       "name": "Ignorar Furtividade aliada",
@@ -55,7 +55,7 @@
       "advanced": "Opções avançadas"
     },
     "door": {
-      "dc": "Percepção Necessária",
+      "stealth": "Valor escondido",
       "maxRange": "Distância de detecção"
     },
     "dnd5e": {

@@ -45,25 +45,16 @@ export class StealthyBaseEngine {
       { perf_mode: libWrapper.PERF_FAST }
     );
 
-    // Secret door patching/hooks
+    // Hidden door patching/hooks
     if (game.settings.get(Stealthy.MODULE_ID, 'spotSecretDoors')) {
-      libWrapper.register(
-        Stealthy.MODULE_ID,
-        'Wall.prototype.createDoorControl',
-        function (wrapped) {
-          return Stealthy.Wall_CreateDoorControlSansGmCheck(this);
-        },
-        libWrapper.OVERRIDE
-      );
-
       libWrapper.register(
         Stealthy.MODULE_ID,
         'DoorControl.prototype.isVisible',
         function (wrapped) {
-          if (!Stealthy.CanDisplayDoorControl(this)) return false;
-          return Stealthy.DoorControl_IsVisibleSansGmCheck(this);
+          if (!wrapped()) return false;
+          return Stealthy.CanDisplayDoorControl(this);
         },
-        libWrapper.OVERRIDE
+        libWrapper.MIXED
       );
 
       libWrapper.register(
@@ -71,23 +62,14 @@ export class StealthyBaseEngine {
         "WallConfig.prototype._updateObject",
         async function (wrapped, event, formData) {
           let result = await wrapped(event, formData);
-          if (result) result = Stealthy.UpdateSecretDoorDc(this, formData);
+          if (result) result = Stealthy.UpdateHiddenDoor(this, formData);
           return result;
         },
         libWrapper.WRAPPER
       );
 
-      libWrapper.register(
-        Stealthy.MODULE_ID,
-        "Wall.prototype._onModifyWall",
-        async function (wrapped, ...args) {
-          return Stealthy.Wall_onModifyWallSansGmCheck(this, ...args);
-        },
-        libWrapper.OVERRIDE
-      );
-
       // Inject custom settings into the wall config diallog
-      Hooks.on("renderWallConfig", Stealthy.RenderSpotDc);
+      Hooks.on("renderWallConfig", Stealthy.RenderHiddenDoor);
     }
   }
 
@@ -272,11 +254,11 @@ export class StealthyBaseEngine {
     stealthy.socket.executeForEveryone('RefreshPerception');
   }
 
-  isSecretDoorSpotted(doorControl, token) {
-    const dc = doorControl.wall.document.flags.stealthy.dc;
+  isHiddenDoorSpotted(doorControl, token) {
+    const stealth = doorControl.wall.document.flags.stealthy.stealth;
     const actor = token.actor;
     const { value: perception } = this.getSpotFlagAndValue(actor, this.findSpotEffect(actor));
-    return perception >= dc;
+    return perception >= stealth;
   }
 }
 
@@ -362,99 +344,32 @@ export class Stealthy {
     }
   }
 
-  static Wall_CreateDoorControlSansGmCheck(wall) {
-    wall.doorControl = canvas.controls.doors.addChild(new DoorControl(wall));
-    wall.doorControl.draw();
-    return wall.doorControl;
-  }
-
-  static Wall_onModifyWallSansGmCheck(wall, doorChange = false) {
-    const perceptionUpdate = {
-      initializeLighting: true,
-      initializeVision: true,
-      initializeSounds: true,
-      refreshTiles: true
-    };
-
-    // Re-draw door icons
-    if (doorChange) {
-      perceptionUpdate.forceUpdateFog = true;
-      const dt = wall.document.door;
-      const hasCtrl = (dt === CONST.WALL_DOOR_TYPES.DOOR) || (dt === CONST.WALL_DOOR_TYPES.SECRET);
-      if (hasCtrl) {
-        if (wall.doorControl) wall.doorControl.draw(); // Asynchronous
-        else wall.createDoorControl();
-      }
-      else wall.clearDoorControl();
-    }
-
-    // Re-initialize perception
-    canvas.perception.update(perceptionUpdate, true);
-  }
-
-  static DoorControl_IsVisibleSansGmCheck(doorControl) {
-    // Test two points which are perpendicular to the door midpoint
-    const w = doorControl.wall;
-    const ray = w.toRay();
-    const [x, y] = w.midpoint;
-    const [dx, dy] = [-ray.dy, ray.dx];
-    const t = 3 / (Math.abs(dx) + Math.abs(dy)); // Approximate with Manhattan distance for speed
-    const points = [
-      { x: x + (t * dx), y: y + (t * dy) },
-      { x: x - (t * dx), y: y - (t * dy) }
-    ];
-
-    // Test each point for visibility
-    return points.some(p => {
-      return canvas.effects.visibility.testVisibility(p, { object: doorControl, tolerance: 0 });
-    });
-  }
-
   static CanDisplayDoorControl(doorControl) {
     const wallDoc = doorControl.wall.document;
-    if (wallDoc.door === CONST.WALL_DOOR_TYPES.SECRET) {
+    if (wallDoc.door === CONST.WALL_DOOR_TYPES.DOOR) {
+      let tokens = canvas.tokens.controlled;
+      if (tokens.length === 1) {
+        const token = tokens[0];
+        const maxRange = doorControl.wall.document.flags.stealthy?.maxRange ?? Infinity;
+        const ray = new Ray(doorControl.center, token.center);
+        const distance = canvas.grid.measureDistances([{ ray }])[0];
+        if (distance > maxRange) return false;
 
-      // If the door doesn't have a stealthy flag, only GMs can see like Foundry wants
-      const dc = wallDoc.flags.stealthy?.dc;
-      if (dc === undefined || dc === null) {
-        if (!game.user.isGM) return false;
-      }
-
-      // Otherwise, find the controlled tokens
-      else {
-        let tokens = canvas.tokens.controlled;
-        if (!tokens.length) {
-          if (!game.user.isGM) {
-            tokens = canvas.scene.tokens.filter(t => {
-              const userId = game.user.id;
-              const ownership = t.actor.ownership[userId] ?? t.actor.ownership.default;
-              return ownership >= 2;
-            });
-            if (!tokens.length) return false;
-          }
-        }
-
-        // Players only see secret doors if they control one unit
-        if (tokens.length === 1) {
-          const engine = stealthy.engine;
-          const token = tokens[0];
-          const maxRange = doorControl.wall.document.flags.stealthy.maxRange ?? Infinity;
-          const ray = new Ray(doorControl.center, token.center);
-          const distance = canvas.grid.measureDistances([{ ray }])[0];
-          if (distance > maxRange) return false;
-          if (!engine.isSecretDoorSpotted(doorControl, token)) return false;
-        }
-        else if (!game.user.isGM) return false;
+        // If the door doesn't have a stealthy flag, everybody sees it
+        const stealth = wallDoc.flags.stealthy?.stealth;
+        if (stealth === undefined || stealth === null) return true;
+        const engine = stealthy.engine;
+        return engine.isHiddenDoorSpotted(doorControl, token);
       }
     }
     return true;
   }
 
-  static async UpdateSecretDoorDc(wallConfig, formData) {
+  static async UpdateHiddenDoor(wallConfig, formData) {
     let update = false;
     const updateData = { flags: { stealthy: {} } };
-    if (formData.spotDc !== undefined) {
-      updateData.flags.stealthy.dc = formData.spotDc;
+    if (formData.stealth !== undefined) {
+      updateData.flags.stealthy.stealth = formData.stealth;
       update = true;
     }
     if (formData.maxRange !== undefined) {
@@ -472,18 +387,22 @@ export class Stealthy {
     return await canvas.scene.updateEmbeddedDocuments("Wall", updateDataset);
   }
 
-  static RenderSpotDc(wallConfig, html, css) {
-    if (css.document.door == 2) {
-      const dcBlock = `
+  static RenderHiddenDoor(wallConfig, html, css) {
+    Stealthy.log('RenderHiddenDoor', { wallConfig, html, css });
+    if (css.document.door == 1) {
+      const hiddenDoorBlock = `
+      <fieldset>
+        <legend>Stealthy</legend>
         <div class="form-group">
-          <label for="spotDc">${game.i18n.localize("stealthy.door.dc")}</label>
-          <input type="number" name="spotDc"/ value="${css.object.flags.stealthy?.dc}">
+          <label for="stealth">${game.i18n.localize("stealthy.door.stealth")}</label>
+          <input type="number" name="stealth"/ value="${css.object.flags.stealthy?.stealth}">
         </div>
         <div class="form-group">
           <label for="maxRange">${game.i18n.localize("stealthy.door.maxRange")}</label>
           <input type="number" name="maxRange"/ value="${css.object.flags.stealthy?.maxRange}">
-        </div>`;
-      html.find(".form-group").last().after(dcBlock);
+        </div>
+      </fieldset>`;
+      html.find(".form-group").last().after(hiddenDoorBlock);
 
       // Force config window to resize
       wallConfig.setPosition({ height: "auto" });

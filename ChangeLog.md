@@ -1,3 +1,6 @@
+# v3.2.0
+* BREAKING CHANGE! Replaced secret door detection with hidden door detection - turned out to be far easier to hide regular doors than to show secret ones. My apologies for not having figured out an automated migration path. This does, however, take care of the non-responsive door icon problem.
+
 # v3.1.3
 * Updated dnd4e/dnd5e version compatibility
 
