@@ -16,21 +16,6 @@ export class StealthyPF2e extends StealthyBaseEngine {
     });
   }
 
-  patchFoundry() {
-    libWrapper.register(
-      Stealthy.MODULE_ID,
-      'DetectionModeBasicSight.prototype._canDetect',
-      function (wrapped, visionSource, target) {
-        // Stealthy.log('DetectionModeBasicSight.prototype._canDetect', { visionSource, target });
-        const engine = stealthy.engine;
-        if (!engine.testStealth(visionSource, target)) return false;
-        return wrapped(visionSource, target);
-      },
-      libWrapper.MIXED,
-      { perf_mode: libWrapper.PERF_FAST }
-    );
-  }
-
   findHiddenEffect(actor) {
     return actor.getFlag(Stealthy.MODULE_ID, 'hidden');
   }
@@ -39,7 +24,7 @@ export class StealthyPF2e extends StealthyBaseEngine {
     return actor.getFlag(Stealthy.MODULE_ID, 'spot');
   }
 
-  isHidden(visionSource, hiddenEffect, target) {
+  canSpotTarget(visionSource, hiddenEffect, target) {
     const source = visionSource.object?.actor;
     const stealth = hiddenEffect ?? (10 + target.actor.system.skills.ste.value);
     const spotEffect = this.findSpotEffect(source);
@@ -47,9 +32,9 @@ export class StealthyPF2e extends StealthyBaseEngine {
 
     if (perception <= stealth) {
       Stealthy.log(`${visionSource.object.name}'s ${perception} can't see ${target.name}'s ${stealth}`);
-      return true;
+      return false;
     }
-    return false;
+    return true;
   }
 
   makeHiddenEffectMaker(label) {

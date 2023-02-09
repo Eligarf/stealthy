@@ -19,7 +19,7 @@ export class StealthyDnd4e extends StealthyBaseEngine {
     });
   }
 
-  isHidden(visionSource, hiddenEffect, target) {
+  canSpotTarget(visionSource, hiddenEffect, target) {
     // Never gets called, neither do the patches for the v10 vision modes
     // dead in the water
     const source = visionSource.object?.actor;
@@ -29,9 +29,9 @@ export class StealthyDnd4e extends StealthyBaseEngine {
 
     if (perception <= stealth) {
       Stealthy.log(`${visionSource.object.name}'s ${perception} can't see ${target.name}'s ${stealth}`);
-      return true;
+      return false;
     }
-    return false;
+    return true;
   }
 
   getHiddenFlagAndValue(actor, effect) {

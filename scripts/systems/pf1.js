@@ -35,7 +35,7 @@ export class StealthyPF1 extends StealthyBaseEngine {
     });
   }
 
-  isHidden(visionSource, hiddenEffect, target) {
+  canSpotTarget(visionSource, hiddenEffect, target) {
     const source = visionSource.object?.actor;
     const stealth = hiddenEffect.flags.stealthy?.hidden ?? (10 + target.actor.system.skills.ste.mod);
     const spotEffect = this.findSpotEffect(source);
@@ -45,9 +45,9 @@ export class StealthyPF1 extends StealthyBaseEngine {
 
     if (perception === undefined || perception <= stealth) {
       Stealthy.log(`${visionSource.object.name}'s ${perception} can't see ${target.name}'s ${stealth}`);
-      return true;
+      return false;
     }
-    return false;
+    return true;
   }
 
   getHiddenFlagAndValue(actor, effect) {

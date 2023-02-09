@@ -26,7 +26,7 @@ export class StealthyBaseEngine {
       'DetectionModeBasicSight.prototype.testVisibility',
       function (wrapped, visionSource, mode, config = {}) {
         const engine = stealthy.engine;
-        if (!engine.testStealth(visionSource, config.object)) return false;
+        if (engine.isHidden(visionSource, config.object)) return false;
         return engine.basicVision(wrapped, visionSource, mode, config);
       },
       libWrapper.MIXED,
@@ -38,7 +38,7 @@ export class StealthyBaseEngine {
       'DetectionModeInvisibility.prototype.testVisibility',
       function (wrapped, visionSource, mode, config = {}) {
         const engine = stealthy.engine;
-        if (!engine.testStealth(visionSource, config.object)) return false;
+        if (engine.isHidden(visionSource, config.object)) return false;
         return engine.seeInvisibility(wrapped, visionSource, mode, config);
       },
       libWrapper.MIXED,
@@ -73,7 +73,7 @@ export class StealthyBaseEngine {
     }
   }
 
-  testStealth(visionSource, target) {
+  isHidden(visionSource, target) {
     const friendlyStealth = game.settings.get(Stealthy.MODULE_ID, 'friendlyStealth');
     let ignoreFriendlyStealth = friendlyStealth === 'ignore' || !game.combat && friendlyStealth === 'inCombat';
     ignoreFriendlyStealth =
@@ -83,11 +83,11 @@ export class StealthyBaseEngine {
     if (!ignoreFriendlyStealth) {
       const hiddenEffect = this.findHiddenEffect(target?.actor);
       if (hiddenEffect) {
-        if (this.isHidden(visionSource, hiddenEffect, target)) return false;
+        return !this.canSpotTarget(visionSource, hiddenEffect, target);
       }
     }
 
-    return true;
+    return false;
   }
 
   findHiddenEffect(actor) {
@@ -98,11 +98,11 @@ export class StealthyBaseEngine {
     return actor?.effects.find(e => e.label === this.spotLabel && !e.disabled);
   }
 
-  isHidden(visionSource, hiddenEffect, target) {
+  canSpotTarget(visionSource, hiddenEffect, target) {
     // Implement your system's method for testing spot data vs hidden data
     // This should would in the absence of a spot effect on the viewer, using
     // a passive or default value as necessary
-    return false;
+    return true;
   }
 
   basicVision(wrapped, visionSource, mode, config) {
@@ -256,7 +256,7 @@ export class StealthyBaseEngine {
     stealthy.socket.executeForEveryone('RefreshPerception');
   }
 
-  isHiddenDoorSpotted(doorControl, token) {
+  canSpotDoor(doorControl, token) {
     const stealth = doorControl.wall.document.flags.stealthy.stealth;
     const actor = token.actor;
     const { value: perception } = this.getSpotFlagAndValue(actor, this.findSpotEffect(actor));
@@ -361,7 +361,7 @@ export class Stealthy {
         const stealth = wallDoc.flags.stealthy?.stealth;
         if (stealth === undefined || stealth === null) return true;
         const engine = stealthy.engine;
-        return engine.isHiddenDoorSpotted(doorControl, token);
+        return engine.canSpotDoor(doorControl, token);
       }
     }
     return true;

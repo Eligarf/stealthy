@@ -100,7 +100,7 @@ export class Stealthy5e extends StealthyBaseEngine {
 
   static LIGHT_LABELS = ['dark', 'dim', 'bright'];
 
-  isHidden(visionSource, hiddenEffect, target) {
+  canSpotTarget(visionSource, hiddenEffect, target) {
     const source = visionSource.object?.actor;
     const stealth = hiddenEffect.flags.stealthy?.hidden ?? target.actor.system.skills.ste.passive;
     const spotEffect = this.findSpotEffect(source);
@@ -120,28 +120,28 @@ export class Stealthy5e extends StealthyBaseEngine {
 
     if (perception <= stealth) {
       Stealthy.log(`${visionSource.object.name}'s ${perception} can't see ${target.name}'s ${stealth}`);
-      return true;
+      return false;
     }
-    return false;
+    return true;
   }
 
   basicVision(wrapped, visionSource, mode, config) {
     const target = config.object?.actor;
-    let noDarkvision = false;
+    let invisibleToDarkvision = false;
     const friendlyUmbralSight = game.settings.get(Stealthy.MODULE_ID, 'friendlyUmbralSight');
     let ignoreFriendlyUmbralSight = friendlyUmbralSight === 'ignore' || !game.combat && friendlyUmbralSight === 'inCombat';
     ignoreFriendlyUmbralSight =
       ignoreFriendlyUmbralSight && config.object.document?.disposition === visionSource.object.document?.disposition;
     if (!ignoreFriendlyUmbralSight && visionSource.visionMode?.id === 'darkvision') {
       const umbralSight = target?.itemTypes?.feat?.find(f => f.name === game.i18n.localize('Umbral Sight'));
-      if (umbralSight) noDarkvision = true;
+      if (umbralSight) invisibleToDarkvision = true;
     }
 
-    if (noDarkvision) {
+    if (invisibleToDarkvision) {
       Stealthy.log(`${visionSource.object.name}'s darkvision can't see ${config.object.name}`);
       let ourMode = duplicate(mode);
       ourMode.range = 0;
-      return wrapped(visionSource, ourMode, config);
+      return super.basicVision(wrapped, visionSource, ourMode, config);
     }
 
     return super.basicVision(wrapped, visionSource, mode, config);
