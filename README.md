@@ -41,10 +41,9 @@ An invisible actor that also has the 'Hidden' effect will check Perception vs St
 The GM has the option for allowing Hidden tokens to be seen by other tokens of the same disposition.
 
 ## Automatic Hidden Door detection
-Doors can now have an optional stealth value; tokens with a sufficiently high perception effect will be able to see a hidden door if it beats that door's stealth. Doors can also have a detection range (hidden or not) that will hide the door control until the viewing token is within the given range.
+Doors can have a detection range that will hide the door control until the viewing token is within the given range. Doors can also have an optional stealth value; tokens with a sufficiently high perception effect will be able to see a hidden door if it beats that door's stealth. 
 
-**THIS DOES NOT APPLY TO FOUNDRY'S SECRET DOORS!!!** Counter-intuitive? Yes, but I tried and failed to to get the secret doors to play nice - turns out to be way easier to hide a door than to show a secret door.
-
+**THIS DOES NOT APPLY TO FOUNDRY'S SECRET DOORS!!!** I tried and failed to to get the secret doors to play nice - turns out to be way easier to conditionally hide a regular door from players than to conditionally show a secret door to them.
 
 ![secret-doors](https://user-images.githubusercontent.com/16523503/212574216-6cc5b0ad-f432-441e-b11a-f4aa2b15cbd1.gif)
 ![hidden-door](https://user-images.githubusercontent.com/16523503/217671740-41aa7832-d495-49da-a149-948ebb6ccb2a.PNG)
