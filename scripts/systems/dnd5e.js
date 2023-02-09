@@ -1,6 +1,7 @@
-import { Stealthy, StealthyBaseEngine } from '../stealthy.js';
+import { Stealthy } from '../stealthy.js';
+import Engine from '../engine.js';
 
-export class Stealthy5e extends StealthyBaseEngine {
+class Engine5e extends Engine {
 
   constructor() {
     super();
@@ -172,7 +173,7 @@ export class Stealthy5e extends StealthyBaseEngine {
     }
     else {
       flag.normal = actor.system.skills.prc.passive;
-      flag.disadvantaged = Stealthy5e.GetPassivePerceptionWithDisadvantage(actor);
+      flag.disadvantaged = Engine5e.GetPassivePerceptionWithDisadvantage(actor);
     }
     return {
       flag: { spot: flag },
@@ -249,13 +250,13 @@ export class Stealthy5e extends StealthyBaseEngine {
     let lightBand = 2;
     if (target?.effects.find(e => e.label === this.darkLabel && !e.disabled)) { lightBand = 0; }
     if (target?.effects.find(e => e.label === this.dimLabel && !e.disabled)) { lightBand = 1; }
-    debugData.lightLevel = Stealthy5e.LIGHT_LABELS[lightBand];
+    debugData.lightLevel = Engine5e.LIGHT_LABELS[lightBand];
 
     // Adjust the light band based on conditions
     if (visionSource.visionMode?.id === 'darkvision') {
       if (game.settings.get(Stealthy.MODULE_ID, 'dimIsBright')) lightBand = lightBand + 1;
       else if (!lightBand) lightBand = 1;
-      debugData.foundryDarkvision = Stealthy5e.LIGHT_LABELS[lightBand];
+      debugData.foundryDarkvision = Engine5e.LIGHT_LABELS[lightBand];
     }
 
     // Extract the normal perception values from the source
@@ -276,7 +277,7 @@ export class Stealthy5e extends StealthyBaseEngine {
       debugData.cantSee = perception;
     }
     else if (lightBand === 1) {
-      let passiveDisadv = Stealthy5e.GetPassivePerceptionWithDisadvantage(source);
+      let passiveDisadv = Engine5e.GetPassivePerceptionWithDisadvantage(source);
       if (active !== undefined) {
         value = spotPair?.disadvantaged ?? value - 5;
         debugData.activeDisadv = value;
@@ -300,5 +301,5 @@ export class Stealthy5e extends StealthyBaseEngine {
 }
 
 Hooks.once('init', () => {
-  Stealthy.RegisterEngine('dnd5e', () => new Stealthy5e());
+  Stealthy.RegisterEngine('dnd5e', () => new Engine5e());
 });

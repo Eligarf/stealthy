@@ -1,10 +1,11 @@
-import { Stealthy, StealthyBaseEngine } from '../stealthy.js';
+import { Stealthy } from '../stealthy.js';
+import Engine from '../engine.js';
 
 // This mechanically works, but I don't know how one is supposed to get rid
 // of the Hidden effect once it is placed given the PF1 UI doesn't seem to show
 // active effects.
 
-export class StealthyDnd4e extends StealthyBaseEngine {
+class Engine4e extends Engine {
 
   constructor() {
     super();
@@ -66,5 +67,5 @@ export class StealthyDnd4e extends StealthyBaseEngine {
 }
 
 Hooks.once('init', () => {
-  Stealthy.RegisterEngine('dnd4e', () => new StealthyDnd4e());
+  Stealthy.RegisterEngine('dnd4e', () => new Engine4e());
 });
