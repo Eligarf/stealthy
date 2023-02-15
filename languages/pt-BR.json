@@ -24,6 +24,12 @@
       "name": "Detecção automática de portas escondidas",
       "hint": "Os tokens podem identificar portas ocultas se seu teste de percepção superar o valor furtivo da porta"
     },
+    "friendlyStealth": {
+      "name": "Como tratar tokens amigáveis ​​sob furtividade",
+      "allow": "Deve testar com sucesso Percepção vs Furtividade para ver",
+      "inCombat": "Teste Percepção apenas em combate",
+      "ignore": "Ignorar testes de Percepção"
+    },
     "ignoreFriendlyStealth": {
       "name": "Ignorar Furtividade aliada",
       "hint": "Testes de Percepção vs Furtividade serão ignorados para tokens com a mesma disposição"
@@ -60,9 +66,11 @@
     },
     "dnd5e": {
       "name": "Dnd5e",
-      "ignoreFriendlyUmbralSight": {
-        "name": "Ignorar Visão Umbral aliada",
-        "hint": "No modo de visão no escuro, ignorar a habilidade Visão Umbral para tokens com a mesma disposição"
+      "friendlyUmbralSight": {
+        "name": "Como tratar fichas amigas com Visão Umbral",
+        "allow": "Visão Umbral está escondida para Darkvision",
+        "inCombat": "Ignore Visão Umbral a menos que esteja em combate",
+        "ignore": "Ignorar Visão Umbral"
       },
       "tokenLighting": {
         "name": "Verificar as condições de iluminação dos tokens",

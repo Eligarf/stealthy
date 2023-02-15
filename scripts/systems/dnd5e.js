@@ -5,6 +5,19 @@ export class Stealthy5e extends StealthyBaseEngine {
   constructor() {
     super();
 
+    game.settings.register(Stealthy.MODULE_ID, 'friendlyUmbralSight', {
+      name: game.i18n.localize("stealthy.dnd5e.friendlyUmbralSight.name"),
+      scope: 'world',
+      config: true,
+      type: String,
+      choices: {
+        'allow': game.i18n.localize("stealthy.dnd5e.friendlyUmbralSight.allow"),
+        'inCombat': game.i18n.localize("stealthy.dnd5e.friendlyUmbralSight.inCombat"),
+        'ignore': game.i18n.localize("stealthy.dnd5e.friendlyUmbralSight.ignore")
+      },
+      default: 'inCombat'
+    });
+
     game.settings.register(Stealthy.MODULE_ID, 'ignoreFriendlyUmbralSight', {
       name: game.i18n.localize("stealthy.dnd5e.ignoreFriendlyUmbralSight.name"),
       hint: game.i18n.localize("stealthy.dnd5e.ignoreFriendlyUmbralSight.hint"),
@@ -80,7 +93,7 @@ export class Stealthy5e extends StealthyBaseEngine {
     Hooks.on('renderSettingsConfig', (app, html, data) => {
       $('<div>').addClass('form-group group-header')
         .html(game.i18n.localize("stealthy.dnd5e.name"))
-        .insertBefore($('[name="stealthy.ignoreFriendlyUmbralSight"]')
+        .insertBefore($('[name="stealthy.friendlyUmbralSight"]')
           .parents('div.form-group:first'));
     });
   }
@@ -115,9 +128,10 @@ export class Stealthy5e extends StealthyBaseEngine {
   basicVision(wrapped, visionSource, mode, config) {
     const target = config.object?.actor;
     let noDarkvision = false;
-    const ignoreFriendlyUmbralSight =
-      game.settings.get(Stealthy.MODULE_ID, 'ignoreFriendlyUmbralSight') &&
-      config.object.document?.disposition === visionSource.object.document?.disposition;
+    const friendlyUmbralSight = game.settings.get(Stealthy.MODULE_ID, 'friendlyUmbralSight');
+    let ignoreFriendlyUmbralSight = friendlyUmbralSight === 'ignore' || !game.combat && friendlyUmbralSight === 'inCombat';
+    ignoreFriendlyUmbralSight =
+      ignoreFriendlyUmbralSight && config.object.document?.disposition === visionSource.object.document?.disposition;
     if (!ignoreFriendlyUmbralSight && visionSource.visionMode?.id === 'darkvision') {
       const umbralSight = target?.itemTypes?.feat?.find(f => f.name === game.i18n.localize('Umbral Sight'));
       if (umbralSight) noDarkvision = true;

@@ -74,8 +74,10 @@ export class StealthyBaseEngine {
   }
 
   testStealth(visionSource, target) {
-    const ignoreFriendlyStealth =
-      game.settings.get(Stealthy.MODULE_ID, 'ignoreFriendlyStealth') &&
+    const friendlyStealth = game.settings.get(Stealthy.MODULE_ID, 'friendlyStealth');
+    let ignoreFriendlyStealth = friendlyStealth === 'ignore' || !game.combat && friendlyStealth === 'inCombat';
+    ignoreFriendlyStealth =
+      ignoreFriendlyStealth &&
       target.document?.disposition === visionSource.object.document?.disposition;
 
     if (!ignoreFriendlyStealth) {

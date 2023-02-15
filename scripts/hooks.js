@@ -4,13 +4,17 @@ Hooks.once('setup', () => {
   const module = game.modules.get(Stealthy.MODULE_ID);
   const moduleVersion = module.version;
 
-  game.settings.register(Stealthy.MODULE_ID, 'ignoreFriendlyStealth', {
-    name: game.i18n.localize("stealthy.ignoreFriendlyStealth.name"),
-    hint: game.i18n.localize("stealthy.ignoreFriendlyStealth.hint"),
+  game.settings.register(Stealthy.MODULE_ID, 'friendlyStealth', {
+    name: game.i18n.localize("stealthy.friendlyStealth.name"),
     scope: 'world',
     config: true,
-    type: Boolean,
-    default: true,
+    type: String,
+    choices: {
+      'allow': game.i18n.localize("stealthy.friendlyStealth.allow"),
+      'inCombat': game.i18n.localize("stealthy.friendlyStealth.inCombat"),
+      'ignore': game.i18n.localize("stealthy.friendlyStealth.ignore")
+    },
+    default: 'inCombat'
   });
 
   game.settings.register(Stealthy.MODULE_ID, 'spotSecretDoors', {
@@ -147,7 +151,7 @@ Hooks.on('getSceneControlButtons', (controls) => {
 });
 
 Hooks.on('renderSettingsConfig', (app, html, data) => {
-  $('<div>').addClass('form-group group-header').html(game.i18n.localize("stealthy.config.general")).insertBefore($('[name="stealthy.ignoreFriendlyStealth"]').parents('div.form-group:first'));
+  $('<div>').addClass('form-group group-header').html(game.i18n.localize("stealthy.config.general")).insertBefore($('[name="stealthy.friendlyStealth"]').parents('div.form-group:first'));
   $('<div>').addClass('form-group group-header').html(game.i18n.localize("stealthy.config.advanced")).insertBefore($('[name="stealthy.hiddenLabel"]').parents('div.form-group:first'));
   $('<div>').addClass('form-group group-header').html(game.i18n.localize("stealthy.config.debug")).insertBefore($('[name="stealthy.logLevel"]').parents('div.form-group:first'));
 });
