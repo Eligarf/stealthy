@@ -1,4 +1,4 @@
-# Pending
+# v3.3.0
 * Add option to ignore stealth on friendly tokens until combat
 * Adjust internal naming to make token and door visibility flow more similar
 * Moved door and engine code into their own files
