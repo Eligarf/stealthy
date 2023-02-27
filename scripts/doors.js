@@ -34,10 +34,10 @@ export default class Doors {
     const stealth = wallDoc.flags.stealthy?.stealth;
     if (stealth == null) return true;
     let tokens = canvas.tokens.controlled;
-    if (!tokens.length) return game.user.isGm;
+    if (!tokens.length) return game.user.isGM;
 
     const maxRange = doorControl.wall.document.flags.stealthy?.maxRange ?? Infinity;
-    for (const token in tokens) {
+    for (const token of tokens) {
       const ray = new Ray(doorControl.center, token.center);
       const distance = canvas.grid.measureDistances([{ ray }])[0];
       if (distance > maxRange) continue;
