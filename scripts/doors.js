@@ -30,23 +30,20 @@ export default class Doors {
 
   static CanDisplayDoorControl(doorControl) {
     const wallDoc = doorControl.wall.document;
-    if (wallDoc.door === CONST.WALL_DOOR_TYPES.DOOR) {
-      let tokens = canvas.tokens.controlled;
-      if (tokens.length === 1) {
-        const token = tokens[0];
-        const maxRange = doorControl.wall.document.flags.stealthy?.maxRange ?? Infinity;
-        const ray = new Ray(doorControl.center, token.center);
-        const distance = canvas.grid.measureDistances([{ ray }])[0];
-        if (distance > maxRange) return false;
+    if (wallDoc.door !== CONST.WALL_DOOR_TYPES.DOOR) return true;
+    const stealth = wallDoc.flags.stealthy?.stealth;
+    if (stealth == null) return true;
+    let tokens = canvas.tokens.controlled;
+    if (!tokens.length) return game.user.isGM;
 
-        // If the door doesn't have a stealthy flag, everybody sees it
-        const stealth = wallDoc.flags.stealthy?.stealth;
-        if (stealth === undefined || stealth === null) return true;
-        const engine = stealthy.engine;
-        return engine.canSpotDoor(doorControl, token);
-      }
+    const maxRange = doorControl.wall.document.flags.stealthy?.maxRange ?? Infinity;
+    for (const token of tokens) {
+      const ray = new Ray(doorControl.center, token.center);
+      const distance = canvas.grid.measureDistances([{ ray }])[0];
+      if (distance > maxRange) continue;
+      if (stealthy.engine.canSpotDoor(doorControl, token)) return true;
     }
-    return true;
+    return false;
   }
 
   static async UpdateHiddenDoor(wallConfig, formData) {

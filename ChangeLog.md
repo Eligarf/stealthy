@@ -1,3 +1,7 @@
+# v3.4.0
+* If multiple controlled tokens are selected, hidden doors will display if at least one token would be able to perceive the hidden door.
+* If no viewing token is selected, hidden doors will only display on the GM client.
+
 # v3.3.0
 * Add option to ignore stealth on friendly tokens until combat
 * Adjust internal naming to make token and door visibility flow more similar
