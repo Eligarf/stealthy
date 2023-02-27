@@ -6,10 +6,6 @@
     {
       "name": "Eligarf",
       "flags": {}
-    },
-    {
-      "name": "Frstrm",
-      "flags": {}
     }
   ],
   "version": "autoreplaced",
@@ -45,11 +41,13 @@
       {
         "id": "lib-wrapper",
         "type": "module",
+        "manifest": "https://github.com/ruipin/fvtt-lib-wrapper/releases/latest/download/module.json",
         "compatibility": {}
       },
       {
         "id": "socketlib",
         "type": "module",
+        "manifest": "https://raw.githubusercontent.com/manuelVo/foundryvtt-socketlib/master/module.json",
         "compatibility": {}
       }
     ]
