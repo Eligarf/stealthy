@@ -1,3 +1,6 @@
+# v3.5.0
+* Only add duration to default Spot effect if combat is active, allowing one to bank spot checks out-of-combat rather than just using the passive Spot value. Spot effects coming from CE or CUB are unaffected, taking whatever duration is specified in the supplied effect.
+
 # v3.4.0
 * If multiple controlled tokens are selected, hidden doors will display if at least one token would be able to perceive the hidden door.
 * If no viewing token is selected, hidden doors will only display on the GM client.
