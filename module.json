@@ -19,14 +19,14 @@
         "id": "dnd4e",
         "type": "system",
         "compatibility": {
-          "verified": "0.3.20"
+          "verified": "0.3.32"
         }
       },
       {
         "id": "dnd5e",
         "type": "system",
         "compatibility": {
-          "verified": "2.1.4"
+          "verified": "2.1.5"
         }
       },
       {

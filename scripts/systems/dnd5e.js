@@ -151,7 +151,7 @@ class Engine5e extends Engine {
   makeSpotEffectMaker(label) {
     return (flag, source) => {
       let effect = super.makeSpotEffectMaker(label)(flag, source);
-      effect.duration = { turns: 1, seconds: 6 };
+      if (game.combat) effect.duration = { turns: 1, seconds: 6 };
       return effect;
     };
   }
