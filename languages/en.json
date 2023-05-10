@@ -20,13 +20,14 @@
       }
     },
     "activeSpot": "Active Spot",
+    "title": "Stealthy",
     "spotHiddenDoors": {
       "name": "Automatic hidden door detection",
       "hint": "Tokens can spot hidden doors if their perception check beats the door's stealth value"
     },
     "friendlyStealth": {
       "name": "How to treat friendly tokens under stealth",
-      "allow": "Must successfully test Perception vs Stealth to see",
+      "allow": "Test Perception",
       "inCombat": "Only test Perception in combat",
       "ignore": "Ignore Perception tests"
     },

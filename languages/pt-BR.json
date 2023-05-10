@@ -20,13 +20,14 @@
       }
     },
     "activeSpot": "Ativamente percebido",
+    "title": "Stealthy",
     "spotHiddenDoors": {
       "name": "Detecção automática de portas escondidas",
       "hint": "Os tokens podem identificar portas ocultas se seu teste de percepção superar o valor furtivo da porta"
     },
     "friendlyStealth": {
       "name": "Como tratar tokens amigáveis ​​sob furtividade",
-      "allow": "Deve testar com sucesso Percepção vs Furtividade para ver",
+      "allow": "Percepção de teste",
       "inCombat": "Teste Percepção apenas em combate",
       "ignore": "Ignorar testes de Percepção"
     },
