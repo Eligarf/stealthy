@@ -27,7 +27,7 @@
     },
     "friendlyStealth": {
       "name": "How to treat friendly tokens under stealth",
-      "allow": "Test Perception",
+      "allow": "Always test Perception",
       "inCombat": "Only test Perception in combat",
       "ignore": "Ignore Perception tests"
     },

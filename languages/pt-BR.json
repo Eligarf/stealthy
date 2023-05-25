@@ -27,7 +27,7 @@
     },
     "friendlyStealth": {
       "name": "Como tratar tokens amigáveis ​​sob furtividade",
-      "allow": "Percepção de teste",
+      "allow": "Sempre teste a Percepção",
       "inCombat": "Teste Percepção apenas em combate",
       "ignore": "Ignorar testes de Percepção"
     },
