@@ -1,3 +1,6 @@
+# v3.6.0
+* Add Foundry V11 support
+* Small tweak of Friend Spot behavior menu language
 # v3.5.0
 * Only add duration to default Spot effect if combat is active, allowing one to bank spot checks out-of-combat rather than just using the passive Spot value. Spot effects coming from CE or CUB are unaffected, taking whatever duration is specified in the supplied effect.
 
