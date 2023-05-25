@@ -11,7 +11,7 @@
   "version": "autoreplaced",
   "compatibility": {
     "minimum": "10.291",
-    "verified": "10.291"
+    "verified": "11.299"
   },
   "relationships": {
     "systems": [
@@ -26,7 +26,7 @@
         "id": "dnd5e",
         "type": "system",
         "compatibility": {
-          "verified": "2.1.5"
+          "verified": "2.2.0"
         }
       },
       {
