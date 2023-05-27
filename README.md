@@ -43,7 +43,7 @@ The GM has the option for allowing Hidden tokens to be seen by other tokens of t
 ## Automatic Hidden Door detection
 Doors can have a detection range that will hide the door control until the viewing token is within the given range. Doors can also have an optional stealth value; tokens with a sufficiently high perception effect will be able to see a hidden door if it beats that door's stealth. 
 
-**THIS DOES NOT APPLY TO FOUNDRY'S SECRET DOORS!!!** I tried and failed to to get the secret doors to play nice - turns out to be way easier to conditionally hide a regular door from players than to conditionally show a secret door to them.
+**THIS DOES NOT APPLY TO FOUNDRY'S SECRET DOORS!!!** I tried and failed to to get the secret doors to play nice - it turns out to be way easier to conditionally hide a regular door from players than to conditionally show a secret door to them.
 
 ![secret-doors](https://user-images.githubusercontent.com/16523503/212574216-6cc5b0ad-f432-441e-b11a-f4aa2b15cbd1.gif)
 ![hidden-door](https://user-images.githubusercontent.com/16523503/217671740-41aa7832-d495-49da-a149-948ebb6ccb2a.PNG)
@@ -51,19 +51,20 @@ Doors can have a detection range that will hide the door control until the viewi
 # Systems
 Stealthy currently works in the following systems (specific notes about a given system are in the [Wiki](https://github.com/Eligarf/stealthy/wiki)):
 - dnd4e
-- dnd5e
-- pf1
+- [dnd5e](https://github.com/Eligarf/stealthy/wiki/D&D-5e)
+- [pf1](https://github.com/Eligarf/stealthy/wiki/Pathfinder-1e)
 
 # Limitations
 
 ## Handling Hidden removal
-Stealthy will not automatically remove the Hidden effect - the dnd5e [Skulker](https://www.dndbeyond.com/feats/skulker) feat demonstrates why removing Hidden gets complicated without heavier automation support provided by modules like the excellent [Midi-QOL](https://foundryvtt.com/packages/midi-qol) which handles this for my games. I suggest [DFreds Effects Panel](https://foundryvtt.com/packages/dfreds-effects-panel) as an easier way to manually remove it, especially for low automation level games. 
+Stealthy will not automatically remove the Hidden effect - the dnd5e [Skulker](https://www.dndbeyond.com/feats/skulker) feat demonstrates why removing Hidden gets complicated without heavier automation support provided by modules like the excellent [Midi-QOL](https://foundryvtt.com/packages/midi-qol) which handles this for my games. I suggest [DFreds Convenient Effects](https://foundryvtt.com/packages/dfreds-convenient-effects) or [Visual Active Effects](https://foundryvtt.com/packages/visual-active-effects) as an easier way to manually remove it, especially for low automation level games. 
 
 # Required modules
 * [lib-wrapper](https://foundryvtt.com/packages/lib-wrapper)
 * [socketlib](https://github.com/manuelVo/foundryvtt-socketlib)
 ## Optional modules
-* [DFreds Convenient Effects](https://foundryvtt.com/packages/dfreds-convenient-effects)
-* [Combat Utility Belt](https://foundryvtt.com/packages/combat-utility-belt)
 * [Active Token Effects](https://foundryvtt.com/packages/ATL)
+* [Combat Utility Belt](https://foundryvtt.com/packages/combat-utility-belt)
+* [DFreds Convenient Effects](https://foundryvtt.com/packages/dfreds-convenient-effects)
 * [Token Light Condition](https://foundryvtt.com/packages/tokenlightcondition)
+* [Visual Active Effects](https://foundryvtt.com/packages/visual-active-effects)
