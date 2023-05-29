@@ -1,5 +1,8 @@
+# pending
+* Add persistance to the active spot setting
+
 # v3.6.1
-* Handle the case where the source of vision doesn't have a perception skill for whatever reason.
+* Handle the case where the source of vision in dnd5e doesn't have a perception skill for whatever reason.
 
 # v3.6.0
 * Add Foundry V11 support
