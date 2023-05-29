@@ -1,4 +1,4 @@
-# pending
+# v3.7.0
 * Add persistance to the active spot setting
 
 # v3.6.1
