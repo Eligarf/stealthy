@@ -92,6 +92,13 @@ Hooks.once('setup', () => {
     default: 'none'
   });
 
+  game.settings.register(Stealthy.MODULE_ID, 'activeSpot', {
+    scope: 'world',
+    config: false,
+    type: Boolean,
+    default: true,
+  });
+
   const systemEngine = Stealthy.engines[game.system.id];
   if (systemEngine) {
     window[Stealthy.MODULE_ID] = new Stealthy(systemEngine);
@@ -146,7 +153,10 @@ Hooks.on('getSceneControlButtons', (controls) => {
     title: game.i18n.localize("stealthy.activeSpot"),
     toggle: true,
     active: stealthy.activeSpot,
-    onClick: (toggled) => stealthy.socket.executeForEveryone('ToggleActiveSpot', toggled)
+    onClick: (toggled) => {
+      game.settings.set(Stealthy.MODULE_ID, 'activeSpot', toggled);
+      stealthy.socket.executeForEveryone('ToggleActiveSpot', toggled);
+    }
   });
 });
 
