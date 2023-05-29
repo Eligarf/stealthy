@@ -233,10 +233,11 @@ class Engine5e extends Engine {
   }
 
   adjustForDefaultConditions(spotPair, visionSource, source, target) {
+    const passivePrc = source?.system?.skills?.prc?.passive ?? -100;
     let perception = spotPair?.normal
       ?? spotPair
-      ?? (source.system.skills.prc.passive + 1);
-    perception = Math.max(perception, source.system.skills.prc.passive);
+      ?? (passivePrc + 1);
+    perception = Math.max(perception, passivePrc);
     return perception;
   }
 
@@ -262,12 +263,13 @@ class Engine5e extends Engine {
     // Extract the normal perception values from the source
     let active = spotPair?.normal ?? spotPair;
     let value;
+    const passivePrc = source?.system?.skills?.prc?.passive ?? -100;
     if (active !== undefined) {
       value = active;
       debugData.active = value;
     }
     else {
-      value = source.system.skills.prc.passive;
+      value = passivePrc;
       debugData.passive = value;
     }
 
@@ -290,7 +292,7 @@ class Engine5e extends Engine {
       debugData.seesDim = perception;
     }
     else {
-      perception = Math.max(value, source.system.skills.prc.passive);
+      perception = Math.max(value, passivePrc);
       debugData.seesBright = perception;
     }
 
