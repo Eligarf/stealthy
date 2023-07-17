@@ -6,16 +6,12 @@
     {
       "name": "Eligarf",
       "flags": {}
-    },
-    {
-      "name": "Frstrm",
-      "flags": {}
     }
   ],
   "version": "autoreplaced",
   "compatibility": {
     "minimum": "10.291",
-    "verified": "10.291"
+    "verified": "11.299"
   },
   "relationships": {
     "systems": [
@@ -23,14 +19,14 @@
         "id": "dnd4e",
         "type": "system",
         "compatibility": {
-          "verified": "0.3.18"
+          "verified": "0.3.33"
         }
       },
       {
         "id": "dnd5e",
         "type": "system",
         "compatibility": {
-          "verified": "2.1.2"
+          "verified": "2.2.1"
         }
       },
       {
@@ -50,11 +46,13 @@
       {
         "id": "lib-wrapper",
         "type": "module",
+        "manifest": "https://github.com/ruipin/fvtt-lib-wrapper/releases/latest/download/module.json",
         "compatibility": {}
       },
       {
         "id": "socketlib",
         "type": "module",
+        "manifest": "https://raw.githubusercontent.com/manuelVo/foundryvtt-socketlib/master/module.json",
         "compatibility": {}
       }
     ]
@@ -66,6 +64,9 @@
     "scripts/systems/dnd5e.js",
     "scripts/systems/pf1.js",
     "scripts/systems/pf2e.js"
+  ],
+  "styles": [
+    "styles/stealthy.css"
   ],
   "languages": [
     {

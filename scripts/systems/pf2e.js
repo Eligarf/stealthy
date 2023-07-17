@@ -1,6 +1,7 @@
-import { Stealthy, StealthyBaseEngine } from '../stealthy.js';
+import { Stealthy } from '../stealthy.js';
+import Engine from '../engine.js';
 
-export class StealthyPF2e extends StealthyBaseEngine {
+export class EnginePF2e extends Engine {
 
   constructor() {
     super();
@@ -16,21 +17,6 @@ export class StealthyPF2e extends StealthyBaseEngine {
     });
   }
 
-  patchFoundry() {
-    libWrapper.register(
-      Stealthy.MODULE_ID,
-      'DetectionModeBasicSight.prototype._canDetect',
-      function (wrapped, visionSource, target) {
-        // Stealthy.log('DetectionModeBasicSight.prototype._canDetect', { visionSource, target });
-        const engine = game.stealthy.engine;
-        if (!engine.testStealth(visionSource, target)) return false;
-        return wrapped(visionSource, target);
-      },
-      libWrapper.MIXED,
-      { perf_mode: libWrapper.PERF_FAST }
-    );
-  }
-
   findHiddenEffect(actor) {
     return actor.getFlag(Stealthy.MODULE_ID, 'hidden');
   }
@@ -39,7 +25,7 @@ export class StealthyPF2e extends StealthyBaseEngine {
     return actor.getFlag(Stealthy.MODULE_ID, 'spot');
   }
 
-  isHidden(visionSource, hiddenEffect, target) {
+  canSpotTarget(visionSource, hiddenEffect, target) {
     const source = visionSource.object?.actor;
     const stealth = hiddenEffect ?? (10 + target.actor.system.skills.ste.value);
     const spotEffect = this.findSpotEffect(source);
@@ -47,9 +33,9 @@ export class StealthyPF2e extends StealthyBaseEngine {
 
     if (perception <= stealth) {
       Stealthy.log(`${visionSource.object.name}'s ${perception} can't see ${target.name}'s ${stealth}`);
-      return true;
+      return false;
     }
-    return false;
+    return true;
   }
 
   makeHiddenEffectMaker(label) {
@@ -74,6 +60,7 @@ export class StealthyPF2e extends StealthyBaseEngine {
 
   async setHiddenValue(actor, effect, flag, value) {
     await actor.setFlag(Stealthy.MODULE_ID, 'hidden', value);
+    stealthy.socket.executeForEveryone('RefreshPerception');
   }
 
   getSpotFlagAndValue(actor, effect) {
@@ -83,6 +70,7 @@ export class StealthyPF2e extends StealthyBaseEngine {
 
   async setSpotValue(actor, effect, flag, value) {
     await actor.setFlag(Stealthy.MODULE_ID, 'spot', value);
+    canvas.perception.update({ initializeVision: true }, true);
   }
 
   async rollPerception(message, options, id) {
@@ -91,6 +79,8 @@ export class StealthyPF2e extends StealthyBaseEngine {
     const token = canvas.tokens.get(message.speaker.token);
     const actor = token.actor;
     await this.updateOrCreateSpotEffect(actor, { spot: Number(message.content) });
+
+    super.rollPerception();
   }
 
   async rollStealth(message, options, id) {
@@ -99,9 +89,11 @@ export class StealthyPF2e extends StealthyBaseEngine {
     const token = canvas.tokens.get(message.speaker.token);
     const actor = token.actor;
     await this.updateOrCreateHiddenEffect(actor, { hidden: Number(message.content) });
+
+    super.rollStealth();
   }
 }
 
 Hooks.once('init', () => {
-  Stealthy.RegisterEngine('pf2e', () => new StealthyPF2e());
+  Stealthy.RegisterEngine('pf2e', () => new EnginePF2e());
 });

@@ -1,10 +1,11 @@
-import { Stealthy, StealthyBaseEngine } from '../stealthy.js';
+import { Stealthy } from '../stealthy.js';
+import Engine from '../engine.js';
 
 // This mechanically works, but I don't know how one is supposed to get rid
 // of the Hidden effect once it is placed given the PF1 UI doesn't seem to show
 // active effects.
 
-export class StealthyDnd4e extends StealthyBaseEngine {
+class Engine4e extends Engine {
 
   constructor() {
     super();
@@ -19,7 +20,7 @@ export class StealthyDnd4e extends StealthyBaseEngine {
     });
   }
 
-  isHidden(visionSource, hiddenEffect, target) {
+  canSpotTarget(visionSource, hiddenEffect, target) {
     // Never gets called, neither do the patches for the v10 vision modes
     // dead in the water
     const source = visionSource.object?.actor;
@@ -29,9 +30,9 @@ export class StealthyDnd4e extends StealthyBaseEngine {
 
     if (perception <= stealth) {
       Stealthy.log(`${visionSource.object.name}'s ${perception} can't see ${target.name}'s ${stealth}`);
-      return true;
+      return false;
     }
-    return false;
+    return true;
   }
 
   getHiddenFlagAndValue(actor, effect) {
@@ -50,6 +51,8 @@ export class StealthyDnd4e extends StealthyBaseEngine {
     const token = canvas.tokens.get(message.speaker.token);
     const actor = token.actor;
     await this.updateOrCreateSpotEffect(actor, { spot: message.rolls[0].total });
+
+    super.rollPerception();
   }
 
   async rollStealth(message, options, id) {
@@ -58,9 +61,11 @@ export class StealthyDnd4e extends StealthyBaseEngine {
     const token = canvas.tokens.get(message.speaker.token);
     const actor = token.actor;
     await this.updateOrCreateHiddenEffect(actor, { hidden: message.rolls[0].total });
+
+    super.rollStealth();
   }
 }
 
 Hooks.once('init', () => {
-  Stealthy.RegisterEngine('dnd4e', () => new StealthyDnd4e());
+  Stealthy.RegisterEngine('dnd4e', () => new Engine4e());
 });

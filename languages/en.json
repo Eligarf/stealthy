@@ -20,9 +20,16 @@
       }
     },
     "activeSpot": "Active Spot",
-    "ignoreFriendlyStealth": {
-      "name": "Ignore friendly stealth",
-      "hint": "Perception vs Stealth tests will be ignored for tokens of the same disposition"
+    "title": "Stealthy",
+    "spotHiddenDoors": {
+      "name": "Automatic hidden door detection",
+      "hint": "Tokens can spot hidden doors if their perception check beats the door's stealth value"
+    },
+    "friendlyStealth": {
+      "name": "How to treat friendly tokens under stealth",
+      "allow": "Always test Perception",
+      "inCombat": "Only test Perception in combat",
+      "ignore": "Ignore Perception tests"
     },
     "source": {
       "hint": "Where to find the effect",
@@ -50,12 +57,18 @@
       "debug": "Debug Options",
       "advanced": "Advanced Options"
     },
+    "door": {
+      "stealth": "Stealth value",
+      "maxRange": "Detection distance"
+    },
     "dnd5e": {
-      "ignoreFriendlyUmbralSight": {
-        "name": "Ignore friendly Umbral Sight",
-        "hint": "In darkvision mode, ignore the Umbral Sight feature for tokens of the same disposition"
+      "name": "Dnd5e",
+      "friendlyUmbralSight": {
+        "name": "How to treat friendly tokens with Umbral Sight",
+        "allow": "Umbral Sight is hidden to Darkvision",
+        "inCombat": "Ignore Umbral Sight unless in combat",
+        "ignore": "Ignore Umbral Sight"
       },
-      "config.experimental": "Experimental",
       "tokenLighting": {
         "name": "Check token lighting conditions",
         "hint": "Check for token effects that indicate lighting condition of the token."
@@ -78,7 +91,7 @@
       }
     },
     "pf1": {
-      "config": "Pathfinder",
+      "name": "Pathfinder",
       "spotTake10": {
         "name": "Perception take-10",
         "hint": "If no Spot effect is active, assume the Perception take-10 result for the visibility test. If disabled, Hidden tokens will not be seen without an active Spot effect."

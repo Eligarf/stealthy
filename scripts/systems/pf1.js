@@ -1,10 +1,11 @@
-import { Stealthy, StealthyBaseEngine } from '../stealthy.js';
+import { Stealthy } from '../stealthy.js';
+import Engine from '../engine.js';
 
 // This mechanically works, but I don't know how one is supposed to get rid
 // of the Hidden effect once it is placed given the PF1 UI doesn't seem to show
 // active effects.
 
-export class StealthyPF1 extends StealthyBaseEngine {
+export class EnginePF1 extends Engine {
 
   constructor() {
     super();
@@ -26,9 +27,16 @@ export class StealthyPF1 extends StealthyBaseEngine {
         await this.rollPerception(actor, message);
       }
     });
+
+    Hooks.on('renderSettingsConfig', (app, html, data) => {
+      $('<div>').addClass('form-group group-header')
+        .html(game.i18n.localize("stealthy.pf1.name"))
+        .insertBefore($('[name="stealthy.spotTake10"]')
+          .parents('div.form-group:first'));
+    });
   }
 
-  isHidden(visionSource, hiddenEffect, target) {
+  canSpotTarget(visionSource, hiddenEffect, target) {
     const source = visionSource.object?.actor;
     const stealth = hiddenEffect.flags.stealthy?.hidden ?? (10 + target.actor.system.skills.ste.mod);
     const spotEffect = this.findSpotEffect(source);
@@ -38,9 +46,9 @@ export class StealthyPF1 extends StealthyBaseEngine {
 
     if (perception === undefined || perception <= stealth) {
       Stealthy.log(`${visionSource.object.name}'s ${perception} can't see ${target.name}'s ${stealth}`);
-      return true;
+      return false;
     }
-    return false;
+    return true;
   }
 
   getHiddenFlagAndValue(actor, effect) {
@@ -57,19 +65,19 @@ export class StealthyPF1 extends StealthyBaseEngine {
     Stealthy.log('rollPerception', { actor, message });
 
     await this.updateOrCreateSpotEffect(actor, { spot: message.rolls[0].total });
+
+    super.rollPerception();
   }
 
   async rollStealth(actor, message) {
     Stealthy.log('rollStealth', { actor, message });
 
     await this.updateOrCreateHiddenEffect(actor, { hidden: message.rolls[0].total });
+    
+    super.rollStealth();
   }
 }
 
 Hooks.once('init', () => {
-  Stealthy.RegisterEngine('pf1', () => new StealthyPF1());
-});
-
-Hooks.on('renderSettingsConfig', (app, html, data) => {
-  $('<div>').addClass('form-group group-header').html(game.i18n.localize("stealthy.pf1.config")).insertBefore($('[name="stealthy.spotTake10"]').parents('div.form-group:first'));
+  Stealthy.RegisterEngine('pf1', () => new EnginePF1());
 });

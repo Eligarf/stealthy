@@ -4,25 +4,30 @@ Hooks.once('setup', () => {
   const module = game.modules.get(Stealthy.MODULE_ID);
   const moduleVersion = module.version;
 
-  game.settings.register(Stealthy.MODULE_ID, 'ignoreFriendlyStealth', {
-    name: game.i18n.localize("stealthy.ignoreFriendlyStealth.name"),
-    hint: game.i18n.localize("stealthy.ignoreFriendlyStealth.hint"),
+  game.settings.register(Stealthy.MODULE_ID, 'friendlyStealth', {
+    name: game.i18n.localize("stealthy.friendlyStealth.name"),
+    scope: 'world',
+    config: true,
+    type: String,
+    choices: {
+      'allow': game.i18n.localize("stealthy.friendlyStealth.allow"),
+      'inCombat': game.i18n.localize("stealthy.friendlyStealth.inCombat"),
+      'ignore': game.i18n.localize("stealthy.friendlyStealth.ignore")
+    },
+    default: 'inCombat'
+  });
+
+  game.settings.register(Stealthy.MODULE_ID, 'spotSecretDoors', {
+    name: game.i18n.localize("stealthy.spotHiddenDoors.name"),
+    hint: game.i18n.localize("stealthy.spotHiddenDoors.hint"),
     scope: 'world',
     config: true,
     type: Boolean,
-    default: true,
+    default: false,
+    onChange: value => {
+      debouncedReload();
+    },
   });
-
-  if (game.system.id === 'dnd5e') {
-    game.settings.register(Stealthy.MODULE_ID, 'ignoreFriendlyUmbralSight', {
-      name: game.i18n.localize("stealthy.dnd5e.ignoreFriendlyUmbralSight.name"),
-      hint: game.i18n.localize("stealthy.dnd5e.ignoreFriendlyUmbralSight.hint"),
-      scope: 'world',
-      config: true,
-      type: Boolean,
-      default: false,
-    });
-  }
 
   let sources = {
     'none': game.i18n.localize("stealthy.source.min"),
@@ -87,9 +92,16 @@ Hooks.once('setup', () => {
     default: 'none'
   });
 
+  game.settings.register(Stealthy.MODULE_ID, 'activeSpot', {
+    scope: 'world',
+    config: false,
+    type: Boolean,
+    default: true,
+  });
+
   const systemEngine = Stealthy.engines[game.system.id];
   if (systemEngine) {
-    window.game.stealthy = new Stealthy(systemEngine);
+    window[Stealthy.MODULE_ID] = new Stealthy(systemEngine);
   }
   else {
     console.error(`Stealthy doesn't yet support system id '${game.system.id}'`);
@@ -102,7 +114,7 @@ Hooks.on('renderTokenHUD', (tokenHUD, html, app) => {
   if (game.user.isGM == true) {
     const token = tokenHUD.object;
     const actor = token?.actor;
-    const engine = game.stealthy.engine;
+    const engine = stealthy.engine;
 
     const hiddenEffect = engine.findHiddenEffect(actor);
     if (hiddenEffect) {
@@ -140,13 +152,16 @@ Hooks.on('getSceneControlButtons', (controls) => {
     name: 'stealthy-spotting',
     title: game.i18n.localize("stealthy.activeSpot"),
     toggle: true,
-    active: game.stealthy.activeSpot,
-    onClick: (toggled) => game.stealthy.socket.executeForEveryone('ToggleActiveSpot', toggled)
+    active: stealthy.activeSpot,
+    onClick: (toggled) => {
+      game.settings.set(Stealthy.MODULE_ID, 'activeSpot', toggled);
+      stealthy.socket.executeForEveryone('ToggleActiveSpot', toggled);
+    }
   });
 });
 
 Hooks.on('renderSettingsConfig', (app, html, data) => {
-  $('<div>').addClass('form-group group-header').html(game.i18n.localize("stealthy.config.general")).insertBefore($('[name="stealthy.ignoreFriendlyStealth"]').parents('div.form-group:first'));
+  $('<div>').addClass('form-group group-header').html(game.i18n.localize("stealthy.config.general")).insertBefore($('[name="stealthy.friendlyStealth"]').parents('div.form-group:first'));
   $('<div>').addClass('form-group group-header').html(game.i18n.localize("stealthy.config.advanced")).insertBefore($('[name="stealthy.hiddenLabel"]').parents('div.form-group:first'));
   $('<div>').addClass('form-group group-header').html(game.i18n.localize("stealthy.config.debug")).insertBefore($('[name="stealthy.logLevel"]').parents('div.form-group:first'));
 });
@@ -155,5 +170,5 @@ Hooks.once('ready', async () => {
   if (!game.modules.get('lib-wrapper')?.active && game.user.isGM)
     ui.notifications.error("Stealthy requires the 'libWrapper' module. Please install and activate it.");
   if (!game.user.isGM)
-    game.stealthy.activeSpot = await game.stealthy.socket.executeAsGM('GetActiveSpot');
+    stealthy.activeSpot = await stealthy.socket.executeAsGM('GetActiveSpot');
 });

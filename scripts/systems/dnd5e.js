@@ -1,9 +1,32 @@
-import { Stealthy, StealthyBaseEngine } from '../stealthy.js';
+import { Stealthy } from '../stealthy.js';
+import Engine from '../engine.js';
 
-export class Stealthy5e extends StealthyBaseEngine {
+class Engine5e extends Engine {
 
   constructor() {
     super();
+
+    game.settings.register(Stealthy.MODULE_ID, 'friendlyUmbralSight', {
+      name: game.i18n.localize("stealthy.dnd5e.friendlyUmbralSight.name"),
+      scope: 'world',
+      config: true,
+      type: String,
+      choices: {
+        'allow': game.i18n.localize("stealthy.dnd5e.friendlyUmbralSight.allow"),
+        'inCombat': game.i18n.localize("stealthy.dnd5e.friendlyUmbralSight.inCombat"),
+        'ignore': game.i18n.localize("stealthy.dnd5e.friendlyUmbralSight.ignore")
+      },
+      default: 'inCombat'
+    });
+
+    game.settings.register(Stealthy.MODULE_ID, 'ignoreFriendlyUmbralSight', {
+      name: game.i18n.localize("stealthy.dnd5e.ignoreFriendlyUmbralSight.name"),
+      hint: game.i18n.localize("stealthy.dnd5e.ignoreFriendlyUmbralSight.hint"),
+      scope: 'world',
+      config: true,
+      type: Boolean,
+      default: false,
+    });
 
     game.settings.register(Stealthy.MODULE_ID, 'tokenLighting', {
       name: game.i18n.localize("stealthy.dnd5e.tokenLighting.name"),
@@ -24,7 +47,7 @@ export class Stealthy5e extends StealthyBaseEngine {
     });
 
     game.settings.register(Stealthy.MODULE_ID, 'darkLabel', {
-      name: game.i18n.localize("stealthy.hidden.dark.key"),
+      name: game.i18n.localize("stealthy.dnd5e.dark.key"),
       scope: 'world',
       config: true,
       type: String,
@@ -65,11 +88,20 @@ export class Stealthy5e extends StealthyBaseEngine {
 
     this.dimLabel = game.i18n.localize(game.settings.get(Stealthy.MODULE_ID, 'dimLabel'));
     this.darkLabel = game.i18n.localize(game.settings.get(Stealthy.MODULE_ID, 'darkLabel'));
+
+    Stealthy.log(`dimLabel='${this.dimLabel}', darkLabel='${this.darkLabel}'`);
+
+    Hooks.on('renderSettingsConfig', (app, html, data) => {
+      $('<div>').addClass('form-group group-header')
+        .html(game.i18n.localize("stealthy.dnd5e.name"))
+        .insertBefore($('[name="stealthy.friendlyUmbralSight"]')
+          .parents('div.form-group:first'));
+    });
   }
 
   static LIGHT_LABELS = ['dark', 'dim', 'bright'];
 
-  isHidden(visionSource, hiddenEffect, target) {
+  canSpotTarget(visionSource, hiddenEffect, target) {
     const source = visionSource.object?.actor;
     const stealth = hiddenEffect.flags.stealthy?.hidden ?? target.actor.system.skills.ste.passive;
     const spotEffect = this.findSpotEffect(source);
@@ -81,35 +113,36 @@ export class Stealthy5e extends StealthyBaseEngine {
     let perception;
 
     if (game.settings.get(Stealthy.MODULE_ID, 'tokenLighting')) {
-      perception = Stealthy5e.AdjustForLightingConditions(spotPair, visionSource, source, target.actor);
+      perception = this.adjustForLightingConditions(spotPair, visionSource, source, target.actor);
     }
     else {
-      perception = Stealthy5e.AdjustForDefaultConditions(spotPair, visionSource, source, target.actor);
+      perception = this.adjustForDefaultConditions(spotPair, visionSource, source, target.actor);
     }
 
     if (perception <= stealth) {
       Stealthy.log(`${visionSource.object.name}'s ${perception} can't see ${target.name}'s ${stealth}`);
-      return true;
+      return false;
     }
-    return false;
+    return true;
   }
 
   basicVision(wrapped, visionSource, mode, config) {
     const target = config.object?.actor;
-    let noDarkvision = false;
-    const ignoreFriendlyUmbralSight =
-      game.settings.get(Stealthy.MODULE_ID, 'ignoreFriendlyUmbralSight') &&
-      config.object.document?.disposition === visionSource.object.document?.disposition;
+    let invisibleToDarkvision = false;
+    const friendlyUmbralSight = game.settings.get(Stealthy.MODULE_ID, 'friendlyUmbralSight');
+    let ignoreFriendlyUmbralSight = friendlyUmbralSight === 'ignore' || !game.combat && friendlyUmbralSight === 'inCombat';
+    ignoreFriendlyUmbralSight =
+      ignoreFriendlyUmbralSight && config.object.document?.disposition === visionSource.object.document?.disposition;
     if (!ignoreFriendlyUmbralSight && visionSource.visionMode?.id === 'darkvision') {
       const umbralSight = target?.itemTypes?.feat?.find(f => f.name === game.i18n.localize('Umbral Sight'));
-      if (umbralSight) noDarkvision = true;
+      if (umbralSight) invisibleToDarkvision = true;
     }
 
-    if (noDarkvision) {
+    if (invisibleToDarkvision) {
       Stealthy.log(`${visionSource.object.name}'s darkvision can't see ${config.object.name}`);
       let ourMode = duplicate(mode);
       ourMode.range = 0;
-      return wrapped(visionSource, ourMode, config);
+      return super.basicVision(wrapped, visionSource, ourMode, config);
     }
 
     return super.basicVision(wrapped, visionSource, mode, config);
@@ -118,28 +151,34 @@ export class Stealthy5e extends StealthyBaseEngine {
   makeSpotEffectMaker(label) {
     return (flag, source) => {
       let effect = super.makeSpotEffectMaker(label)(flag, source);
-      effect.duration = { turns: 1, seconds: 6 };
+      if (game.combat) effect.duration = { turns: 1, seconds: 6 };
       return effect;
     };
   }
 
   getHiddenFlagAndValue(actor, effect) {
-    const value = effect.flags.stealthy?.hidden ?? actor.system.skills.ste.passive;
-    return { flag: { hidden: value }, value };
+    const value = effect?.flags.stealthy?.hidden ?? actor.system.skills.ste.passive;
+    return {
+      flag: { hidden: value },
+      value
+    };
   }
 
   getSpotFlagAndValue(actor, effect) {
     let flag = { normal: undefined, disadvantaged: undefined };
-    const active = effect.flags.stealthy?.spot?.normal ?? effect.flags.stealthy?.spot;
+    const active = effect?.flags.stealthy?.spot?.normal ?? effect?.flags.stealthy?.spot;
     if (active !== undefined) {
       flag.normal = active;
       flag.disadvantaged = effect.flags.stealthy?.spot?.disadvantaged ?? active - 5;
     }
     else {
       flag.normal = actor.system.skills.prc.passive;
-      disadvantaged = Stealthy5e.GetPassivePerceptionWithDisadvantage(actor);
+      flag.disadvantaged = Engine5e.GetPassivePerceptionWithDisadvantage(actor);
     }
-    return { flag: { spot: flag }, value: flag.normal };
+    return {
+      flag: { spot: flag },
+      value: flag.normal
+    };
   }
 
   async setSpotValue(actor, effect, flag, value) {
@@ -149,10 +188,11 @@ export class Stealthy5e extends StealthyBaseEngine {
     effect.flags.stealthy = flag;
 
     await actor.updateEmbeddedDocuments('ActiveEffect', [effect]);
+    canvas.perception.update({ initializeVision: true }, true);
   }
 
   async rollPerception(actor, roll) {
-    if (!game.stealthy.activeSpot) return;
+    if (!stealthy.activeSpot) return;
     Stealthy.log('Stealthy5e.rollPerception', { actor, roll });
 
     let perception = { normal: roll.total, disadvantaged: roll.total };
@@ -175,12 +215,16 @@ export class Stealthy5e extends StealthyBaseEngine {
     }
 
     await this.updateOrCreateSpotEffect(actor, { spot: perception });
+
+    super.rollPerception();
   }
 
   async rollStealth(actor, roll) {
     Stealthy.log('Stealthy5e.rollStealth', { actor, roll });
 
     await this.updateOrCreateHiddenEffect(actor, { hidden: roll.total });
+
+    super.rollStealth();
   }
 
   static GetPassivePerceptionWithDisadvantage(source) {
@@ -188,17 +232,18 @@ export class Stealthy5e extends StealthyBaseEngine {
     return source.system.skills.prc.passive - 5;
   }
 
-  static AdjustForDefaultConditions(spotPair, visionSource, source, target) {
+  adjustForDefaultConditions(spotPair, visionSource, source, target) {
+    const passivePrc = source?.system?.skills?.prc?.passive ?? -100;
     let perception = spotPair?.normal
       ?? spotPair
-      ?? (source.system.skills.prc.passive + 1);
-    perception = Math.max(perception, source.system.skills.prc.passive);
+      ?? (passivePrc + 1);
+    perception = Math.max(perception, passivePrc);
     return perception;
   }
 
   // check target Token Lighting conditions via effects usage
   // look for effects that indicate Dim or Dark condition on the token
-  static AdjustForLightingConditions(spotPair, visionSource, source, target) {
+  adjustForLightingConditions(spotPair, visionSource, source, target) {
     let debugData = { spotPair };
     let perception;
 
@@ -206,24 +251,25 @@ export class Stealthy5e extends StealthyBaseEngine {
     let lightBand = 2;
     if (target?.effects.find(e => e.label === this.darkLabel && !e.disabled)) { lightBand = 0; }
     if (target?.effects.find(e => e.label === this.dimLabel && !e.disabled)) { lightBand = 1; }
-    debugData.lightLevel = Stealthy5e.LIGHT_LABELS[lightBand];
+    debugData.lightLevel = Engine5e.LIGHT_LABELS[lightBand];
 
     // Adjust the light band based on conditions
     if (visionSource.visionMode?.id === 'darkvision') {
-      if (game.settings.get(Stealthy.MODULE_ID, 'tokenLighting')) lightBand = lightBand + 1;
+      if (game.settings.get(Stealthy.MODULE_ID, 'dimIsBright')) lightBand = lightBand + 1;
       else if (!lightBand) lightBand = 1;
-      debugData.foundryDarkvision = Stealthy5e.LIGHT_LABELS[lightBand];
+      debugData.foundryDarkvision = Engine5e.LIGHT_LABELS[lightBand];
     }
 
     // Extract the normal perception values from the source
     let active = spotPair?.normal ?? spotPair;
     let value;
+    const passivePrc = source?.system?.skills?.prc?.passive ?? -100;
     if (active !== undefined) {
       value = active;
       debugData.active = value;
     }
     else {
-      value = source.system.skills.prc.passive;
+      value = passivePrc;
       debugData.passive = value;
     }
 
@@ -233,7 +279,7 @@ export class Stealthy5e extends StealthyBaseEngine {
       debugData.cantSee = perception;
     }
     else if (lightBand === 1) {
-      let passiveDisadv = Stealthy5e.GetPassivePerceptionWithDisadvantage(source);
+      let passiveDisadv = Engine5e.GetPassivePerceptionWithDisadvantage(source);
       if (active !== undefined) {
         value = spotPair?.disadvantaged ?? value - 5;
         debugData.activeDisadv = value;
@@ -246,7 +292,7 @@ export class Stealthy5e extends StealthyBaseEngine {
       debugData.seesDim = perception;
     }
     else {
-      perception = Math.max(value, source.system.skills.prc.passive);
+      perception = Math.max(value, passivePrc);
       debugData.seesBright = perception;
     }
 
@@ -257,9 +303,5 @@ export class Stealthy5e extends StealthyBaseEngine {
 }
 
 Hooks.once('init', () => {
-  Stealthy.RegisterEngine('dnd5e', () => new Stealthy5e());
-});
-
-Hooks.on('renderSettingsConfig', (app, html, data) => {
-  $('<div>').addClass('form-group group-header').html(game.i18n.localize("stealthy.dnd5e.config.experimental")).insertBefore($('[name="stealthy.tokenLighting"]').parents('div.form-group:first'));
+  Stealthy.RegisterEngine('dnd5e', () => new Engine5e());
 });
