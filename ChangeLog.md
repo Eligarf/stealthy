@@ -1,3 +1,6 @@
+# pending
+* Add PF2e support
+
 # v3.7.0
 * Add persistance to the active spot setting
 

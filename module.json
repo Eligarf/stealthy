@@ -39,7 +39,9 @@
       {
         "id": "pf2e",
         "type": "system",
-        "compatibility": {}
+        "compatibility": {
+          "verified": "5.1.2"
+        }
       }
     ],
     "requires": [
