@@ -14,19 +14,18 @@ export class EnginePF2e extends Engine {
       if (['>Skill Check: Stealth<', '>Initiative: Stealth<', '>(Stealth Check)<'].some(t => message.flavor.includes(t))) {
         await this.rollStealth(message, options, id);
       }
-      // else if (['>Perception Check<', '>(Perception Check)<'].some(t => message.flavor.includes(t))) {
-      //   await this.rollPerception(message, options, id);
-      // }
+      else if (['>Perception Check<', '>(Perception Check)<'].some(t => message.flavor.includes(t))) {
+        await this.rollPerception(message, options, id);
+      }
     });
   }
 
   findHiddenEffect(actor) {
-    return actor.getCondition('hidden');
+    return actor?.getCondition('hidden');
   }
 
   findSpotEffect(actor) {
-    Stealthy.log('PF2e.findSpotEffect not implemented');
-    return null;
+    return actor?.items.find(i => i.name === 'Seeking');
   }
 
   canSpotTarget(visionSource, hiddenEffect, target) {
@@ -64,9 +63,54 @@ export class EnginePF2e extends Engine {
     const condition = actor.getCondition(lowerLabel);
     let update = duplicate(condition.toObject(false));
     update.flags.stealthy = flag;
-    Stealthy.log('update', update);
     await actor.updateEmbeddedDocuments('Item', [update]);
     stealthy.socket.executeForEveryone('RefreshPerception');
+  }
+
+  async updateOrCreateSpotEffect(actor, flag) {
+    const lowerLabel = this.hiddenLabel.toLowerCase();
+    let seeking = this.findSpotEffect(actor);
+    if (!seeking) {
+      const effect = {
+        "name": "Seeking",
+        "type": "effect",
+        "effects": [],
+        "system": {
+          "description": {
+            "gm": "",
+            "value": ""
+          },
+          "slug": "seeking",
+          "traits": {
+            "value": []
+          },
+          "level": {
+            "value": 1
+          },
+          "duration": {
+            "value": 1,
+            "unit": "rounds",
+            "sustained": false,
+            "expiry": "turn-start"
+          },
+          "tokenIcon": {
+            "show": true
+          },
+          "unidentified": false
+        },
+        "img": "systems/pf2e/icons/spells/anticipate-peril.webp",
+        "flags": {
+          "stealthy": flag
+        },
+      };
+      await actor.createEmbeddedDocuments('Item', [effect]);
+    }
+    else {
+      let update = duplicate(seeking.toObject(false));
+      update.flags.stealthy = flag;
+      await actor.updateEmbeddedDocuments('Item', [update]);
+    }
+    canvas.perception.update({ initializeVision: true }, true);
   }
 
   getHiddenFlagAndValue(actor, effect) {
@@ -82,22 +126,23 @@ export class EnginePF2e extends Engine {
   }
 
   getSpotFlagAndValue(actor, effect) {
-    Stealthy.log('PF2e.getSpotFlagAndValue not implemented');
-    const value = effect ?? (10 + actor.system.attributes.perception.value);
-    return { value };
+    const value = effect?.flags.stealthy.spot ?? (10 + actor.system.attributes.perception.value);
+    return { flag: { spot: value }, value };
   }
 
   async setSpotValue(actor, effect, flag, value) {
-    Stealthy.log('PF2e.setSpotValue not implemented');
+    flag.spot = value;
+    effect.flags.stealthy = flag;
+    await actor.updateEmbeddedDocuments('Item', [effect]);
   }
 
   async rollPerception(message, options, id) {
     Stealthy.log('rollPerception - NOT IMPLEMENTED', { message, options, id });
-    // const check = Number(message.content);
+    const check = Number(message.content);
 
-    // const token = canvas.tokens.get(message.speaker.token);
-    // const actor = token.actor;
-    // await this.updateOrCreateSpotEffect(actor, { spot: check });
+    const token = canvas.tokens.get(message.speaker.token);
+    const actor = token.actor;
+    await this.updateOrCreateSpotEffect(actor, { spot: check });
 
     super.rollPerception();
   }

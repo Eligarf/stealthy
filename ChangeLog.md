@@ -1,5 +1,8 @@
 # pending
-* Add PF2e support
+## Add PF2e support
+* Rolling stealth (this includes initiative) adds the hidden condition which tracks the check result internally in a flag.
+* If the hidden condition is added via the token HUD, its value will default to the Stealth DC of the actor.
+* Rolling a perception check (excluding initiative) adds a 'Seeking' effect to the actor which tracks the check result.
 
 # v3.7.0
 * Add persistance to the active spot setting
