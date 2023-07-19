@@ -14,9 +14,9 @@ export class EnginePF2e extends Engine {
       if (['>Skill Check: Stealth<', '>Initiative: Stealth<', '>(Stealth Check)<'].some(t => message.flavor.includes(t))) {
         await this.rollStealth(message, options, id);
       }
-      else if (['>Perception Check<', '>(Perception Check)<'].some(t => message.flavor.includes(t))) {
-        await this.rollPerception(message, options, id);
-      }
+      // else if (['>Perception Check<', '>(Perception Check)<'].some(t => message.flavor.includes(t))) {
+      //   await this.rollPerception(message, options, id);
+      // }
     });
   }
 
@@ -25,39 +25,48 @@ export class EnginePF2e extends Engine {
   }
 
   findSpotEffect(actor) {
+    Stealthy.log('PF2e.findSpotEffect not implemented');
     return null;
   }
 
   canSpotTarget(visionSource, hiddenEffect, target) {
-    // const source = visionSource.object?.actor;
-    // const stealth = hiddenEffect ?? (10 + target.actor.system.skills.ste.value);
-    // const spotEffect = this.findSpotEffect(source);
-    // const perception = spotEffect ?? (10 + target.actor.system.attributes.perception.value);
+    const source = visionSource.object?.actor;
+    const stealth = hiddenEffect ?? (10 + target.actor.system.skills.ste.value);
+    const perception = 10 + source.system.attributes.perception.value;
 
-    // if (perception <= stealth) {
-    //   Stealthy.log(`${visionSource.object.name}'s ${perception} can't see ${target.name}'s ${stealth}`);
-    //   return false;
-    // }
+    if (perception <= stealth) {
+      Stealthy.log(`${visionSource.object.name}'s ${perception} can't see ${target.name}'s ${stealth}`);
+      return false;
+    }
     return true;
   }
 
   makeHiddenEffectMaker(label) {
+    Stealthy.log('PF2e.makeHiddenEffectMaker not implemented');
     return (flag, source) => null;
   }
 
   makeSpotEffectMaker(label) {
+    Stealthy.log('PF2e.makeSpotEffectMaker not implemented');
     return (flag, source) => null;
   }
 
   async updateOrCreateEffect({ label, actor, flag, source, makeEffect }) {
-    const lowerLabel = label.toLowerCase();
+    Stealthy.log('PF2e.updateOrCreateEffect not implemented');
+    return null;
+  }
+
+  async updateOrCreateHiddenEffect(actor, flag) {
+    const lowerLabel = this.hiddenLabel.toLowerCase();
     if (!actor.hasCondition(lowerLabel)) {
       await actor.toggleCondition(lowerLabel);
     }
     const condition = actor.getCondition(lowerLabel);
     let update = duplicate(condition.toObject(false));
     update.flags.stealthy = flag;
+    Stealthy.log('update', update);
     await actor.updateEmbeddedDocuments('Item', [update]);
+    stealthy.socket.executeForEveryone('RefreshPerception');
   }
 
   getHiddenFlagAndValue(actor, effect) {
@@ -73,17 +82,17 @@ export class EnginePF2e extends Engine {
   }
 
   getSpotFlagAndValue(actor, effect) {
+    Stealthy.log('PF2e.getSpotFlagAndValue not implemented');
     const value = effect ?? (10 + actor.system.attributes.perception.value);
     return { value };
   }
 
   async setSpotValue(actor, effect, flag, value) {
-    await actor.setFlag(Stealthy.MODULE_ID, 'spot', value);
-    canvas.perception.update({ initializeVision: true }, true);
+    Stealthy.log('PF2e.setSpotValue not implemented');
   }
 
   async rollPerception(message, options, id) {
-    Stealthy.log('rollPerception', { message, options, id });
+    Stealthy.log('rollPerception - NOT IMPLEMENTED', { message, options, id });
     // const check = Number(message.content);
 
     // const token = canvas.tokens.get(message.speaker.token);
@@ -100,14 +109,6 @@ export class EnginePF2e extends Engine {
     const token = canvas.tokens.get(message.speaker.token);
     const actor = token.actor;
     await this.updateOrCreateHiddenEffect(actor, { hidden: check });
-    // const label = 'hidden';
-    // if (!actor.hasCondition(label)) {
-    //   await actor.toggleCondition(label);
-    // }
-    // const hidden = actor.getCondition(label);
-    // let update = duplicate(hidden.toObject(false));
-    // update.flags.stealthy = check;
-    // await actor.updateEmbeddedDocuments('Item', [update]);
 
     super.rollStealth();
   }
