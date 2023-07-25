@@ -36,6 +36,14 @@ export class EnginePF1 extends Engine {
     });
   }
 
+  findHiddenEffect(actor) {
+    return actor?.items.find(i => i.name === 'Hidden' && i.system.active);
+  }
+
+  findSpotEffect(actor) {
+    return actor?.items.find(i => i.name === 'Spot' && i.system.active);
+  }
+
   canSpotTarget(visionSource, hiddenEffect, target) {
     const source = visionSource.object?.actor;
     const stealth = hiddenEffect.flags.stealthy?.hidden ?? (10 + target.actor.system.skills.ste.mod);
@@ -51,14 +59,185 @@ export class EnginePF1 extends Engine {
     return true;
   }
 
+  makeHiddenEffectMaker(label) {
+    Stealthy.log('PF1.makeHiddenEffectMaker not used in PF1');
+    return (flag, source) => null;
+  }
+
+  makeSpotEffectMaker(label) {
+    Stealthy.log('PF1.makeSpotEffectMaker not used in PF1');
+    return (flag, source) => null;
+  }
+
+  async updateOrCreateEffect({ label, actor, flag, source, makeEffect }) {
+    Stealthy.log('PF1.updateOrCreateEffect not used in PF1');
+    return null;
+  }
+
+  async updateOrCreateHiddenEffect(actor, flag) {
+    let hidden = this.findHiddenEffect(actor);
+    if (!hidden) hidden = actor?.items.find(i => i.name === 'Hidden');
+    if (!hidden) {
+      const effect = {
+        "name": "Hidden",
+        "type": "buff",
+        "img": "icons/magic/perception/shadow-stealth-eyes-purple.webp",
+        "system": {
+          "description": {
+            "value": "",
+            "unidentified": ""
+          },
+          "tags": [],
+          "changes": [],
+          "changeFlags": {
+            "loseDexToAC": false,
+            "noEncumbrance": false,
+            "mediumArmorFullSpeed": false,
+            "heavyArmorFullSpeed": false
+          },
+          "contextNotes": [],
+          "links": {
+            "children": []
+          },
+          "tag": "",
+          "useCustomTag": false,
+          "flags": {
+            "boolean": {},
+            "dictionary": {}
+          },
+          "scriptCalls": [],
+          "subType": "temp",
+          "active": true,
+          "level": null,
+          "duration": {
+            "value": "",
+            "units": "",
+            "start": 0
+          },
+          "hideFromToken": false,
+          "uses": {
+            "per": ""
+          }
+        },
+        "effects": [],
+        "folder": null,
+        "flags": {
+          "core": {},
+          "stealthy": flag
+        },
+        "_stats": {
+          "systemId": "pf1",
+          "systemVersion": "9.2",
+          "coreVersion": "11.306",
+          "createdTime": 1690224122722,
+          "modifiedTime": 1690225389387,
+          "lastModifiedBy": "FDk5oLXCkN7Yj8YE"
+        }
+      };
+      await actor.createEmbeddedDocuments('Item', [effect]);
+    }
+    else {
+      let update = duplicate(hidden.toObject(false));
+      update.system.active = true;
+      update.flags.stealthy = flag;
+      await actor.updateEmbeddedDocuments('Item', [update]);
+    }
+    stealthy.socket.executeForEveryone('RefreshPerception');
+  }
+
   getHiddenFlagAndValue(actor, effect) {
     const value = effect.flags.stealthy?.hidden ?? (10 + actor.system.skills.ste.value);
     return { flag: { hidden: value }, value };
   }
 
+  async setHiddenValue(actor, effect, flag, value) {
+    flag.hidden = value;
+    effect.flags.stealthy = flag;
+    await actor.updateEmbeddedDocuments('Item', [effect]);
+    stealthy.socket.executeForEveryone('RefreshPerception');
+  }
+
+  async updateOrCreateSpotEffect(actor, flag) {
+    let spot = this.findSpotEffect(actor);
+    if (!spot) spot = actor?.items.find(i => i.name === 'Spot');
+    if (!spot) {
+      const effect = {
+        "name": "Spot",
+        "type": "buff",
+        "img": "systems/pf2e/icons/spells/anticipate-peril.webp",
+        "system": {
+          "description": {
+            "value": "",
+            "unidentified": ""
+          },
+          "tags": [],
+          "changes": [],
+          "changeFlags": {
+            "loseDexToAC": false,
+            "noEncumbrance": false,
+            "mediumArmorFullSpeed": false,
+            "heavyArmorFullSpeed": false
+          },
+          "contextNotes": [],
+          "links": {
+            "children": []
+          },
+          "tag": "",
+          "useCustomTag": false,
+          "flags": {
+            "boolean": {},
+            "dictionary": {}
+          },
+          "scriptCalls": [],
+          "subType": "temp",
+          "active": true,
+          "level": null,
+          "duration": {
+            "value": "",
+            "units": "turn",
+            "start": 0
+          },
+          "hideFromToken": false,
+          "uses": {
+            "per": ""
+          }
+        },
+        "effects": [],
+        "folder": null,
+        "flags": {
+          "core": {},
+          "stealthy": flag
+        },
+        "_stats": {
+          "systemId": "pf1",
+          "systemVersion": "9.2",
+          "coreVersion": "11.306",
+          "createdTime": 1690223875160,
+          "modifiedTime": 1690227032032,
+          "lastModifiedBy": "FDk5oLXCkN7Yj8YE"
+        },
+      };
+      await actor.createEmbeddedDocuments('Item', [effect]);
+    }
+    else {
+      let update = duplicate(spot.toObject(false));
+      update.system.active = true;
+      update.flags.stealthy = flag;
+      await actor.updateEmbeddedDocuments('Item', [update]);
+    }
+    canvas.perception.update({ initializeVision: true }, true);
+  }
+
   getSpotFlagAndValue(actor, effect) {
-    const value = effect.flags.stealthy.spot;
+    const value = effect.flags.stealthy?.spot;
     return { flag: { spot: value }, value };
+  }
+
+  async setSpotValue(actor, effect, flag, value) {
+    flag.spot = value;
+    effect.flags.stealthy = flag;
+    await actor.updateEmbeddedDocuments('Item', [effect]);
+    canvas.perception.update({ initializeVision: true }, true);
   }
 
   async rollPerception(actor, message) {
