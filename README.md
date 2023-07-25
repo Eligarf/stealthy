@@ -53,6 +53,7 @@ Stealthy currently works in the following systems (specific notes about a given 
 - dnd4e
 - [dnd5e](https://github.com/Eligarf/stealthy/wiki/D&D-5e)
 - [pf1](https://github.com/Eligarf/stealthy/wiki/Pathfinder-1e)
+- [pf2e](https://github.com/Eligarf/stealthy/wiki/Pathfinder-2e)
 
 # Limitations
 

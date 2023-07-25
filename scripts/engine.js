@@ -178,17 +178,6 @@ export default class Engine {
     await actor.updateEmbeddedDocuments('ActiveEffect', [effect]);
   }
 
-  async updateOrCreateSpotEffect(actor, flag) {
-    await this.updateOrCreateEffect({
-      label: this.spotLabel,
-      actor,
-      flag,
-      source: game.settings.get(Stealthy.MODULE_ID, 'spotSource'),
-      makeEffect: this.makeSpotEffectMaker(this.spotLabel)
-    });
-    canvas.perception.update({ initializeVision: true }, true);
-  }
-
   async updateOrCreateHiddenEffect(actor, flag) {
     await this.updateOrCreateEffect({
       label: this.hiddenLabel,
@@ -212,6 +201,17 @@ export default class Engine {
     effect.flags.stealthy = flag;
     await actor.updateEmbeddedDocuments('ActiveEffect', [effect]);
     stealthy.socket.executeForEveryone('RefreshPerception');
+  }
+
+  async updateOrCreateSpotEffect(actor, flag) {
+    await this.updateOrCreateEffect({
+      label: this.spotLabel,
+      actor,
+      flag,
+      source: game.settings.get(Stealthy.MODULE_ID, 'spotSource'),
+      makeEffect: this.makeSpotEffectMaker(this.spotLabel)
+    });
+    canvas.perception.update({ initializeVision: true }, true);
   }
 
   getSpotFlagAndValue(actor, effect) {
