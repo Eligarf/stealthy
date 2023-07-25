@@ -41,17 +41,17 @@ export class EnginePF2e extends Engine {
   }
 
   makeHiddenEffectMaker(label) {
-    Stealthy.log('PF2e.makeHiddenEffectMaker not implemented');
+    Stealthy.log('PF2e.makeHiddenEffectMaker not used in PF2e');
     return (flag, source) => null;
   }
 
   makeSpotEffectMaker(label) {
-    Stealthy.log('PF2e.makeSpotEffectMaker not implemented');
+    Stealthy.log('PF2e.makeSpotEffectMaker not used in PF2e');
     return (flag, source) => null;
   }
 
   async updateOrCreateEffect({ label, actor, flag, source, makeEffect }) {
-    Stealthy.log('PF2e.updateOrCreateEffect not implemented');
+    Stealthy.log('PF2e.updateOrCreateEffect not used in PF2e');
     return null;
   }
 
@@ -67,8 +67,19 @@ export class EnginePF2e extends Engine {
     stealthy.socket.executeForEveryone('RefreshPerception');
   }
 
+  getHiddenFlagAndValue(actor, effect) {
+    const value = effect.flags.stealthy?.hidden ?? (10 + actor.system.skills.ste.value);
+    return { flag: { hidden: value }, value };
+  }
+
+  async setHiddenValue(actor, effect, flag, value) {
+    flag.hidden = value;
+    effect.flags.stealthy = flag;
+    await actor.updateEmbeddedDocuments('Item', [effect]);
+    stealthy.socket.executeForEveryone('RefreshPerception');
+  }
+
   async updateOrCreateSpotEffect(actor, flag) {
-    const lowerLabel = this.hiddenLabel.toLowerCase();
     let seeking = this.findSpotEffect(actor);
     if (!seeking) {
       const effect = {
@@ -111,18 +122,6 @@ export class EnginePF2e extends Engine {
       await actor.updateEmbeddedDocuments('Item', [update]);
     }
     canvas.perception.update({ initializeVision: true }, true);
-  }
-
-  getHiddenFlagAndValue(actor, effect) {
-    const value = effect.flags.stealthy?.hidden ?? (10 + actor.system.skills.ste.value);
-    return { flag: { hidden: value }, value };
-  }
-
-  async setHiddenValue(actor, effect, flag, value) {
-    flag.hidden = value;
-    effect.flags.stealthy = flag;
-    await actor.updateEmbeddedDocuments('Item', [effect]);
-    stealthy.socket.executeForEveryone('RefreshPerception');
   }
 
   getSpotFlagAndValue(actor, effect) {

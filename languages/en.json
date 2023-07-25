@@ -3,7 +3,7 @@
     "hidden": {
       "label": "Hidden",
       "description": "Requires perception check to detect",
-      "inputBox": "Current Stealth",
+      "inputBox": "Stealth check",
       "source": "Hidden effect source",
       "preloc": {
         "key": "Localization key for Hidden label",
@@ -13,7 +13,7 @@
     "spot": {
       "label": "Spot",
       "description": "Active Perception check result",
-      "inputBox": "Current Perception",
+      "inputBox": "Perception check",
       "source": "Spot effect source",
       "preloc": {
         "key": "Localization key for Spot label"

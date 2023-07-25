@@ -3,7 +3,7 @@
     "hidden": {
       "label": "Escondido",
       "description": "Requer teste de Percepção para detectar",
-      "inputBox": "Furtividade atual",
+      "inputBox": "Verificação furtiva",
       "source": "Fonte de efeito Escondido",
       "preloc": {
         "key": "Chave de localização para rótulo Escondido",
@@ -13,7 +13,7 @@
     "spot": {
       "label": "Percebido",
       "description": "Resultado do teste ativo de Percepção",
-      "inputBox": "Percepção atual",
+      "inputBox": "Teste de percepção",
       "source": "Fonte de efeito Percebido",
       "preloc": {
         "key": "Chave de localização para rótulo Percebido"

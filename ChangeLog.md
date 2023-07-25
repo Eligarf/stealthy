@@ -1,8 +1,8 @@
-# pending
-## Add PF2e support
-* Rolling stealth (this includes initiative) adds the hidden condition which tracks the check result internally in a flag.
-* If the hidden condition is added via the token HUD, its value will default to the Stealth DC of the actor.
-* Rolling a perception check (excluding initiative) adds a 'Seeking' effect to the actor which tracks the check result.
+# v3.8.0
+* PF1: Spot/Hidden effects are now buffs.
+* PF2e: Rolling stealth (including initiative) sets the hidden condition and tracks the check result internally in a flag. If the hidden condition is set via the token HUD, its value will default to the Stealth DC of the actor.
+* PF2e: Rolling a perception check (excluding initiative) adds a 'Seeking' PF2e effect to the actor which tracks the check result.
+* PF2e: Hidden/Seeking doesn't yet affect the canvas - this is a work-in-progress
 
 # v3.7.0
 * Add persistance to the active spot setting
