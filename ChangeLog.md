@@ -1,3 +1,6 @@
+# v3.9.1
+* Forgot to change the language json files for 3.9.0
+
 # v3.9.0
 * Fixed up v11 warnings and should still be v10 compatible.
 

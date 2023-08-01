@@ -2,6 +2,7 @@
   "stealthy": {
     "hidden": {
       "label": "Escondido",
+      "name": "Escondido",
       "description": "Requer teste de Percepção para detectar",
       "inputBox": "Verificação furtiva",
       "source": "Fonte de efeito Escondido",
@@ -12,6 +13,7 @@
     },
     "spot": {
       "label": "Percebido",
+      "name": "Percebido",
       "description": "Resultado do teste ativo de Percepção",
       "inputBox": "Teste de percepção",
       "source": "Fonte de efeito Percebido",

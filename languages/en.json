@@ -2,6 +2,7 @@
   "stealthy": {
     "hidden": {
       "label": "Hidden",
+      "name": "Hidden",
       "description": "Requires perception check to detect",
       "inputBox": "Stealth check",
       "source": "Hidden effect source",
@@ -12,6 +13,7 @@
     },
     "spot": {
       "label": "Spot",
+      "name": "Spot",
       "description": "Active Perception check result",
       "inputBox": "Perception check",
       "source": "Spot effect source",
