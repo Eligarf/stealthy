@@ -56,13 +56,15 @@ Hooks.once('setup', () => {
     default: 'ae'
   });
 
+  const v10 = Math.floor(game.version) < 11;
+
   game.settings.register(Stealthy.MODULE_ID, 'hiddenLabel', {
     name: game.i18n.localize("stealthy.hidden.preloc.key"),
     hint: game.i18n.localize("stealthy.hidden.preloc.hint"),
     scope: 'world',
     config: true,
     type: String,
-    default: 'stealthy.hidden.label',
+    default: v10 ? 'stealthy.hidden.label' : 'stealthy.hidden.name',
     onChange: value => {
       debouncedReload();
     }
@@ -73,7 +75,7 @@ Hooks.once('setup', () => {
     scope: 'world',
     config: true,
     type: String,
-    default: 'stealthy.spot.label',
+    default: v10 ? 'stealthy.spot.label' : 'stealthy.spot.name',
     onChange: value => {
       debouncedReload();
     }

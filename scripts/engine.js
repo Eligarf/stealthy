@@ -71,11 +71,11 @@ export default class Engine {
   }
 
   findHiddenEffect(actor) {
-    return actor?.effects.find(e => e.label === this.hiddenLabel && !e.disabled);
+    return actor?.effects.find(e => (stealthy.v10 ? e.label : e.name) === this.hiddenLabel && !e.disabled);
   }
 
   findSpotEffect(actor) {
-    return actor?.effects.find(e => e.label === this.spotLabel && !e.disabled);
+    return actor?.effects.find(e => (stealthy.v10 ? e.label : e.name) === this.spotLabel && !e.disabled);
   }
 
   canSpotTarget(visionSource, hiddenEffect, target) {
@@ -97,16 +97,30 @@ export default class Engine {
 
   makeHiddenEffectMaker(label) {
     return (flag, source) => {
-      let hidden = {
-        label,
-        icon: 'icons/magic/perception/shadow-stealth-eyes-purple.webp',
-        changes: [],
-        flags: {
-          convenientDescription: game.i18n.localize("stealthy.hidden.description"),
-          stealthy: flag,
-          core: { statusId: '1' },
-        },
-      };
+      let hidden;
+      if (!stealthy.v10) {
+        hidden = {
+          label,
+          icon: 'icons/magic/perception/shadow-stealth-eyes-purple.webp',
+          changes: [],
+          flags: {
+            convenientDescription: game.i18n.localize("stealthy.hidden.description"),
+            stealthy: flag,
+            core: { statusId: '1' },
+          },
+        };
+      } else {
+        hidden = {
+          name: label,
+          icon: 'icons/magic/perception/shadow-stealth-eyes-purple.webp',
+          changes: [],
+          description: game.i18n.localize("stealthy.hidden.description"),
+          flags: {
+            stealthy: flag,
+          },
+          statuses: ['hidden'],
+        };
+      }
       if (source === 'ae') {
         if (typeof ATLUpdate !== 'undefined') {
           hidden.changes.push({
@@ -121,26 +135,42 @@ export default class Engine {
   }
 
   makeSpotEffectMaker(label) {
-    return (flag, source) => ({
-      label,
-      icon: 'icons/commodities/biological/eye-blue.webp',
-      flags: {
-        convenientDescription: game.i18n.localize("stealthy.spot.description"),
-        stealthy: flag,
-        core: { statusId: '1' },
-      },
-    });
+    return (flag, source) => {
+      let spot;
+      if (stealthy.v10) {
+        spot = {
+          label,
+          icon: 'icons/commodities/biological/eye-blue.webp',
+          flags: {
+            convenientDescription: game.i18n.localize("stealthy.spot.description"),
+            stealthy: flag,
+            core: { statusId: '1' },
+          },
+        };
+      } else {
+        spot = {
+          name: label,
+          icon: 'icons/commodities/biological/eye-blue.webp',
+          description: game.i18n.localize("stealthy.spot.description"),
+          flags: {
+            stealthy: flag,
+          },
+          statuses: ['spot'],
+        };
+      }
+      return spot;
+    }
   }
 
   async updateOrCreateEffect({ label, actor, flag, source, makeEffect }) {
-    let effect = actor.effects.find(e => e.label === label);
+    let effect = actor.effects.find(e => (stealthy.v10 ? e.label : e.name) === label);
 
     if (!effect) {
       // See if we can source from outside
       if (source === 'ce') {
         if (game.dfreds?.effectInterface?.findEffectByName(label)) {
           await game.dfreds.effectInterface.addEffect({ effectName: label, uuid: actor.uuid });
-          effect = actor.effects.find(e => e.label === label);
+          effect = actor.effects.find(e => (stealthy.v10 ? e.label : e.name) === label);
         }
         if (!effect && !this.warnedMissingCE) {
           this.warnedMissingCE = true;
@@ -153,7 +183,7 @@ export default class Engine {
       else if (source === 'cub') {
         if (game.cub?.getCondition(label)) {
           await game.cub.applyCondition(label, actor);
-          effect = actor.effects.find(e => e.label === label);
+          effect = actor.effects.find(e => (stealthy.v10 ? e.label : e.name) === label);
         }
         if (!effect && !this.warnedMissingCUB) {
           this.warnedMissingCUB = true;

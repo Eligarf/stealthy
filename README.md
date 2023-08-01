@@ -58,7 +58,7 @@ Stealthy currently works in the following systems (specific notes about a given 
 # Limitations
 
 ## Handling Hidden removal
-Stealthy will not automatically remove the Hidden effect - the dnd5e [Skulker](https://www.dndbeyond.com/feats/skulker) feat demonstrates why removing Hidden gets complicated without heavier automation support provided by modules like the excellent [Midi-QOL](https://foundryvtt.com/packages/midi-qol) which handles this for my games. I suggest [DFreds Convenient Effects](https://foundryvtt.com/packages/dfreds-convenient-effects) or [Visual Active Effects](https://foundryvtt.com/packages/visual-active-effects) as an easier way to manually remove it, especially for low automation level games. 
+Stealthy will not automatically remove the Hidden effect - the dnd5e [Skulker](https://www.dndbeyond.com/feats/skulker) feat demonstrates why removing Hidden gets complicated without heavier automation support provided by modules like the excellent [Midi-QOL](https://foundryvtt.com/packages/midi-qol) which handles this for my games. I suggest [Visual Active Effects](https://foundryvtt.com/packages/visual-active-effects) as an easier way to manually remove it, especially for low automation level games. 
 
 # Required modules
 * [lib-wrapper](https://foundryvtt.com/packages/lib-wrapper)
@@ -68,4 +68,5 @@ Stealthy will not automatically remove the Hidden effect - the dnd5e [Skulker](h
 * [Combat Utility Belt](https://foundryvtt.com/packages/combat-utility-belt)
 * [DFreds Convenient Effects](https://foundryvtt.com/packages/dfreds-convenient-effects)
 * [Token Light Condition](https://foundryvtt.com/packages/tokenlightcondition)
+* [Vision5e](https://foundryvtt.com/packages/vision-5e)
 * [Visual Active Effects](https://foundryvtt.com/packages/visual-active-effects)

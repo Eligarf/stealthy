@@ -3,6 +3,7 @@ export class Stealthy {
   static MODULE_ID = 'stealthy';
 
   constructor(makeEngine) {
+    this.v10 = Math.floor(game.version) < 11;
     this.engine = makeEngine();
     this.engine.patchFoundry();
     this.activeSpot = game.settings.get(Stealthy.MODULE_ID, 'activeSpot');
@@ -30,10 +31,10 @@ export class Stealthy {
     stealthy.activeSpot = toggled;
 
     if (!toggled && game.user.isGM) {
-      const label = game.i18n.localize('stealthy.spot.label');
+      const label = game.i18n.localize(v10 ? 'stealthy.spot.label' : 'stealthy.spot.name');
       for (let token of canvas.tokens.placeables) {
         const actor = token.actor;
-        const spot = actor.effects.find(e => e.label === label);
+        const spot = actor.effects.find(e => (this.v10 ? e.label : e.name) === label);
         if (spot) {
           actor.deleteEmbeddedDocuments('ActiveEffect', [spot.id]);
         }

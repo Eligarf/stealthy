@@ -1,3 +1,6 @@
+# v3.9.0
+* Fixed up v11 warnings and should still be v10 compatible.
+
 # v3.8.0
 * PF1: Spot/Hidden effects are now buffs.
 * PF2e: Rolling stealth (including initiative) sets the hidden condition and tracks the check result internally in a flag. If the hidden condition is set via the token HUD, its value will default to the Stealth DC of the actor.

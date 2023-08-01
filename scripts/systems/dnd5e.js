@@ -51,7 +51,7 @@ class Engine5e extends Engine {
       scope: 'world',
       config: true,
       type: String,
-      default: 'stealthy.dnd5e.dark.label',
+      default: stealthy.v10 ? 'stealthy.dnd5e.dark.label' : 'stealthy.dnd5e.dark.name',
       onChange: value => {
         debouncedReload();
       }
@@ -62,7 +62,7 @@ class Engine5e extends Engine {
       scope: 'world',
       config: true,
       type: String,
-      default: 'stealthy.dnd5e.dim.label',
+      default: stealthy.v10 ? 'stealthy.dnd5e.dim.label' : 'stealthy.dnd5e.dim.name',
       onChange: value => {
         debouncedReload();
       }
@@ -249,8 +249,9 @@ class Engine5e extends Engine {
 
     // What light band are we told we sit in?
     let lightBand = 2;
-    if (target?.effects.find(e => e.label === this.darkLabel && !e.disabled)) { lightBand = 0; }
-    if (target?.effects.find(e => e.label === this.dimLabel && !e.disabled)) { lightBand = 1; }
+    const v10 = Math.floor(game.version) < 11;
+    if (target?.effects.find(e => (v10 ? e.label : e.name) === this.darkLabel && !e.disabled)) { lightBand = 0; }
+    if (target?.effects.find(e => (v10 ? e.label : e.name) === this.dimLabel && !e.disabled)) { lightBand = 1; }
     debugData.lightLevel = Engine5e.LIGHT_LABELS[lightBand];
 
     // Adjust the light band based on conditions
