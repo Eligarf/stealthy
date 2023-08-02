@@ -101,7 +101,7 @@ export default class Engine {
     return (flag, source) => {
       let hidden;
       const v10 = Math.floor(game.version) < 11;
-      if (!v10) {
+      if (v10) {
         hidden = {
           label,
           icon: 'icons/magic/perception/shadow-stealth-eyes-purple.webp',
