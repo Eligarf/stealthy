@@ -1,3 +1,7 @@
+# v3.10.0
+* Fixed an inverted if/else branch when building effects for v10 vs v11. 
+* PF2e: Stealthy ignores raw skill rolls and will only apply the Hidden condition as part of rolling initiative with stealth, or with an action like Hide or Sneak. The 'Seeking' effect is only applied when using the Seek action. Use of the Basic Action Macros in PF2e Workbench is highly recommended, but the relevant actions can be dragged onto your character sheet if you prefer.
+
 # v3.9.2
 * Fix differences between running locally and on forge
 

@@ -11,10 +11,10 @@ export class EnginePF2e extends Engine {
     // There is probably a better practice for figuring out skill checks in PF2E, but this "works"
     Hooks.on('createChatMessage', async (message, options, id) => {
       // Stealthy.log("createChatMessage", message);
-      if (['>Skill Check: Stealth<', '>Initiative: Stealth<', '>(Stealth Check)<'].some(t => message.flavor.includes(t))) {
+      if (['>Initiative: Stealth<', '>(Stealth Check)<'].some(t => message.flavor.includes(t))) {
         await this.rollStealth(message, options, id);
       }
-      else if (['>Perception Check<', '>(Perception Check)<'].some(t => message.flavor.includes(t))) {
+      else if (['>(Perception Check)<'].some(t => message.flavor.includes(t))) {
         await this.rollPerception(message, options, id);
       }
     });
