@@ -1,3 +1,6 @@
+# v3.9.2
+* Fix differences between running locally and on forge
+
 # v3.9.1
 * Forgot to change the language json files for 3.9.0
 

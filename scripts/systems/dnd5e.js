@@ -46,12 +46,13 @@ class Engine5e extends Engine {
       default: false,
     });
 
+    const v10 = Math.floor(game.version) < 11;
     game.settings.register(Stealthy.MODULE_ID, 'darkLabel', {
       name: game.i18n.localize("stealthy.dnd5e.dark.key"),
       scope: 'world',
       config: true,
       type: String,
-      default: stealthy.v10 ? 'stealthy.dnd5e.dark.label' : 'stealthy.dnd5e.dark.name',
+      default: v10 ? 'stealthy.dnd5e.dark.label' : 'stealthy.dnd5e.dark.name',
       onChange: value => {
         debouncedReload();
       }
@@ -62,7 +63,7 @@ class Engine5e extends Engine {
       scope: 'world',
       config: true,
       type: String,
-      default: stealthy.v10 ? 'stealthy.dnd5e.dim.label' : 'stealthy.dnd5e.dim.name',
+      default: v10 ? 'stealthy.dnd5e.dim.label' : 'stealthy.dnd5e.dim.name',
       onChange: value => {
         debouncedReload();
       }

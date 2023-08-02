@@ -71,11 +71,13 @@ export default class Engine {
   }
 
   findHiddenEffect(actor) {
-    return actor?.effects.find(e => (stealthy.v10 ? e.label : e.name) === this.hiddenLabel && !e.disabled);
+    const v10 = Math.floor(game.version) < 11;
+    return actor?.effects.find(e => (v10 ? e.label : e.name) === this.hiddenLabel && !e.disabled);
   }
 
   findSpotEffect(actor) {
-    return actor?.effects.find(e => (stealthy.v10 ? e.label : e.name) === this.spotLabel && !e.disabled);
+    const v10 = Math.floor(game.version) < 11;
+    return actor?.effects.find(e => (v10 ? e.label : e.name) === this.spotLabel && !e.disabled);
   }
 
   canSpotTarget(visionSource, hiddenEffect, target) {
@@ -98,7 +100,8 @@ export default class Engine {
   makeHiddenEffectMaker(label) {
     return (flag, source) => {
       let hidden;
-      if (!stealthy.v10) {
+      const v10 = Math.floor(game.version) < 11;
+      if (!v10) {
         hidden = {
           label,
           icon: 'icons/magic/perception/shadow-stealth-eyes-purple.webp',
@@ -137,7 +140,8 @@ export default class Engine {
   makeSpotEffectMaker(label) {
     return (flag, source) => {
       let spot;
-      if (stealthy.v10) {
+      const v10 = Math.floor(game.version) < 11;
+      if (v10) {
         spot = {
           label,
           icon: 'icons/commodities/biological/eye-blue.webp',
@@ -163,14 +167,15 @@ export default class Engine {
   }
 
   async updateOrCreateEffect({ label, actor, flag, source, makeEffect }) {
-    let effect = actor.effects.find(e => (stealthy.v10 ? e.label : e.name) === label);
+    const v10 = Math.floor(game.version) < 11;
+    let effect = actor.effects.find(e => (v10 ? e.label : e.name) === label);
 
     if (!effect) {
       // See if we can source from outside
       if (source === 'ce') {
         if (game.dfreds?.effectInterface?.findEffectByName(label)) {
           await game.dfreds.effectInterface.addEffect({ effectName: label, uuid: actor.uuid });
-          effect = actor.effects.find(e => (stealthy.v10 ? e.label : e.name) === label);
+          effect = actor.effects.find(e => (v10 ? e.label : e.name) === label);
         }
         if (!effect && !this.warnedMissingCE) {
           this.warnedMissingCE = true;
@@ -183,7 +188,7 @@ export default class Engine {
       else if (source === 'cub') {
         if (game.cub?.getCondition(label)) {
           await game.cub.applyCondition(label, actor);
-          effect = actor.effects.find(e => (stealthy.v10 ? e.label : e.name) === label);
+          effect = actor.effects.find(e => (v10 ? e.label : e.name) === label);
         }
         if (!effect && !this.warnedMissingCUB) {
           this.warnedMissingCUB = true;
