@@ -229,7 +229,9 @@ export class EnginePF1 extends Engine {
   }
 
   getSpotFlagAndValue(actor, effect) {
-    const value = effect.flags.stealthy?.spot;
+    const spotTake10 = game.settings.get(Stealthy.MODULE_ID, 'spotTake10');
+    const value = effect?.flags?.stealthy?.spot
+      ?? (spotTake10 ? 10 + actor.system.skills.per.mod : undefined);
     return { flag: { spot: value }, value };
   }
 
