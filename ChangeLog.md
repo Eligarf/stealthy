@@ -1,5 +1,5 @@
 # v3.10.1
-* Handle v11 change in the door data
+* Handle v11 change in the door data ([#105](https://github.com/Eligarf/stealthy/issues/105))
 
 # v3.10.0
 * Fixed an inverted if/else branch when building effects for v10 vs v11. 
