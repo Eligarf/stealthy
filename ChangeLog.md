@@ -1,3 +1,6 @@
+# v3.11.0
+* Added French translation (thanks Tallon159)
+
 # v3.10.1
 * Handle v11 change in the door data ([#105](https://github.com/Eligarf/stealthy/issues/105))
 
