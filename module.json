@@ -78,6 +78,12 @@
       "flags": {}
     },
     {
+      "lang": "fr",
+      "name": "French",
+      "path": "languages/fr.json",
+      "flags": {}
+    },
+    {
       "lang": "pt-BR",
       "name": "Português Brasileiro",
       "path": "languages/pt-BR.json",

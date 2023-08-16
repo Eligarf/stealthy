@@ -1,0 +1,103 @@
+{
+  "stealthy": {
+    "hidden": {
+      "label": "Caché",
+      "name": "Caché",
+      "description": "Nécessite un test de perception pour détecter",
+      "inputBox": "Test de Discrétion",
+      "source": "Source d'effets cachés",
+      "preloc": {
+        "key": "Clé de localisation pour l'étiquette masquée",
+        "hint": "Cette chaîne sera envoyée via i18n.localize(). "
+      }
+    },
+    "spot": {
+      "label": "Détection",
+      "name": "Détection",
+      "description": "Résultat de la vérification de la perception active",
+      "inputBox": "Test de Perception",
+      "source": "Source d'effet ponctuel",
+      "preloc": {
+        "key": "Clé de localisation pour l'étiquette Spot"
+      }
+    },
+    "activeSpot": "Détection active",
+    "title": "Furtif",
+    "spotHiddenDoors": {
+      "name": "Détection automatique de porte cachée",
+      "hint": "Les tokens peuvent repérer les portes cachées si leur test de perception dépasse la valeur de furtivité de la porte"
+    },
+    "friendlyStealth": {
+      "name": "Comment traiter les token amis en toute discrétion",
+      "allow": "Toujours tester la perception",
+      "inCombat": "Ne tester la perception qu'en combat",
+      "ignore": "Ignorer les tests de perception"
+    },
+    "source": {
+      "hint": "Où trouver l'effet",
+      "ce": {
+        "name": "Convinient effects",
+        "beforeLabel": "Impossible de trouver l'effet",
+        "afterLabel": "dans CE, en utilisant la valeur par défaut de Stealthy à la place"
+      },
+      "cub": {
+        "name": "Combat utility belt",
+        "beforeLabel": "Impossible de trouver l'effet",
+        "afterLabel": "dans CUB, en utilisant la valeur par défaut de Stealthy à la place"
+      },
+      "ae": "Effet Furtif",
+      "min": "Effet Furtif - juste une icône"
+    },
+    "logLevel": {
+      "name": "Niveau de journalisation",
+      "none": "Pas de logs",
+      "debug": "Debug level",
+      "log": "Log level"
+    },
+    "config": {
+      "general": "Options générales",
+      "debug": "Options de debug",
+      "advanced": "Options avancées"
+    },
+    "door": {
+      "stealth": "Valeur furtive",
+      "maxRange": "Distance de détection"
+    },
+    "dnd5e": {
+      "name": "Dnd5e",
+      "friendlyUmbralSight": {
+        "name": "Comment traiter les tokens alliés avec Vision des ombres",
+        "allow": "Alliés avec Vision des ombres sont cachés",
+        "inCombat": "Ignore Vision des ombres sauf en combat",
+        "ignore": "Ignorer Vision des ombres"
+      },
+      "tokenLighting": {
+        "name": "Vérifier les conditions d'éclairage des tokens",
+        "hint": "Vérifiez les effets de tokens qui indiquent l'état d'éclairage du token."
+      },
+      "dark": {
+        "label": "Dark",
+        "key": "Clé de localisation pour Dark"
+      },
+      "dim": {
+        "label": "Faible",
+        "key": "Clé de localisation pour Faible"
+      },
+      "spotPair": {
+        "name": "Enregistrer la perception désavantagée lors du lancer d'un test",
+        "hint": "Analyser les résultats du jet de perception pour avoir à la fois un résultat normal et désavantageux, en lançant un deuxième dé si nécessaire"
+      },
+      "dimIsBright": {
+        "name": "Traiter Faible comme Intense pour la vision dans le noir",
+        "hint": "L'activation correspond au comportement de la vision dans le noir de foundry, la désactivation correspond aux règles 5E."
+      }
+    },
+    "pf1": {
+      "name": "Pathfinder",
+      "spotTake10": {
+        "name": "Test de perception-10",
+        "hint": "Si aucun effet Détection n'est actif, supposez que le résultat Perception prend -10 pour le test de visibilité."
+      }
+    }
+  }
+}
