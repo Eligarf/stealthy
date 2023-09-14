@@ -94,6 +94,10 @@
       "dimIsBright": {
         "name": "Trate Penumbra como Escuro em Visão Escura",
         "hint": "Habilitar isso corresponde ao comportamento do Foundry, desabilitar isso corresponde às regras 5E. Instale o módulo 'Adequate Vision' se desejar que os visuais do Foundry correspondam mais às regras 5E."
+      },
+      "ignorePassiveFloor": {
+        "name": "Ignore o valor mínimo de percepção passiva para verificações ativas",
+        "hint": "Ativa uma opção de homebrew para ignorar o valor de percepção passiva ao realizar um teste de percepção ativa"
       }
     },
     "pf1": {

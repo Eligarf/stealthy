@@ -90,6 +90,10 @@
       "dimIsBright": {
         "name": "Treat Dim as Bright in Darkvision",
         "hint": "Enabling this matches Foundry Darkvision behavior, disabling this matches 5E rules. Install the 'Adequate Vision' module if you wish Foundry visuals to more closely match 5E rules."
+      },
+      "ignorePassiveFloor": {
+        "name": "Ignore passive perception minimum value for active checks",
+        "hint": "Enables a homebrew option to ignore the passive perception value when rolling an active perception check"
       }
     },
     "pf1": {

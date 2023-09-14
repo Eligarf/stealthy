@@ -41,7 +41,7 @@ class Engine4e extends Engine {
   }
 
   getSpotFlagAndValue(actor, effect) {
-    const value = effect.flags.stealthy?.spot ?? (10 + actor.system.skills.prc.total);
+    const value = effect?.flags?.stealthy?.spot ?? (10 + actor.system.skills.prc.total);
     return { flag: { spot: value }, value };
   }
 

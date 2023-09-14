@@ -1,3 +1,7 @@
+# v3.12.0
+* Dnd5e: Added a setting to ignore the passive perception floor on a perception check when doing an active spot check
+* Dnd5e: Removed deprecated 'Ignore Friendly Umbral Sight' checkbox
+
 # v3.11.0
 * Added French translation (thanks Tallon159)
 

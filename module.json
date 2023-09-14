@@ -11,7 +11,7 @@
   "version": "autoreplaced",
   "compatibility": {
     "minimum": "10.291",
-    "verified": "11.307"
+    "verified": "11.308"
   },
   "relationships": {
     "systems": [
@@ -19,14 +19,14 @@
         "id": "dnd4e",
         "type": "system",
         "compatibility": {
-          "verified": "0.4.13"
+          "verified": "0.4.21"
         }
       },
       {
         "id": "dnd5e",
         "type": "system",
         "compatibility": {
-          "verified": "2.3.0"
+          "verified": "2.3.1"
         }
       },
       {
@@ -40,7 +40,7 @@
         "id": "pf2e",
         "type": "system",
         "compatibility": {
-          "verified": "5.3.2"
+          "verified": "5.4.4"
         }
       }
     ],

@@ -19,15 +19,6 @@ class Engine5e extends Engine {
       default: 'inCombat'
     });
 
-    game.settings.register(Stealthy.MODULE_ID, 'ignoreFriendlyUmbralSight', {
-      name: game.i18n.localize("stealthy.dnd5e.ignoreFriendlyUmbralSight.name"),
-      hint: game.i18n.localize("stealthy.dnd5e.ignoreFriendlyUmbralSight.hint"),
-      scope: 'world',
-      config: true,
-      type: Boolean,
-      default: false,
-    });
-
     game.settings.register(Stealthy.MODULE_ID, 'tokenLighting', {
       name: game.i18n.localize("stealthy.dnd5e.tokenLighting.name"),
       hint: game.i18n.localize("stealthy.dnd5e.tokenLighting.hint"),
@@ -40,6 +31,15 @@ class Engine5e extends Engine {
     game.settings.register(Stealthy.MODULE_ID, 'spotPair', {
       name: game.i18n.localize("stealthy.dnd5e.spotPair.name"),
       hint: game.i18n.localize("stealthy.dnd5e.spotPair.hint"),
+      scope: 'world',
+      config: true,
+      type: Boolean,
+      default: false,
+    });
+
+    game.settings.register(Stealthy.MODULE_ID, 'ignorePassiveFloor', {
+      name: game.i18n.localize("stealthy.dnd5e.ignorePassiveFloor.name"),
+      hint: game.i18n.localize("stealthy.dnd5e.ignorePassiveFloor.hint"),
       scope: 'world',
       config: true,
       type: Boolean,
@@ -238,7 +238,8 @@ class Engine5e extends Engine {
     let perception = spotPair?.normal
       ?? spotPair
       ?? (passivePrc + 1);
-    perception = Math.max(perception, passivePrc);
+    if (!game.settings.get(Stealthy.MODULE_ID, 'ignorePassiveFloor'))
+      perception = Math.max(perception, passivePrc);
     return perception;
   }
 
@@ -263,6 +264,7 @@ class Engine5e extends Engine {
     }
 
     // Extract the normal perception values from the source
+    const ignorePassiveFloor = game.settings.get(Stealthy.MODULE_ID, 'ignorePassiveFloor');
     let active = spotPair?.normal ?? spotPair;
     let value;
     const passivePrc = source?.system?.skills?.prc?.passive ?? -100;
@@ -290,11 +292,11 @@ class Engine5e extends Engine {
         value = passiveDisadv;
         debugData.passiveDisadv = value;
       }
-      perception = Math.max(value, passiveDisadv);
+      perception = (ignorePassiveFloor) ? value : Math.max(value, passiveDisadv);
       debugData.seesDim = perception;
     }
     else {
-      perception = Math.max(value, passivePrc);
+      perception = (ignorePassiveFloor) ? value : Math.max(value, passivePrc);
       debugData.seesBright = perception;
     }
 

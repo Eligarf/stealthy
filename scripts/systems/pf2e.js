@@ -29,9 +29,10 @@ export class EnginePF2e extends Engine {
   }
 
   canSpotTarget(visionSource, hiddenEffect, target) {
+    const stealth = hiddenEffect?.flags?.stealthy?.hidden ?? (10 + target.actor.system.skills.ste.value);
     const source = visionSource.object?.actor;
-    const stealth = hiddenEffect ?? (10 + target.actor.system.skills.ste.value);
-    const perception = 10 + source.system.attributes.perception.value;
+    let seeking = this.findSpotEffect(source);
+    const perception = seeking?.flags?.stealthy?.spot ?? 10 + source.system.attributes.perception.value;
 
     if (perception <= stealth) {
       Stealthy.log(`${visionSource.object.name}'s ${perception} can't see ${target.name}'s ${stealth}`);
