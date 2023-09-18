@@ -102,6 +102,9 @@
         "name": "Perception take-10",
         "hint": "If no Spot effect is active, assume the Perception take-10 result for the visibility test. If disabled, Hidden tokens will not be seen without an active Spot effect."
       }
+    },
+    "pf2e": {
+      "dependency": "Stealthy requires the Hide and Seek actions from Basic Action Macros in PF2e Workbench"
     }
   }
 }

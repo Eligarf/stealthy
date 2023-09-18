@@ -102,6 +102,9 @@
         "name": "Test de perception-10",
         "hint": "Si aucun effet Détection n'est actif, supposez que le résultat Perception prend -10 pour le test de visibilité."
       }
+    },
+    "pf2e": {
+      "dependency": "Stealthy nécessite les actions de cache-cache des macros d'action de base dans PF2e Workbench"
     }
   }
 }

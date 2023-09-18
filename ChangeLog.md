@@ -1,3 +1,7 @@
+# v3.13.0
+* PF2e: Update chat parsing to match changed text in hide and seek actions
+* PF2e: Add an error notification if PF2e Workbench is missing
+
 # v3.12.0
 * Dnd5e: Added a setting to ignore the passive perception floor on a perception check when doing an active spot check
 * Dnd5e: Removed deprecated 'Ignore Friendly Umbral Sight' checkbox

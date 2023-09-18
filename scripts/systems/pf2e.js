@@ -8,13 +8,21 @@ export class EnginePF2e extends Engine {
   constructor() {
     super();
 
+    const workbench = game.modules.get('xdy-pf2e-workbench')?.active;
+    Stealthy.log('workbench', workbench);
+    if (!workbench) {
+      Hooks.once('ready', async () => {
+        ui.notifications.error(`${game.i18n.localize('stealthy.pf2e.dependency')}`);
+      });
+    }
+
     // There is probably a better practice for figuring out skill checks in PF2E, but this "works"
     Hooks.on('createChatMessage', async (message, options, id) => {
       // Stealthy.log("createChatMessage", message);
-      if (['>Initiative: Stealth<', '>(Stealth Check)<'].some(t => message.flavor.includes(t))) {
+      if (['>Initiative: Stealth<', '>(Stealth Check)<', 'Hide - Stealth Check'].some(t => message.flavor.includes(t))) {
         await this.rollStealth(message, options, id);
       }
-      else if (['>(Perception Check)<'].some(t => message.flavor.includes(t))) {
+      else if (['>(Perception Check)<', 'Seek - Perception Check', '>Initiative: Perception<'].some(t => message.flavor.includes(t))) {
         await this.rollPerception(message, options, id);
       }
     });
@@ -34,7 +42,7 @@ export class EnginePF2e extends Engine {
     let seeking = this.findSpotEffect(source);
     const perception = seeking?.flags?.stealthy?.spot ?? 10 + source.system.attributes.perception.value;
 
-    if (perception <= stealth) {
+    if (perception < stealth) {
       Stealthy.log(`${visionSource.object.name}'s ${perception} can't see ${target.name}'s ${stealth}`);
       return false;
     }
@@ -137,7 +145,7 @@ export class EnginePF2e extends Engine {
   }
 
   async rollPerception(message, options, id) {
-    Stealthy.log('rollPerception - NOT IMPLEMENTED', { message, options, id });
+    Stealthy.log('rollPerception', { message, options, id });
     const check = Number(message.content);
 
     const token = canvas.tokens.get(message.speaker.token);

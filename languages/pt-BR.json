@@ -106,6 +106,9 @@
         "name": "Percepção pegue-10",
         "hint": "Se nenhum efeito Percebido estiver ativo, assuma o resultado de Percepção - 10 para o teste de visibilidade. Se desativado, os tokens Escondido não serão vistos sem um efeito Percebido ativo."
       }
+    },
+    "pf2e": {
+      "dependency": "Stealthy requer as ações Hide and Seek das macros de ação básicas no PF2e Workbench"
     }
   }
 }
