@@ -1,20 +1,20 @@
 import { Stealthy } from '../stealthy.js';
 import Engine from '../engine.js';
 
-// This mechanically works, but I don't know how one is supposed to get rid
-// of the Hidden effect once it is placed given the PF1 UI doesn't seem to show
-// active effects.
-
 class Engine4e extends Engine {
 
   constructor() {
     super();
 
+    const usesStealth = `uses ${game.i18n.localize('DND4EBETA.SkillStl')}.`
+    const usesPerception = `uses ${game.i18n.localize('DND4EBETA.SkillPrc')}.`
+    Stealthy.log('Localized Chat Tags', { usesStealth, usesPerception });
+
     Hooks.on('createChatMessage', async (message, options, id) => {
-      if (message.flavor.endsWith('uses Stealth.')) {
+      if (message.flavor.endsWith(usesStealth)) {
         await this.rollStealth(message, options, id);
       }
-      else if (message.flavor.endsWith('uses Perception.')) {
+      else if (message.flavor.endsWith(usesPerception)) {
         await this.rollPerception(message, options, id);
       }
     });

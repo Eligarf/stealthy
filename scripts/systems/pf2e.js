@@ -9,7 +9,6 @@ export class EnginePF2e extends Engine {
     super();
 
     const workbench = game.modules.get('xdy-pf2e-workbench')?.active;
-    Stealthy.log('workbench', workbench);
     if (!workbench) {
       Hooks.once('ready', async () => {
         ui.notifications.error(`${game.i18n.localize('stealthy.pf2e.dependency')}`);
@@ -17,12 +16,22 @@ export class EnginePF2e extends Engine {
     }
 
     // There is probably a better practice for figuring out skill checks in PF2E, but this "works"
+    const stealthTags = [
+      `>${game.i18n.localize('xdy-pf2e-workbench.macros.basicActionMacros.actions.Hide')} - ${game.i18n.localize('PF2E.StealthLabel')} ${game.i18n.localize('PF2E.Check.Label')}<`,
+      `>${game.i18n.format("PF2E.InitiativeWithSkill", { skillName: game.i18n.localize('PF2E.StealthLabel') }) }<`,
+    ]; 
+    const perceptionTags = [
+      `>${game.i18n.localize('xdy-pf2e-workbench.macros.basicActionMacros.actions.Seek')} - ${game.i18n.localize('PF2E.PerceptionCheck')}<`,
+      `>${game.i18n.format("PF2E.InitiativeWithSkill", { skillName: game.i18n.localize('PF2E.PerceptionLabel') })}<`,
+    ];
+    Stealthy.log('Localized Chat Tags', { stealthTags, perceptionTags });
+
     Hooks.on('createChatMessage', async (message, options, id) => {
       // Stealthy.log("createChatMessage", message);
-      if (['>Initiative: Stealth<', '>(Stealth Check)<', 'Hide - Stealth Check'].some(t => message.flavor.includes(t))) {
+      if (stealthTags.some(t => message.flavor.includes(t))) {
         await this.rollStealth(message, options, id);
       }
-      else if (['>(Perception Check)<', 'Seek - Perception Check', '>Initiative: Perception<'].some(t => message.flavor.includes(t))) {
+      else if (perceptionTags.some(t => message.flavor.includes(t))) {
         await this.rollPerception(message, options, id);
       }
     });
@@ -40,7 +49,7 @@ export class EnginePF2e extends Engine {
     const stealth = hiddenEffect?.flags?.stealthy?.hidden ?? (10 + target.actor.system.skills.ste.value);
     const source = visionSource.object?.actor;
     let seeking = this.findSpotEffect(source);
-    const perception = seeking?.flags?.stealthy?.spot ?? 10 + source.system.attributes.perception.value;
+    const perception = seeking?.flags?.stealthy?.spot ?? 10 + source.system.attributes.perception?.value;
 
     if (perception < stealth) {
       Stealthy.log(`${visionSource.object.name}'s ${perception} can't see ${target.name}'s ${stealth}`);
@@ -134,7 +143,7 @@ export class EnginePF2e extends Engine {
   }
 
   getSpotFlagAndValue(actor, effect) {
-    const value = effect?.flags.stealthy.spot ?? (10 + actor.system.attributes.perception.value);
+    const value = effect?.flags.stealthy.spot ?? (10 + actor.system.attributes.perception?.value);
     return { flag: { spot: value }, value };
   }
 

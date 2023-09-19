@@ -1,3 +1,6 @@
+# v3.13.1
+* PF2e/Dnd4e: Localize the chat scraping functions
+
 # v3.13.0
 * PF2e: Update chat parsing to match changed text in hide and seek actions
 * PF2e: Add an error notification if PF2e Workbench is missing
