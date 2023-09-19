@@ -1,3 +1,6 @@
+# v3.13.2
+* PF2e: Don't apply seek status when rolling intiative based on perception
+
 # v3.13.1
 * PF2e/Dnd4e: Localize the chat scraping functions
 
