@@ -22,7 +22,6 @@ export class EnginePF2e extends Engine {
     ]; 
     const perceptionTags = [
       `>${game.i18n.localize('xdy-pf2e-workbench.macros.basicActionMacros.actions.Seek')} - ${game.i18n.localize('PF2E.PerceptionCheck')}<`,
-      `>${game.i18n.format("PF2E.InitiativeWithSkill", { skillName: game.i18n.localize('PF2E.PerceptionLabel') })}<`,
     ];
     Stealthy.log('Localized Chat Tags', { stealthTags, perceptionTags });
 
