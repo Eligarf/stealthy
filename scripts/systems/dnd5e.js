@@ -65,6 +65,19 @@ class Engine5e extends Engine {
       default: false,
     });
 
+    game.settings.register(Stealthy.MODULE_ID, 'friendlyUmbralSight', {
+      name: game.i18n.localize("stealthy.dnd5e.friendlyUmbralSight.name"),
+      scope: 'world',
+      config: true,
+      type: String,
+      choices: {
+        'allow': game.i18n.localize("stealthy.dnd5e.friendlyUmbralSight.allow"),
+        'inCombat': game.i18n.localize("stealthy.dnd5e.friendlyUmbralSight.inCombat"),
+        'ignore': game.i18n.localize("stealthy.dnd5e.friendlyUmbralSight.ignore")
+      },
+      default: 'inCombat'
+    });
+
     Hooks.on('dnd5e.rollSkill', async (actor, roll, skill) => {
       if (skill === 'ste') {
         await this.rollStealth(actor, roll);
@@ -91,28 +104,26 @@ class Engine5e extends Engine {
 
   canSpotTarget(visionSource, hiddenEffect, targetToken) {
     const srcToken = visionSource.object.document;
-    if (hiddenEffect) {
-      const source = srcToken?.actor;
-      const stealth = hiddenEffect.flags.stealthy?.hidden ?? target.actor.system.skills.ste.passive;
-      const spotEffect = this.findSpotEffect(source);
+    const source = srcToken?.actor;
+    const stealth = hiddenEffect.flags.stealthy?.hidden ?? target.actor.system.skills.ste.passive;
+    const spotEffect = this.findSpotEffect(source);
 
-      // active perception loses ties, passive perception wins ties to simulate the
-      // idea that active skills need to win outright to change the status quo. Passive
-      // perception means that stealth is being the active skill.
-      const spotPair = spotEffect?.flags.stealthy?.spot;
-      let perception;
+    // active perception loses ties, passive perception wins ties to simulate the
+    // idea that active skills need to win outright to change the status quo. Passive
+    // perception means that stealth is being the active skill.
+    const spotPair = spotEffect?.flags.stealthy?.spot;
+    let perception;
 
-      if (game.settings.get(Stealthy.MODULE_ID, 'tokenLighting')) {
-        perception = this.adjustForLightingConditions(spotPair, visionSource, source, targetToken.actor);
-      }
-      else {
-        perception = this.adjustForDefaultConditions(spotPair, visionSource, source, targetToken.actor);
-      }
+    if (game.settings.get(Stealthy.MODULE_ID, 'tokenLighting')) {
+      perception = this.adjustForLightingConditions(spotPair, visionSource, source, targetToken.actor);
+    }
+    else {
+      perception = this.adjustForDefaultConditions(spotPair, visionSource, source, targetToken.actor);
+    }
 
-      if (perception <= stealth) {
-        Stealthy.log(`${visionSource.object.name}'s ${perception} can't detect ${targetToken.name}'s ${stealth}`);
-        return false;
-      }
+    if (perception <= stealth) {
+      Stealthy.log(`${visionSource.object.name}'s ${perception} can't detect ${targetToken.name}'s ${stealth}`);
+      return false;
     }
 
     return true;

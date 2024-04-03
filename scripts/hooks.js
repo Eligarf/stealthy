@@ -81,6 +81,18 @@ Hooks.once('setup', () => {
     }
   });
 
+  game.settings.register(Stealthy.MODULE_ID, 'useCanDetect', {
+    name: 'EXPERIMENTAL - use _canDetect instead of TestVisibility',
+    hint: 'This only works on some installations',
+    scope: 'world',
+    config: true,
+    type: Boolean,
+    default: false,
+    onChange: value => {
+      debouncedReload();
+    },
+  });
+
   game.settings.register(Stealthy.MODULE_ID, 'logLevel', {
     name: game.i18n.localize("stealthy.logLevel.name"),
     scope: 'client',

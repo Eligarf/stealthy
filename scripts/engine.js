@@ -24,27 +24,54 @@ export default class Engine {
 
   patchFoundry() {
     // Detection mode patching
-    libWrapper.register(
-      Stealthy.MODULE_ID,
-      'DetectionMode.prototype._canDetect',
-      function (wrapped, visionSource, target) {
-        switch (this.type) {
-          case DetectionMode.DETECTION_TYPES.SIGHT:
-          case DetectionMode.DETECTION_TYPES.SOUND:
-            const src = visionSource.object.document;
-            if (src instanceof TokenDocument) {
-              const tgt = target?.document;
-              if (tgt instanceof TokenDocument) {
-                const engine = stealthy.engine;
-                if (engine.isHidden(visionSource, tgt)) return false;
+    if (game.settings.get(Stealthy.MODULE_ID, 'useCanDetect')) {
+      libWrapper.register(
+        Stealthy.MODULE_ID,
+        'DetectionMode.prototype._canDetect',
+        function (wrapped, visionSource, target) {
+          switch (this.type) {
+            case DetectionMode.DETECTION_TYPES.SIGHT:
+            case DetectionMode.DETECTION_TYPES.SOUND:
+              const src = visionSource.object.document;
+              if (src instanceof TokenDocument) {
+                const tgt = target?.document;
+                if (tgt instanceof TokenDocument) {
+                  const engine = stealthy.engine;
+                  if (engine.isHidden(visionSource, tgt)) return false;
+                }
               }
-            }
-        }
-        return wrapped(visionSource, target);
-      },
-      libWrapper.MIXED,
-      { perf_mode: libWrapper.PERF_FAST }
-    );
+          }
+          return wrapped(visionSource, target);
+        },
+        libWrapper.MIXED,
+        { perf_mode: libWrapper.PERF_FAST }
+      );
+    }
+    else {
+      libWrapper.register(
+        Stealthy.MODULE_ID,
+        'DetectionModeBasicSight.prototype.testVisibility',
+        function (wrapped, visionSource, mode, config = {}) {
+          const engine = stealthy.engine;
+          if (engine.isHidden(visionSource, config.object)) return false;
+          return wrapped(visionSource, mode, config);
+        },
+        libWrapper.MIXED,
+        { perf_mode: libWrapper.PERF_FAST }
+      );
+
+      libWrapper.register(
+        Stealthy.MODULE_ID,
+        'DetectionModeInvisibility.prototype.testVisibility',
+        function (wrapped, visionSource, mode, config = {}) {
+          const engine = stealthy.engine;
+          if (engine.isHidden(visionSource, config.object)) return false;
+          return wrapped(visionSource, mode, config);
+        },
+        libWrapper.MIXED,
+        { perf_mode: libWrapper.PERF_FAST }
+      );
+    }
 
     if (game.settings.get(Stealthy.MODULE_ID, 'spotSecretDoors')) {
       StealthyDoors.initialize();
@@ -60,7 +87,9 @@ export default class Engine {
 
     if (!ignoreFriendlyStealth) {
       const hiddenEffect = this.findHiddenEffect(target?.actor);
-      return !this.canSpotTarget(visionSource, hiddenEffect, target);
+      if (hiddenEffect) {
+        return !this.canSpotTarget(visionSource, hiddenEffect, target);
+      }
     }
 
     return false;
@@ -149,7 +178,7 @@ export default class Engine {
         };
       }
       return spot;
-    }
+    };
   }
 
   async updateOrCreateEffect({ label, actor, flag, source, makeEffect }) {

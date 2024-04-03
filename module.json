@@ -35,13 +35,6 @@
         "compatibility": {
           "verified": "0.9.4"
         }
-      },
-      {
-        "id": "pf2e",
-        "type": "system",
-        "compatibility": {
-          "verified": "5.5.2"
-        }
       }
     ],
     "requires": [

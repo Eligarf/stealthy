@@ -88,6 +88,12 @@
       "ignorePassiveFloor": {
         "name": "Ignore passive perception minimum value for active checks",
         "hint": "Enables a homebrew option to ignore the passive perception value when rolling an active perception check"
+      },
+      "friendlyUmbralSight": {
+        "name": "How to treat friendly tokens with Umbral Sight",
+        "allow": "Umbral Sight is hidden to Darkvision",
+        "inCombat": "Ignore Umbral Sight unless in combat",
+        "ignore": "Ignore Umbral Sight"
       }
     },
     "pf1": {

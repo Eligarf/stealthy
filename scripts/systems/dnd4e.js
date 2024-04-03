@@ -6,8 +6,8 @@ class Engine4e extends Engine {
   constructor() {
     super();
 
-    const usesStealth = `uses ${game.i18n.localize('DND4EBETA.SkillStl')}.`
-    const usesPerception = `uses ${game.i18n.localize('DND4EBETA.SkillPrc')}.`
+    const usesStealth = `uses ${game.i18n.localize('DND4EBETA.SkillStl')}.`;
+    const usesPerception = `uses ${game.i18n.localize('DND4EBETA.SkillPrc')}.`;
     Stealthy.log('Localized Chat Tags', { usesStealth, usesPerception });
 
     Hooks.on('createChatMessage', async (message, options, id) => {
@@ -23,17 +23,14 @@ class Engine4e extends Engine {
   canSpotTarget(visionSource, hiddenEffect, target) {
     // Never gets called, neither do the patches for the v10 vision modes
     // dead in the water
-    if (hiddenEffect) {
-      const source = visionSource.object?.actor;
-      const stealth = hiddenEffect.flags.stealthy?.hidden ?? (10 + target.actor.system.skills.stl.total);
-      const spotEffect = this.findSpotEffect(source);
-      const perception = spotEffect?.flags.stealthy?.spot ?? (10 + source.system.skills.prc.total);
+    const source = visionSource.object?.actor;
+    const stealth = hiddenEffect.flags.stealthy?.hidden ?? (10 + target.actor.system.skills.stl.total);
+    const spotEffect = this.findSpotEffect(source);
+    const perception = spotEffect?.flags.stealthy?.spot ?? (10 + source.system.skills.prc.total);
 
-      if (perception <= stealth) {
-        Stealthy.log(`${visionSource.object.name}'s ${perception} can't detect ${target.name}'s ${stealth}`);
-        return false;
-      }
-
+    if (perception <= stealth) {
+      Stealthy.log(`${visionSource.object.name}'s ${perception} can't detect ${target.name}'s ${stealth}`);
+      return false;
     }
     return true;
   }

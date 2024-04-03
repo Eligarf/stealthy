@@ -1,3 +1,7 @@
+# v3.14.1
+* Dnd5e: Adding a setting to select old reliable way or new experimental way of hooking the visibility tests.
+* PF2e: disabled for the time being, need a better way of hooking hide/seek actions.
+
 # v3.14.0
 * Dnd5e: Breaking change - Stealthy no longer does any Umbral Sight handling. Use Vision5e instead for this feature.
 * Dnd5e: Stealthy's recorded stealth checks are now applied against both sight and sound detection modes.
