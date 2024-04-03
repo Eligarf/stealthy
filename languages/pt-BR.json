@@ -3,39 +3,35 @@
     "hidden": {
       "label": "Escondido",
       "name": "Escondido",
-      "description": "Requer teste de Percepção para detectar",
-      "inputBox": "Verificação furtiva",
-      "source": "Fonte de efeito Escondido",
+      "description": "Requer teste de Percepção para detectar.",
+      "inputBox": "Teste de Furtividade",
+      "source": "Origem Escondida",
       "preloc": {
         "key": "Chave de localização para rótulo Escondido",
         "hint": "Esta string será enviada através de i18n.localize(). Mudar isso pode afetar a automação geral dos efeitos do Stealthy."
       }
     },
     "spot": {
-      "label": "Percebido",
-      "name": "Percebido",
-      "description": "Resultado do teste ativo de Percepção",
-      "inputBox": "Teste de percepção",
-      "source": "Fonte de efeito Percebido",
+      "label": "Percebendo",
+      "name": "Percebendo",
+      "description": "Resultado do teste ativo de Percepção.",
+      "inputBox": "Teste de Percepção.",
+      "source": "Origem Percebendo",
       "preloc": {
         "key": "Chave de localização para rótulo Percebido"
       }
     },
-    "activeSpot": "Ativamente percebido",
+    "activeSpot": "Percebendo Passivamente",
     "title": "Stealthy",
     "spotHiddenDoors": {
       "name": "Detecção automática de portas escondidas",
-      "hint": "Os tokens podem identificar portas ocultas se seu teste de percepção superar o valor furtivo da porta"
+      "hint": "Tokens podem identificar portas ocultas se seu teste de Percepção superar o valor furtivo da porta."
     },
     "friendlyStealth": {
-      "name": "Como tratar tokens amigáveis ​​sob furtividade",
-      "allow": "Sempre teste a Percepção",
-      "inCombat": "Teste Percepção apenas em combate",
+      "name": "Como tratar tokens amigáveis ​​sob Furtividade",
+      "allow": "Sempre testar Percepção",
+      "inCombat": "Testar Percepção apenas em combate",
       "ignore": "Ignorar testes de Percepção"
-    },
-    "ignoreFriendlyStealth": {
-      "name": "Ignorar Furtividade aliada",
-      "hint": "Testes de Percepção vs Furtividade serão ignorados para tokens com a mesma disposição"
     },
     "source": {
       "hint": "Onde encontrar o efeito",
@@ -53,52 +49,52 @@
       "min": "Stealthy - apenas um ícone"
     },
     "logLevel": {
-      "name": "Nível de registro",
+      "name": "Nível de Registro",
       "none": "Sem log",
-      "debug": "Debug",
+      "debug": "Deputação",
       "log": "Com log"
     },
     "config": {
-      "general": "Opções gerais",
-      "debug": "Opções de depuração",
-      "advanced": "Opções avançadas"
+      "general": "Opções Gerais",
+      "debug": "Opções de Depuração",
+      "advanced": "Opções Avançadas"
     },
     "door": {
-      "stealth": "Valor escondido",
+      "stealth": "Valor Escondido",
       "maxRange": "Distância de detecção"
     },
     "dnd5e": {
       "name": "Dnd5e",
       "tokenLighting": {
         "name": "Verificar as condições de iluminação dos tokens",
-        "hint": "Verificar se há efeitos de token que indicam a condição de iluminação dos tokens."
+        "hint": "Verifica se há efeitos no token que indicam a condição de iluminação dos tokens."
       },
       "dark": {
-        "label": "Escuro",
-        "key": "Chave de localização para rótulo Escuro"
+        "label": "Escuridão",
+        "key": "Chave de localização para rótulo Escuridão."
       },
       "dim": {
         "label": "Penumbra",
-        "key": "Chave de localização para rótulo Penumbra"
+        "key": "Chave de localização para rótulo Penumbra."
       },
       "spotPair": {
-        "name": "Registar Percepção com desvantagem ao rolar um teste",
-        "hint": "Analisar os resultados do teste de Percepção para obter um resultado normal e um com desvantagem, rolando um segundo dado se necessário"
+        "name": "Registar desvantagem de Percepção ao rolar um teste",
+        "hint": "Analisa os resultados do teste de Percepção para obter um resultado normal e um com desvantagem, rolando um segundo dado se necessário."
       },
       "dimIsBright": {
-        "name": "Trate Penumbra como Escuro em Visão Escura",
-        "hint": "Habilitar isso corresponde ao comportamento do Foundry, desabilitar isso corresponde às regras 5E. Instale o módulo 'Adequate Vision' se desejar que os visuais do Foundry correspondam mais às regras 5E."
+        "name": "Trate Penumbra como Luz Plena com Visão no Escuro",
+        "hint": "Se habilitado, o comportamento será o mesmo do Foundry e se desabilitado, será como as regras da 5E. Instale o módulo 'Adequate Vision' se deseja que os visuais do Foundry correspondam mais às regras 5E."
       },
       "ignorePassiveFloor": {
-        "name": "Ignore o valor mínimo de percepção passiva para verificações ativas",
-        "hint": "Ativa uma opção de homebrew para ignorar o valor de percepção passiva ao realizar um teste de percepção ativa"
+        "name": "Ignore o valor mínimo de Percepção Passiva para verificações ativas",
+        "hint": "Ativa uma opção de homebrew para ignorar o valor de Percepção Passiva ao realizar um teste de Percepção Ativa."
       }
     },
     "pf1": {
       "name": "Pathfinder",
       "spotTake10": {
         "name": "Percepção pegue-10",
-        "hint": "Se nenhum efeito Percebido estiver ativo, assuma o resultado de Percepção - 10 para o teste de visibilidade. Se desativado, os tokens Escondido não serão vistos sem um efeito Percebido ativo."
+        "hint": "Se nenhum efeito Percebendo estiver ativo, assuma o resultado de Percepção - 10 para o teste de visibilidade. Se desativado, os tokens Escondidos não serão vistos sem um efeito Percebendo ativo."
       }
     },
     "pf2e": {
