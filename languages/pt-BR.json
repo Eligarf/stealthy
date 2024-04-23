@@ -73,8 +73,8 @@
     "dnd5e": {
       "name": "Dnd5e",
       "endTurn": {
-        "name": "Fim de Curva",
-        "hint": "Fim de turno se você é dono do atual combatente"
+        "name": "Encerrar Turno",
+        "hint": "Encerra o turno se você é dono do atual combatente."
       },
       "tokenLighting": {
         "name": "Verificar as condições de iluminação dos tokens",
@@ -99,7 +99,7 @@
         "hint": "Ativa uma opção de homebrew para ignorar o valor de Percepção Passiva ao realizar um teste de Percepção Ativa."
       },
       "friendlyUmbralSight": {
-        "name": "DEPRECATED - Como tratar fichas amigas com Visão Umbral",
+        "name": "DESCONTINUADO - Como tratar fichas amigas com Visão Umbral",
         "allow": "Visão Umbral está escondida para Darkvision",
         "inCombat": "Ignore Visão Umbral a menos que esteja em combate",
         "ignore": "Ignorar Visão Umbral"
