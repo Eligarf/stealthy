@@ -40,6 +40,10 @@
     "playerHud": {
       "name": "Allow players to see (not edit) Hidden and Spot values on the token HUD"
     },
+    "useTokenFlags": {
+      "name": "Use token flags",
+      "hint": "Store stealth and perception flags in tokens rather than putting Effects on Actors. This enables a linked actor to have different stealth values simultaneously in multiple scenes."
+    },
     "source": {
       "hint": "Where to find the effect",
       "ce": {

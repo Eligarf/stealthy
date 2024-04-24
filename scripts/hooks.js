@@ -105,6 +105,15 @@ Hooks.once('setup', () => {
     default: v10 ? 'stealthy.spot.label' : 'stealthy.spot.name',
   });
 
+  game.settings.register(Stealthy.MODULE_ID, 'useTokenFlags', {
+    name: game.i18n.localize("stealthy.useTokenFlags.name"),
+    hint: game.i18n.localize("stealthy.useTokenFlags.hint"),
+    scope: 'world',
+    config: true,
+    type: Boolean,
+    default: false,
+  });
+
   game.settings.register(Stealthy.MODULE_ID, 'logLevel', {
     name: game.i18n.localize("stealthy.logLevel.name"),
     scope: 'client',

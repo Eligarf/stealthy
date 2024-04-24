@@ -1,3 +1,6 @@
+# pending
+* Use token flags rather than actor effects to support having an actor on multiple scenes.
+
 # v3.18.1
 * Update pt-BR.json (thanks Kharmans)
 

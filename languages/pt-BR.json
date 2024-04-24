@@ -34,6 +34,10 @@
     "playerHud": {
       "name": "Permitir que os jogadores vejam (não editem) valores ocultos e visíveis no HUD do token"
     },
+    "useTokenFlags": {
+      "name": "Usar sinalizadores de token",
+      "hint": "Armazene bandeiras de furtividade e percepção em tokens em vez de colocar Efeitos em Atores. Isso permite que um ator vinculado tenha diferentes valores de furtividade simultaneamente em várias cenas."
+    },
     "friendlyStealth": {
       "name": "Como tratar tokens amigáveis ​​sob Furtividade",
       "allow": "Sempre testar Percepção",
