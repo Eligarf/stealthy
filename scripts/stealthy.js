@@ -7,7 +7,6 @@ export class Stealthy {
     this.socket = null;
     this.engine.patchFoundry();
     Hooks.once('setup', () => {
-      this.activeSpot = game.settings.get(Stealthy.MODULE_ID, 'activeSpot');
       this.socket = socketlib.registerModule(Stealthy.MODULE_ID);
       this.socket.register('ToggleActiveSpot', Stealthy.ToggleActiveSpot);
       this.socket.register('GetActiveSpot', Stealthy.GetActiveSpot);

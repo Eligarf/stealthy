@@ -109,6 +109,7 @@ Hooks.once('setup', () => {
     name: game.i18n.localize("stealthy.useTokenFlags.name"),
     hint: game.i18n.localize("stealthy.useTokenFlags.hint"),
     scope: 'world',
+    requiresReload: true,
     config: true,
     type: Boolean,
     default: false,
@@ -133,6 +134,7 @@ Hooks.once('setup', () => {
     type: Boolean,
     default: true,
   });
+  Stealthy.activeSpot = game.settings.get(Stealthy.MODULE_ID, 'activeSpot');
 
   Stealthy.log(`Initialized ${moduleVersion}`);
 });
