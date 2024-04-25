@@ -202,12 +202,14 @@ class Engine5e extends Engine {
   }
 
   getPerceptionFlag(effect) {
+    if (!effect) return undefined;
     const flags = this.getFlags(effect);
     let spot = flags?.spot;
     const active = spot?.normal ?? spot;
-    if (active === undefined) return undefined;
-    spot.normal = active;
-    spot.disadvantaged = spot?.disadvantaged ?? active - 5;
+    if (active !== undefined) {
+      spot.normal = active;
+      spot.disadvantaged = spot?.disadvantaged ?? active - 5;
+    }
     return { spot };
   }
 

@@ -73,12 +73,12 @@ export default class Engine {
 
   findHiddenEffect(actor) {
     const v10 = Math.floor(game.version) < 11;
-    return actor?.effects.find(e => (v10 ? e.label : e.name) === this.hiddenLabel && !e.disabled);
+    return actor?.effects.find((e) => !e.disabled && (v10 ? e.label : e.name) === this.hiddenLabel );
   }
 
   findSpotEffect(actor) {
     const v10 = Math.floor(game.version) < 11;
-    return actor?.effects.find(e => (v10 ? e.label : e.name) === this.spotLabel && !e.disabled);
+    return actor?.effects.find(e => !e.disabled && (v10 ? e.label : e.name) === this.spotLabel);
   }
 
   canDetectHidden(visionSource, hiddenEffect, target) {
@@ -222,9 +222,10 @@ export default class Engine {
   }
 
   getStealthFlag(effect) {
+    if (!effect) return undefined;
     const flags = this.getFlags(effect);
     const hidden = flags?.hidden;
-    return hidden ? { hidden } : undefined;
+    return { hidden };
   }
 
   getStealthValue(flag, actor) {
@@ -259,9 +260,10 @@ export default class Engine {
   }
 
   getPerceptionFlag(effect) {
+    if (!effect) return undefined;
     const flags = this.getFlags(effect);
     const spot = flags?.spot;
-    return spot ? { spot } : undefined;
+    return { spot };
   }
 
   getPerceptionValue(flag, actor) {
