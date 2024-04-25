@@ -217,10 +217,28 @@ export default class Engine {
     stealthy.socket.executeForEveryone('RefreshPerception');
   }
 
-  getHiddenFlagAndValue(actor, effect) {
+  getFlags(effect) {
+    return effect?.flags?.stealthy;
+  }
+
+  getStealthFlag(effect) {
+    const flags = this.getFlags(effect);
+    const { hidden } = flags;
+    return { hidden };
+  }
+
+  getStealthValue(actor, flag) {
+    return flag?.hidden;
+  }
+
+  // deprecated API
+  getStealthFlagAndValue(actor, effect) {
     // Return the data necessary for storing data about hidden, and the
     // value that should be shown on the token button input
-    return { flag: { hidden: undefined }, value: undefined };
+    return {
+      flag: this.getStealthFlag(effect),
+      value: this.getStealthValue(actor, flag)
+    };
   }
 
   async setHiddenValue(actor, effect, flag, value) {

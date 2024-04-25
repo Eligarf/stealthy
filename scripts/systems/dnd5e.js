@@ -197,12 +197,8 @@ class Engine5e extends Engine {
     };
   }
 
-  getHiddenFlagAndValue(actor, effect) {
-    const value = effect?.flags.stealthy?.hidden ?? actor.system.skills.ste.passive;
-    return {
-      flag: { hidden: value },
-      value
-    };
+  getStealthValue(actor, flag) {
+    return super.getStealthValue(actor, flag) ?? actor.system.skills.ste.passive;
   }
 
   getSpotFlagAndValue(actor, effect) {

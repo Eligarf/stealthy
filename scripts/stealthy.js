@@ -20,10 +20,11 @@ export class Stealthy {
     return value;
   }
 
+  // Deprecated API
   getHiddenValue(actor) {
     const effect = this.engine.findHiddenEffect(actor);
-    const { value } = this.engine.getHiddenFlagAndValue(actor, effect);
-    return value;
+    const flag = this.engine.getStealthFlag(effect);
+    return this.engine.getStealthValue(actor, flag);
   }
 
   static async ToggleActiveSpot(toggled) {

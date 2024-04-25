@@ -33,9 +33,8 @@ class Engine4e extends Engine {
     return  perception > stealth;
   }
 
-  getHiddenFlagAndValue(actor, effect) {
-    const value = effect.flags.stealthy?.hidden ?? (10 + actor.system.skills.stl.total);
-    return { flag: { hidden: value }, value };
+  getStealthValue(actor, flag) {
+    return super.getStealthValue(actor, flag) ?? (10 + actor.system.skills.stl.total);
   }
 
   getSpotFlagAndValue(actor, effect) {

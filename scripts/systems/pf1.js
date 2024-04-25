@@ -132,9 +132,8 @@ export class EnginePF1 extends Engine {
     stealthy.socket.executeForEveryone('RefreshPerception');
   }
 
-  getHiddenFlagAndValue(actor, effect) {
-    const value = effect.flags.stealthy?.hidden ?? (10 + actor.system.skills.ste.value);
-    return { flag: { hidden: value }, value };
+  getStealthValue(actor, flag) {
+    return super.getStealthValue(actor, flag) ?? (10 + actor.system.skills.ste.value);
   }
 
   async setHiddenValue(actor, effect, flag, value) {

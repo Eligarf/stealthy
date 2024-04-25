@@ -148,7 +148,8 @@ Hooks.on('renderTokenHUD', (tokenHUD, html, app) => {
 
     const hiddenEffect = engine.findHiddenEffect(actor);
     if (hiddenEffect) {
-      let { flag, value } = engine.getHiddenFlagAndValue(actor, hiddenEffect);
+      let flag = engine.getStealthFlag(hiddenEffect);
+      let value = engine.getStealthValue(actor, flag);
       const inputBox = $(
         `<input id="ste_hid_inp_box" title="${game.i18n.localize("stealthy.hidden.inputBox")}" type="text" name="hidden_value_inp_box" value="${value}"></input>`
       );
