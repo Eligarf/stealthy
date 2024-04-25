@@ -136,7 +136,8 @@ export class EnginePF1 extends Engine {
     return super.getStealthValue(flag, actor) ?? (10 + actor.system.skills.ste.value);
   }
 
-  async setHiddenValue(actor, effect, flag, value) {
+  async setStealthValue(flag, value, actor, effect) {
+    Stealthy.log(`Setting ${actor.name}'s Stealth to ${value}`);
     flag.hidden = value;
     effect.flags.stealthy = flag;
     await actor.updateEmbeddedDocuments('Item', [effect]);
@@ -184,7 +185,8 @@ export class EnginePF1 extends Engine {
     return super.getPerceptionValue(flag, actor) ?? (spotTake10 ? 10 + actor.system.skills.per.mod : undefined);
   }
 
-  async setSpotValue(actor, effect, flag, value) {
+  async setPerceptionValue(flag, value, actor, effect) {
+    Stealthy.log(`Setting ${actor.name}'s Perception to ${value}`);
     flag.spot = value;
     effect.flags.stealthy = flag;
     await actor.updateEmbeddedDocuments('Item', [effect]);

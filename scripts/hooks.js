@@ -154,7 +154,7 @@ Hooks.on('renderTokenHUD', (tokenHUD, html, app) => {
       if (game.user.isGM == true) {
         inputBox.change(async (inputbox) => {
           if (token === undefined) return;
-          await engine.setHiddenValue(actor, duplicate(hiddenEffect), stealthFlag, Number(inputbox.target.value));
+          await engine.setStealthValue(stealthFlag, Number(inputbox.target.value), actor, duplicate(hiddenEffect));
         });
       }
     }
@@ -170,7 +170,7 @@ Hooks.on('renderTokenHUD', (tokenHUD, html, app) => {
       if (game.user.isGM == true) {
         inputBox.change(async (inputbox) => {
           if (token === undefined) return;
-          await engine.setSpotValue(actor, duplicate(spotEffect), perceptionFlag, Number(inputbox.target.value));
+          await engine.setPerceptionValue(perceptionFlag, Number(inputbox.target.value), actor, duplicate(spotEffect));
         });
       }
     }

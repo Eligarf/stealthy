@@ -218,7 +218,8 @@ class Engine5e extends Engine {
       actor.system.skills.prc.passive;
   }
 
-  async setSpotValue(actor, effect, flag, value) {
+  async setPerceptionValue(flag, value, actor, effect) {
+    Stealthy.log(`Setting ${actor.name}'s Perception to ${value}`);
     const delta = value - flag.spot.normal;
     flag.spot.normal = value;
     flag.spot.disadvantaged += delta;

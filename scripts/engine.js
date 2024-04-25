@@ -188,16 +188,8 @@ export default class Engine {
     return flag?.hidden;
   }
 
-  // deprecated API
-  getHiddenFlagAndValue(actor, effect) {
-    return {
-      flag: this.getStealthFlag(effect),
-      value: this.getStealthValue(flag, actor)
-    };
-  }
-
-  async setHiddenValue(actor, effect, flag, value) {
-    // If the hidden value was changed, do what you need to store it
+  async setStealthValue(flag, value, actor, effect) {
+    Stealthy.log(`Setting ${actor.name}'s Stealth to ${value}`);
     flag.hidden = value;
     effect.flags.stealthy = flag;
     await actor.updateEmbeddedDocuments('ActiveEffect', [effect]);
@@ -226,16 +218,8 @@ export default class Engine {
     return flag?.spot;
   }
 
-  // Deprecated API
-  getSpotFlagAndValue(actor, effect) {
-    return {
-      flag: this.getPerceptionFlag(effect),
-      value: this.getPerceptionValue(flag, actor)
-    };
-  }
-
-  async setSpotValue(actor, effect, flag, value) {
-    // If the spot value was changed, do what you need to store it
+  async setPerceptionValue(flag, value, actor, effect) {
+    Stealthy.log(`Setting ${actor.name}'s Perception to ${value}`);
     flag.spot = value;
     effect.flags.stealthy = flag;
     await actor.updateEmbeddedDocuments('ActiveEffect', [effect]);
