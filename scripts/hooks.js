@@ -135,7 +135,7 @@ Hooks.once('setup', () => {
     type: Boolean,
     default: true,
   });
-  Stealthy.activeSpot = game.settings.get(Stealthy.MODULE_ID, 'activeSpot');
+  stealthy.activeSpot = game.settings.get(Stealthy.MODULE_ID, 'activeSpot');
 
   Stealthy.log(`Initialized ${moduleVersion}`);
 });
@@ -147,9 +147,9 @@ Hooks.on('renderTokenHUD', (tokenHUD, html, app) => {
     const engine = stealthy.engine;
 
     const hiddenEffect = engine.findHiddenEffect(actor);
-    if (hiddenEffect) {
-      let flag = engine.getStealthFlag(hiddenEffect);
-      let value = engine.getStealthValue(flag, actor);
+    let stealthFlag = engine.getStealthFlag(hiddenEffect);
+    if (stealthFlag) {
+      let value = engine.getStealthValue(stealthFlag, actor);
       const inputBox = $(
         `<input id="ste_hid_inp_box" title="${game.i18n.localize("stealthy.hidden.inputBox")}" type="text" name="hidden_value_inp_box" value="${value}"></input>`
       );
@@ -157,15 +157,15 @@ Hooks.on('renderTokenHUD', (tokenHUD, html, app) => {
       if (game.user.isGM == true) {
         inputBox.change(async (inputbox) => {
           if (token === undefined) return;
-          await engine.setHiddenValue(actor, duplicate(hiddenEffect), flag, Number(inputbox.target.value));
+          await engine.setHiddenValue(actor, duplicate(hiddenEffect), stealthFlag, Number(inputbox.target.value));
         });
       }
     }
 
     const spotEffect = engine.findSpotEffect(actor);
-    if (spotEffect) {
-      let flag = engine.getPerceptionFlag(spotEffect);
-      let value = engine.getPerceptionValue(flag, actor);
+    let perceptionFlag = engine.getPerceptionFlag(spotEffect);
+    if (perceptionFlag) {
+      let value = engine.getPerceptionValue(perceptionFlag, actor);
       const inputBox = $(
         `<input id="ste_spt_inp_box" title="${game.i18n.localize("stealthy.spot.inputBox")}" type="text" name="spot_value_inp_box" value="${value}"></input>`
       );
@@ -173,7 +173,7 @@ Hooks.on('renderTokenHUD', (tokenHUD, html, app) => {
       if (game.user.isGM == true) {
         inputBox.change(async (inputbox) => {
           if (token === undefined) return;
-          await engine.setSpotValue(actor, duplicate(spotEffect), flag, Number(inputbox.target.value));
+          await engine.setSpotValue(actor, duplicate(spotEffect), perceptionFlag, Number(inputbox.target.value));
         });
       }
     }
@@ -203,8 +203,12 @@ Hooks.on('renderSettingsConfig', (app, html, data) => {
 });
 
 Hooks.once('ready', async () => {
-  if (!game.modules.get('lib-wrapper')?.active && game.user.isGM)
-    ui.notifications.error("Stealthy requires the 'libWrapper' module. Please install and activate it.");
-  if (!game.user.isGM)
+  if (!game.user.isGM) {
     stealthy.activeSpot = await stealthy.socket.executeAsGM('GetActiveSpot');
+    return;
+  }
+
+  if (!game.modules.get('lib-wrapper')?.active) {
+    ui.notifications.error("Stealthy requires the 'libWrapper' module. Please install and activate it.");
+  }
 });
