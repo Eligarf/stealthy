@@ -227,7 +227,7 @@ export default class Engine {
     return { hidden };
   }
 
-  getStealthValue(actor, flag) {
+  getStealthValue(flag, actor) {
     return flag?.hidden;
   }
 
@@ -235,7 +235,7 @@ export default class Engine {
   getHiddenFlagAndValue(actor, effect) {
     return {
       flag: this.getStealthFlag(effect),
-      value: this.getStealthValue(actor, flag)
+      value: this.getStealthValue(flag, actor)
     };
   }
 
@@ -258,21 +258,21 @@ export default class Engine {
     canvas.perception.update({ initializeVision: true }, true);
   }
 
-  getPerceptionFlag(effect, actor) {
+  getPerceptionFlag(effect) {
     const flags = this.getFlags(effect);
     const spot = flags?.spot;
     return { spot };
   }
 
-  getPerceptionValue(actor, flag) {
+  getPerceptionValue(flag, actor) {
     return flag?.spot;
   }
 
   // Deprecated API
   getSpotFlagAndValue(actor, effect) {
     return {
-      flag: this.getPerceptionFlag(effect, actor),
-      value: this.getPerceptionValue(actor, flag)
+      flag: this.getPerceptionFlag(effect),
+      value: this.getPerceptionValue(flag, actor)
     };
   }
 
@@ -312,8 +312,8 @@ export default class Engine {
     const token = visionSource.object.document;
     const actor = token.actor;
     const effect = this.findSpotEffect(actor);
-    const flag = this.getPerceptionFlag(effect, actor);
-    const perception = this.getPerceptionValue(actor, flag);
+    const flag = this.getPerceptionFlag(effect);
+    const perception = this.getPerceptionValue(flag, actor);
     return perception >= stealth;
   }
 }

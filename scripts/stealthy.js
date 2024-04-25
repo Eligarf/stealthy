@@ -17,15 +17,15 @@ export class Stealthy {
   // Deprecated API
   getSpotValue(actor) {
     const effect = this.engine.findSpotEffect(actor);
-    const flag = this.engine.getPerceptionFlag(effect, actor);
-    return this.engine.getPerceptionValue(actor, flag);
+    const flag = this.engine.getPerceptionFlag(effect);
+    return this.engine.getPerceptionValue(flag, actor);
   }
 
   // Deprecated API
   getHiddenValue(actor) {
     const effect = this.engine.findHiddenEffect(actor);
     const flag = this.engine.getStealthFlag(effect);
-    return this.engine.getStealthValue(actor, flag);
+    return this.engine.getStealthValue(flag, actor);
   }
 
   static async ToggleActiveSpot(toggled) {

@@ -132,8 +132,8 @@ export class EnginePF1 extends Engine {
     stealthy.socket.executeForEveryone('RefreshPerception');
   }
 
-  getStealthValue(actor, flag) {
-    return super.getStealthValue(actor, flag) ?? (10 + actor.system.skills.ste.value);
+  getStealthValue(flag, actor) {
+    return super.getStealthValue(flag, actor) ?? (10 + actor.system.skills.ste.value);
   }
 
   async setHiddenValue(actor, effect, flag, value) {
@@ -179,9 +179,9 @@ export class EnginePF1 extends Engine {
     canvas.perception.update({ initializeVision: true }, true);
   }
 
-  getPerceptionValue(actor, flag) {
+  getPerceptionValue(flag, actor) {
     const spotTake10 = game.settings.get(Stealthy.MODULE_ID, 'spotTake10');
-    return super.getPerceptionValue(actor, flag) ?? (spotTake10 ? 10 + actor.system.skills.per.mod : undefined);
+    return super.getPerceptionValue(flag, actor) ?? (spotTake10 ? 10 + actor.system.skills.per.mod : undefined);
   }
 
   async setSpotValue(actor, effect, flag, value) {

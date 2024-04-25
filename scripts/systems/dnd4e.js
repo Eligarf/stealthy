@@ -33,12 +33,12 @@ class Engine4e extends Engine {
     return  perception > stealth;
   }
 
-  getStealthValue(actor, flag) {
-    return super.getStealthValue(actor, flag) ?? (10 + actor.system.skills.stl.total);
+  getStealthValue(flag, actor) {
+    return super.getStealthValue(flag, actor) ?? (10 + actor.system.skills.stl.total);
   }
 
-  getPerceptionValue(actor, flag) {
-    return super.getPerceptionValue(actor, flag) ?? (10 + actor.system.skills.prc.total);
+  getPerceptionValue(flag, actor) {
+    return super.getPerceptionValue(flag, actor) ?? (10 + actor.system.skills.prc.total);
   }
 
   async rollPerception(message, options, id) {

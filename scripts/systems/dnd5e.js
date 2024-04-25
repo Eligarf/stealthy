@@ -197,30 +197,23 @@ class Engine5e extends Engine {
     };
   }
 
-  getStealthValue(actor, flag) {
-    return super.getStealthValue(actor, flag) ?? actor.system.skills.ste.passive;
+  getStealthValue(flag, actor) {
+    return super.getStealthValue(flag, actor) ?? actor.system.skills.ste.passive;
   }
 
-  getPerceptionFlag(effect, actor) {
+  getPerceptionFlag(effect) {
     const flags = this.getFlags(effect);
     let spot = flags?.spot;
     const active = spot?.normal ?? spot;
-    if (active !== undefined) {
-      spot.normal = active;
-      spot.disadvantaged = spot?.disadvantaged ?? active - 5;
-    }
-    else {
-      spot = {
-        normal: actor.system.skills.prc.passive,
-        disadvantaged: Engine5e.GetPassivePerceptionWithDisadvantage(actor),
-      };
-    }
+    if (active === undefined) return undefined;
+    spot.normal = active;
+    spot.disadvantaged = spot?.disadvantaged ?? active - 5;
     return { spot };
   }
 
-  getPerceptionValue(actor, flag) {
+  getPerceptionValue(flag, actor) {
     return flag?.spot?.normal ??
-      flags?.spot ??
+      flag?.spot ??
       actor.system.skills.prc.passive;
   }
 

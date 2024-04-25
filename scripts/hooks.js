@@ -149,7 +149,7 @@ Hooks.on('renderTokenHUD', (tokenHUD, html, app) => {
     const hiddenEffect = engine.findHiddenEffect(actor);
     if (hiddenEffect) {
       let flag = engine.getStealthFlag(hiddenEffect);
-      let value = engine.getStealthValue(actor, flag);
+      let value = engine.getStealthValue(flag, actor);
       const inputBox = $(
         `<input id="ste_hid_inp_box" title="${game.i18n.localize("stealthy.hidden.inputBox")}" type="text" name="hidden_value_inp_box" value="${value}"></input>`
       );
@@ -164,8 +164,8 @@ Hooks.on('renderTokenHUD', (tokenHUD, html, app) => {
 
     const spotEffect = engine.findSpotEffect(actor);
     if (spotEffect) {
-      let flag = engine.getPerceptionFlag(spotEffect, actor);
-      let value = engine.getPerceptionValue(actor, flag);
+      let flag = engine.getPerceptionFlag(spotEffect);
+      let value = engine.getPerceptionValue(flag, actor);
       const inputBox = $(
         `<input id="ste_spt_inp_box" title="${game.i18n.localize("stealthy.spot.inputBox")}" type="text" name="spot_value_inp_box" value="${value}"></input>`
       );
