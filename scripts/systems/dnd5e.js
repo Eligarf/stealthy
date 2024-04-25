@@ -66,14 +66,13 @@ class Engine5e extends Engine {
       });
 
       if (tlcActive) {
-        const v10 = Math.floor(game.version) < 11;
         game.settings.register(Stealthy.MODULE_ID, 'darkLabel', {
           name: game.i18n.localize("stealthy.dnd5e.dark.key"),
           scope: 'world',
           requiresReload: true,
           config: true,
           type: String,
-          default: v10 ? 'stealthy.dnd5e.dark.label' : 'stealthy.dnd5e.dark.name',
+          default: 'stealthy.dnd5e.dark.name',
         });
 
         game.settings.register(Stealthy.MODULE_ID, 'dimLabel', {
@@ -82,12 +81,12 @@ class Engine5e extends Engine {
           requiresReload: true,
           config: true,
           type: String,
-          default: v10 ? 'stealthy.dnd5e.dim.label' : 'stealthy.dnd5e.dim.name',
+          default: 'stealthy.dnd5e.dim.name',
         });
 
-        this.dimLabel = game.i18n.localize(game.settings.get(Stealthy.MODULE_ID, 'dimLabel'));
-        this.darkLabel = game.i18n.localize(game.settings.get(Stealthy.MODULE_ID, 'darkLabel'));
-        Stealthy.log(`dimLabel='${this.dimLabel}', darkLabel='${this.darkLabel}'`);
+        this.dimName = game.i18n.localize(game.settings.get(Stealthy.MODULE_ID, 'dimLabel'));
+        this.darkName = game.i18n.localize(game.settings.get(Stealthy.MODULE_ID, 'darkLabel'));
+        Stealthy.log(`dimName='${this.dimName}', darkName='${this.darkName}'`);
 
         Hooks.on('renderSettingsConfig', (app, html, data) => {
           $('<div>').addClass('form-group group-header')
@@ -189,9 +188,9 @@ class Engine5e extends Engine {
     return perception > stealth;
   }
 
-  makeSpotEffectMaker(label) {
+  makeSpotEffectMaker(name) {
     return (flag, source) => {
-      let effect = super.makeSpotEffectMaker(label)(flag, source);
+      let effect = super.makeSpotEffectMaker(name)(flag, source);
       if (game.combat) effect.duration = { turns: 1, seconds: 6 };
       return effect;
     };
@@ -292,9 +291,8 @@ class Engine5e extends Engine {
 
     // What light band are we told we sit in?
     let lightBand = 2;
-    const v10 = Math.floor(game.version) < 11;
-    if (target?.effects.find(e => (v10 ? e.label : e.name) === this.darkLabel && !e.disabled)) { lightBand = 0; }
-    if (target?.effects.find(e => (v10 ? e.label : e.name) === this.dimLabel && !e.disabled)) { lightBand = 1; }
+    if (target?.effects.find(e => e.name === this.darkName && !e.disabled)) { lightBand = 0; }
+    if (target?.effects.find(e => e.name === this.dimName && !e.disabled)) { lightBand = 1; }
     debugData.initialLightLevel = Engine5e.LIGHT_LABELS[lightBand];
 
     // Adjust the light band based on conditions

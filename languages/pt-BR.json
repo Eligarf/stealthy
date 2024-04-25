@@ -51,11 +51,6 @@
         "beforeLabel": "Não foi possível encontrar o efeito",
         "afterLabel": "no CE, usando o padrão do Stealthy"
       },
-      "cub": {
-        "name": "Combat Utility Belt",
-        "beforeLabel": "Não foi possível encontrar o efeito",
-        "afterLabel": "no CUB, usando o padrão do Stealthy"
-      },
       "ae": "Stealthy",
       "min": "Stealthy - apenas um ícone"
     },

@@ -23,8 +23,6 @@ class Engine4e extends Engine {
   }
 
   canDetectHidden(visionSource, hiddenEffect, tgtToken) {
-    // Never gets called, neither do the patches for the v10 vision modes
-    // dead in the water
     const source = visionSource.object?.actor;
     const stealth = hiddenEffect.flags.stealthy?.hidden ?? (10 + tgtToken.actor.system.skills.stl.total);
     const spotEffect = this.findSpotEffect(source);

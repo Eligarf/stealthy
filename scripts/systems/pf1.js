@@ -89,17 +89,17 @@ export class EnginePF1 extends Engine {
     return !(perception === undefined || perception <= stealth);
   }
 
-  makeHiddenEffectMaker(label) {
+  makeHiddenEffectMaker(name) {
     Stealthy.log('PF1.makeHiddenEffectMaker not used in PF1');
     return (flag, source) => null;
   }
 
-  makeSpotEffectMaker(label) {
+  makeSpotEffectMaker(name) {
     Stealthy.log('PF1.makeSpotEffectMaker not used in PF1');
     return (flag, source) => null;
   }
 
-  async updateOrCreateEffect({ label, actor, flag, source, makeEffect }) {
+  async updateOrCreateEffect({ name, actor, flag, source, makeEffect }) {
     Stealthy.log('PF1.updateOrCreateEffect not used in PF1');
     return null;
   }

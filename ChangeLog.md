@@ -1,5 +1,6 @@
 # pending
 * Use token flags rather than actor effects to support having an actor on multiple scenes.
+* Drop V10 and CUB support
 
 # v3.18.1
 * Update pt-BR.json (thanks Kharmans)

@@ -38,7 +38,6 @@ Hooks.once('setup', () => {
   let sources = {
     'none': game.i18n.localize("stealthy.source.min"),
     'ae': game.i18n.localize("stealthy.source.ae"),
-    'cub': game.i18n.localize("stealthy.source.cub.name"),
     'ce': game.i18n.localize("stealthy.source.ce.name")
   };
 
@@ -84,8 +83,6 @@ Hooks.once('setup', () => {
     default: 'icons/commodities/biological/eye-blue.webp'
   });
 
-  const v10 = Math.floor(game.version) < 11;
-
   game.settings.register(Stealthy.MODULE_ID, 'hiddenLabel', {
     name: game.i18n.localize("stealthy.hidden.preloc.key"),
     hint: game.i18n.localize("stealthy.hidden.preloc.hint"),
@@ -93,7 +90,7 @@ Hooks.once('setup', () => {
     requiresReload: true,
     config: true,
     type: String,
-    default: v10 ? 'stealthy.hidden.label' : 'stealthy.hidden.name',
+    default: 'stealthy.hidden.name',
   });
 
   game.settings.register(Stealthy.MODULE_ID, 'spotLabel', {
@@ -102,7 +99,7 @@ Hooks.once('setup', () => {
     requiresReload: true,
     config: true,
     type: String,
-    default: v10 ? 'stealthy.spot.label' : 'stealthy.spot.name',
+    default: 'stealthy.spot.name',
   });
 
   game.settings.register(Stealthy.MODULE_ID, 'useTokenFlags', {

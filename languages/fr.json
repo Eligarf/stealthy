@@ -51,11 +51,6 @@
         "beforeLabel": "Impossible de trouver l'effet",
         "afterLabel": "dans CE, en utilisant la valeur par défaut de Stealthy à la place"
       },
-      "cub": {
-        "name": "Combat utility belt",
-        "beforeLabel": "Impossible de trouver l'effet",
-        "afterLabel": "dans CUB, en utilisant la valeur par défaut de Stealthy à la place"
-      },
       "ae": "Effet Furtif",
       "min": "Effet Furtif - juste une icône"
     },

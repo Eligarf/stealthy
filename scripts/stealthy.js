@@ -33,11 +33,10 @@ export class Stealthy {
     stealthy.activeSpot = toggled;
 
     if (!toggled && game.user.isGM) {
-      const v10 = Math.floor(game.version) < 11;
-      const label = game.i18n.localize(v10 ? 'stealthy.spot.label' : 'stealthy.spot.name');
+      const name = game.i18n.localize('stealthy.spot.name');
       for (let token of canvas.tokens.placeables) {
         const actor = token.actor;
-        const spot = actor.effects.find(e => (v10 ? e.label : e.name) === label);
+        const spot = actor.effects.find(e => e.name === name);
         if (spot) {
           actor.deleteEmbeddedDocuments('ActiveEffect', [spot.id]);
         }

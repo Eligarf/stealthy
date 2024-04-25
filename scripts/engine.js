@@ -22,11 +22,10 @@ export default class Engine {
 
 
     this.warnedMissingCE = false;
-    this.warnedMissingCUB = false;
     Hooks.once('setup', () => {
-      this.hiddenLabel = game.i18n.localize(game.settings.get(Stealthy.MODULE_ID, 'hiddenLabel'));
-      this.spotLabel = game.i18n.localize(game.settings.get(Stealthy.MODULE_ID, 'spotLabel'));
-      Stealthy.log(`hiddenLabel='${this.hiddenLabel}', spotLabel='${this.spotLabel}'`);
+      this.hiddenName = game.i18n.localize(game.settings.get(Stealthy.MODULE_ID, 'hiddenLabel'));
+      this.spotName = game.i18n.localize(game.settings.get(Stealthy.MODULE_ID, 'spotLabel'));
+      Stealthy.log(`hiddenName='${this.hiddenName}', spotName='${this.spotName}'`);
       if (game.settings.get(Stealthy.MODULE_ID, 'spotSecretDoors')) {
         Doors.initialize();
       }
@@ -72,13 +71,11 @@ export default class Engine {
   }
 
   findHiddenEffect(actor) {
-    const v10 = Math.floor(game.version) < 11;
-    return actor?.effects.find((e) => !e.disabled && (v10 ? e.label : e.name) === this.hiddenLabel );
+    return actor?.effects.find((e) => !e.disabled && e.name === this.hiddenName);
   }
 
   findSpotEffect(actor) {
-    const v10 = Math.floor(game.version) < 11;
-    return actor?.effects.find(e => !e.disabled && (v10 ? e.label : e.name) === this.spotLabel);
+    return actor?.effects.find(e => !e.disabled && e.name === this.spotName);
   }
 
   canDetectHidden(visionSource, hiddenEffect, target) {
@@ -88,34 +85,20 @@ export default class Engine {
     return true;
   }
 
-  makeHiddenEffectMaker(label) {
+  makeHiddenEffectMaker(name) {
     return (flag, source) => {
       let hidden;
-      const v10 = Math.floor(game.version) < 11;
       const hiddenIcon = game.settings.get(Stealthy.MODULE_ID, 'hiddenIcon');
-      if (v10) {
-        hidden = {
-          label,
-          icon: hiddenIcon,
-          changes: [],
-          flags: {
-            convenientDescription: game.i18n.localize("stealthy.hidden.description"),
-            stealthy: flag,
-            core: { statusId: '1' },
-          },
-        };
-      } else {
-        hidden = {
-          name: label,
-          icon: hiddenIcon,
-          changes: [],
-          description: game.i18n.localize("stealthy.hidden.description"),
-          flags: {
-            stealthy: flag,
-          },
-          statuses: ['hidden'],
-        };
-      }
+      hidden = {
+        name,
+        icon: hiddenIcon,
+        changes: [],
+        description: game.i18n.localize("stealthy.hidden.description"),
+        flags: {
+          stealthy: flag,
+        },
+        statuses: ['hidden'],
+      };
       if (source === 'ae') {
         if (typeof ATLUpdate !== 'undefined') {
           hidden.changes.push({
@@ -129,66 +112,39 @@ export default class Engine {
     };
   }
 
-  makeSpotEffectMaker(label) {
+  makeSpotEffectMaker(name) {
     return (flag, source) => {
       let spot;
-      const v10 = Math.floor(game.version) < 11;
       const spotIcon = game.settings.get(Stealthy.MODULE_ID, 'spotIcon');
-      if (v10) {
-        spot = {
-          label,
-          icon: spotIcon,
-          flags: {
-            convenientDescription: game.i18n.localize("stealthy.spot.description"),
-            stealthy: flag,
-            core: { statusId: '1' },
-          },
-        };
-      } else {
-        spot = {
-          name: label,
-          icon: spotIcon,
-          description: game.i18n.localize("stealthy.spot.description"),
-          flags: {
-            stealthy: flag,
-          },
-          statuses: ['spot'],
-        };
-      }
+      spot = {
+        name,
+        icon: spotIcon,
+        description: game.i18n.localize("stealthy.spot.description"),
+        flags: {
+          stealthy: flag,
+        },
+        statuses: ['spot'],
+      };
       return spot;
     };
   }
 
-  async updateOrCreateEffect({ label, actor, flag, source, makeEffect }) {
-    const v10 = Math.floor(game.version) < 11;
-    let effect = actor.effects.find(e => (v10 ? e.label : e.name) === label);
+  async updateOrCreateEffect({ name, actor, flag, source, makeEffect }) {
+    let effect = actor.effects.find(e => e.name === name);
 
     if (!effect) {
       // See if we can source from outside
       if (source === 'ce') {
-        if (game.dfreds?.effectInterface?.findEffectByName(label)) {
-          await game.dfreds.effectInterface.addEffect({ effectName: label, uuid: actor.uuid });
-          effect = actor.effects.find(e => (v10 ? e.label : e.name) === label);
+        if (game.dfreds?.effectInterface?.findEffectByName(name)) {
+          await game.dfreds.effectInterface.addEffect({ effectName: name, uuid: actor.uuid });
+          effect = actor.effects.find(e => e.name === name);
         }
         if (!effect && !this.warnedMissingCE) {
           this.warnedMissingCE = true;
           if (game.user.isGM)
             ui.notifications.warn(
-              `${game.i18n.localize('stealthy.source.ce.beforeLabel')} '${label}' ${game.i18n.localize('stealthy.source.ce.afterLabel')}`);
-          console.error(`stealthy | Convenient Effects couldn't find the '${label}' effect so Stealthy will use the default one. Add your customized effect to CE or select a different effect source in Game Settings`);
-        }
-      }
-      else if (source === 'cub') {
-        if (game.cub?.getCondition(label)) {
-          await game.cub.applyCondition(label, actor);
-          effect = actor.effects.find(e => (v10 ? e.label : e.name) === label);
-        }
-        if (!effect && !this.warnedMissingCUB) {
-          this.warnedMissingCUB = true;
-          if (game.user.isGM)
-            ui.notifications.warn(
-              `${game.i18n.localize('stealthy.source.cub.beforeLabel')} '${label}' ${game.i18n.localize('stealthy.source.cub.afterLabel')}`);
-          console.error(`stealthy | Combat Utility Belt couldn't find the '${label}' effect so Stealthy will use the default one. Add your customized effect to CUB or select a different effect source in Game Settings`);
+              `${game.i18n.localize('stealthy.source.ce.beforeLabel')} '${name}' ${game.i18n.localize('stealthy.source.ce.afterLabel')}`);
+          console.error(`stealthy | Convenient Effects couldn't find the '${name}' effect so Stealthy will use the default one. Add your customized effect to CE or select a different effect source in Game Settings`);
         }
       }
 
@@ -208,11 +164,11 @@ export default class Engine {
 
   async updateOrCreateHiddenEffect(actor, flag) {
     await this.updateOrCreateEffect({
-      label: this.hiddenLabel,
+      name: this.hiddenName,
       actor,
       flag,
       source: game.settings.get(Stealthy.MODULE_ID, 'hiddenSource'),
-      makeEffect: this.makeHiddenEffectMaker(this.hiddenLabel)
+      makeEffect: this.makeHiddenEffectMaker(this.hiddenName)
     });
     stealthy.socket.executeForEveryone('RefreshPerception');
   }
@@ -250,11 +206,11 @@ export default class Engine {
 
   async updateOrCreateSpotEffect(actor, flag) {
     await this.updateOrCreateEffect({
-      label: this.spotLabel,
+      name: this.spotName,
       actor,
       flag,
       source: game.settings.get(Stealthy.MODULE_ID, 'spotSource'),
-      makeEffect: this.makeSpotEffectMaker(this.spotLabel)
+      makeEffect: this.makeSpotEffectMaker(this.spotName)
     });
     canvas.perception.update({ initializeVision: true }, true);
   }

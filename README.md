@@ -14,7 +14,7 @@ A module for [FoundryVTT](https://foundryvtt.com) that adds perception vs stealt
 # Features
 
 ## Rolling Stealth checks applies the Hidden effect
-Rolling a Stealth skill check will apply the Hidden effect to the actor and record the result of the check in that effect for later comparisons, replacing the stored result if the Hidden effect is already present. Stealthy's default Hidden effect can be overriden by adding a custom Hidden effect in either Convenient Effects or CUB.
+Rolling a Stealth skill check will apply the Hidden effect to the actor and record the result of the check in that effect for later comparisons, replacing the stored result if the Hidden effect is already present. Stealthy's default Hidden effect can be overriden by adding a custom Hidden effect in Convenient Effects.
 
 ***See [Handling Hidden removal](#handling-hidden-removal)***
 
