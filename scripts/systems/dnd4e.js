@@ -37,9 +37,8 @@ class Engine4e extends Engine {
     return super.getStealthValue(actor, flag) ?? (10 + actor.system.skills.stl.total);
   }
 
-  getSpotFlagAndValue(actor, effect) {
-    const value = effect?.flags?.stealthy?.spot ?? (10 + actor.system.skills.prc.total);
-    return { flag: { spot: value }, value };
+  getPerceptionValue(actor, flag) {
+    return super.getPerceptionValue(actor, flag) ?? (10 + actor.system.skills.prc.total);
   }
 
   async rollPerception(message, options, id) {

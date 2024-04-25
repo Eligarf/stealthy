@@ -164,7 +164,8 @@ Hooks.on('renderTokenHUD', (tokenHUD, html, app) => {
 
     const spotEffect = engine.findSpotEffect(actor);
     if (spotEffect) {
-      let { flag, value } = engine.getSpotFlagAndValue(actor, spotEffect);
+      let flag = engine.getPerceptionFlag(spotEffect, actor);
+      let value = engine.getPerceptionValue(actor, flag);
       const inputBox = $(
         `<input id="ste_spt_inp_box" title="${game.i18n.localize("stealthy.spot.inputBox")}" type="text" name="spot_value_inp_box" value="${value}"></input>`
       );

@@ -223,7 +223,7 @@ export default class Engine {
 
   getStealthFlag(effect) {
     const flags = this.getFlags(effect);
-    const { hidden } = flags;
+    const hidden = flags?.hidden;
     return { hidden };
   }
 
@@ -232,9 +232,7 @@ export default class Engine {
   }
 
   // deprecated API
-  getStealthFlagAndValue(actor, effect) {
-    // Return the data necessary for storing data about hidden, and the
-    // value that should be shown on the token button input
+  getHiddenFlagAndValue(actor, effect) {
     return {
       flag: this.getStealthFlag(effect),
       value: this.getStealthValue(actor, flag)
@@ -260,10 +258,22 @@ export default class Engine {
     canvas.perception.update({ initializeVision: true }, true);
   }
 
+  getPerceptionFlag(effect, actor) {
+    const flags = this.getFlags(effect);
+    const spot = flags?.spot;
+    return { spot };
+  }
+
+  getPerceptionValue(actor, flag) {
+    return flag?.spot;
+  }
+
+  // Deprecated API
   getSpotFlagAndValue(actor, effect) {
-    // Return the data necessary for storing data about spot, and the
-    // value that should be shown on the token button input
-    return { flag: { spot: undefined }, value: undefined };
+    return {
+      flag: this.getPerceptionFlag(effect, actor),
+      value: this.getPerceptionValue(actor, flag)
+    };
   }
 
   async setSpotValue(actor, effect, flag, value) {
@@ -301,7 +311,9 @@ export default class Engine {
     const stealth = stealthyFlags.stealth;
     const token = visionSource.object.document;
     const actor = token.actor;
-    const { value: perception } = this.getSpotFlagAndValue(actor, this.findSpotEffect(actor));
+    const effect = this.findSpotEffect(actor);
+    const flag = this.getPerceptionFlag(effect, actor);
+    const perception = this.getPerceptionValue(actor, flag);
     return perception >= stealth;
   }
 }

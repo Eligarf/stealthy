@@ -179,11 +179,9 @@ export class EnginePF1 extends Engine {
     canvas.perception.update({ initializeVision: true }, true);
   }
 
-  getSpotFlagAndValue(actor, effect) {
+  getPerceptionValue(actor, flag) {
     const spotTake10 = game.settings.get(Stealthy.MODULE_ID, 'spotTake10');
-    const value = effect?.flags?.stealthy?.spot
-      ?? (spotTake10 ? 10 + actor.system.skills.per.mod : undefined);
-    return { flag: { spot: value }, value };
+    return super.getPerceptionValue(actor, flag) ?? (spotTake10 ? 10 + actor.system.skills.per.mod : undefined);
   }
 
   async setSpotValue(actor, effect, flag, value) {

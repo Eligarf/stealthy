@@ -14,10 +14,11 @@ export class Stealthy {
     });
   }
 
+  // Deprecated API
   getSpotValue(actor) {
     const effect = this.engine.findSpotEffect(actor);
-    const { value } = this.engine.getSpotFlagAndValue(actor, effect);
-    return value;
+    const flag = this.engine.getPerceptionFlag(effect, actor);
+    return this.engine.getPerceptionValue(actor, flag);
   }
 
   // Deprecated API

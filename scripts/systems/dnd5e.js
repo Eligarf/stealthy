@@ -201,21 +201,27 @@ class Engine5e extends Engine {
     return super.getStealthValue(actor, flag) ?? actor.system.skills.ste.passive;
   }
 
-  getSpotFlagAndValue(actor, effect) {
-    let flag = { normal: undefined, disadvantaged: undefined };
-    const active = effect?.flags.stealthy?.spot?.normal ?? effect?.flags.stealthy?.spot;
+  getPerceptionFlag(effect, actor) {
+    const flags = this.getFlags(effect);
+    let spot = flags?.spot;
+    const active = spot?.normal ?? spot;
     if (active !== undefined) {
-      flag.normal = active;
-      flag.disadvantaged = effect.flags.stealthy?.spot?.disadvantaged ?? active - 5;
+      spot.normal = active;
+      spot.disadvantaged = spot?.disadvantaged ?? active - 5;
     }
     else {
-      flag.normal = actor.system.skills.prc.passive;
-      flag.disadvantaged = Engine5e.GetPassivePerceptionWithDisadvantage(actor);
+      spot = {
+        normal: actor.system.skills.prc.passive,
+        disadvantaged: Engine5e.GetPassivePerceptionWithDisadvantage(actor),
+      };
     }
-    return {
-      flag: { spot: flag },
-      value: flag.normal
-    };
+    return { spot };
+  }
+
+  getPerceptionValue(actor, flag) {
+    return flag?.spot?.normal ??
+      flags?.spot ??
+      actor.system.skills.prc.passive;
   }
 
   async setSpotValue(actor, effect, flag, value) {
