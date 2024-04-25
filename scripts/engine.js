@@ -224,7 +224,7 @@ export default class Engine {
   getStealthFlag(effect) {
     const flags = this.getFlags(effect);
     const hidden = flags?.hidden;
-    return { hidden };
+    return hidden ? { hidden } : undefined;
   }
 
   getStealthValue(flag, actor) {
@@ -261,7 +261,7 @@ export default class Engine {
   getPerceptionFlag(effect) {
     const flags = this.getFlags(effect);
     const spot = flags?.spot;
-    return { spot };
+    return spot ? { spot } : undefined;
   }
 
   getPerceptionValue(flag, actor) {
