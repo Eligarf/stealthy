@@ -135,7 +135,7 @@ export class EnginePF1 extends Engine {
   getStealthFlag(token) {
     let flag = super.getStealthFlag(token);
     if (flag && flag.stealth === undefined)
-      flag.stealth = flag.token.actor.system.skills.ste.value;
+      flag.stealth = 10 + token.actor.system.skills.ste.mod;
     return flag;
   }
 
@@ -186,9 +186,15 @@ export class EnginePF1 extends Engine {
     canvas.perception.update({ initializeVision: true }, true);
   }
 
-  getPerceptionValue(flag) {
-    const spotTake10 = game.settings.get(Stealthy.MODULE_ID, 'spotTake10');
-    return super.getPerceptionValue(flag) ?? (spotTake10 ? 10 + flag?.token?.actor.system.skills.per.mod : undefined);
+  getPerceptionFlag(token) {
+    const flag = super.getPerceptionFlag(token);
+    if (flag) return flag;
+    if (!game.settings.get(Stealthy.MODULE_ID, 'spotTake10')) return undefined;
+    return {
+      token,
+      passive: true,
+      perception: 10 + token.actor.system.skills.per.mod
+    };
   }
 
   async setPerceptionValue(flag, value) {

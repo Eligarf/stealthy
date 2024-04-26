@@ -40,8 +40,14 @@ class Engine4e extends Engine {
     return flag;
   }
 
-  getPerceptionValue(flag) {
-    return super.getPerceptionValue(flag) ?? (10 + flag?.token?.actor.system.skills.prc.total);
+  getPerceptionFlag(token) {
+    const flag = super.getPerceptionFlag(token);
+    if (flag) return flag;
+    return {
+      token,
+      passive: true,
+      perception: 10 + token.actor.system.skills.prc.total
+    };
   }
 
   async rollPerception(message, options, id) {

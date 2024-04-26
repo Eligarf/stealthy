@@ -226,10 +226,22 @@ class Engine5e extends Engine {
     return { perception, effect, token };
   }
 
+  getPerceptionFlag(token) {
+    const flag = super.getPerceptionFlag(token);
+    if (flag) return flag;
+    const passive = token.actor.system.skills.prc.passive;
+    return {
+      token,
+      passive: true,
+      perception: {
+        normal: passive,
+        disadvantaged: passive - 5
+      }
+    };
+  }
+
   getPerceptionValue(flag) {
-    return flag?.perception?.normal ??
-      flag?.perception ??
-      flag?.token?.actor.system.skills.prc.passive;
+    return flag?.perception?.normal ?? flag?.perception;
   }
 
   async setPerceptionValue(flag, value) {
