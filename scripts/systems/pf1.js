@@ -197,7 +197,7 @@ export class EnginePF1 extends Engine {
     if (!('stealthy' in effect.flags)) effect.flags.stealthy = { perception: value };
     else effect.flags.stealthy.perception = value;
 
-    const actor = flag?.token?.actor;
+    const actor = flag.token.actor;
     await actor.updateEmbeddedDocuments('Item', [effect]);
     canvas.perception.update({ initializeVision: true }, true);
   }
