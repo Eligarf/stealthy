@@ -111,7 +111,7 @@ Hooks.once('setup', () => {
     type: Boolean,
     default: false,
   });
-  Stealthy.useTokenFlags = game.settings.get(Stealthy.MODULE_ID, 'useTokenFlags');
+  stealthy.useTokenFlags = game.settings.get(Stealthy.MODULE_ID, 'useTokenFlags');
 
   game.settings.register(Stealthy.MODULE_ID, 'logLevel', {
     name: game.i18n.localize("stealthy.logLevel.name"),
