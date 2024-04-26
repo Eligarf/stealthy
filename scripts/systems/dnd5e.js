@@ -213,20 +213,6 @@ class Engine5e extends Engine {
   }
 
   getPerceptionFlag(token) {
-    const actor = token?.actor;
-    const effect = this.findSpotEffect(actor);
-    if (!effect) return undefined;
-    const flags = this.getFlags(effect);
-    let perception = flags?.perception ?? flags?.spot;
-    const active = perception?.normal ?? perception;
-    if (active !== undefined) {
-      perception.normal = active;
-      perception.disadvantaged = perception?.disadvantaged ?? active - 5;
-    }
-    return { perception, effect, token };
-  }
-
-  getPerceptionFlag(token) {
     const flag = super.getPerceptionFlag(token);
     if (flag) return flag;
     const passive = token.actor.system.skills.prc.passive;
