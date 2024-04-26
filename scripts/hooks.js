@@ -143,8 +143,7 @@ Hooks.on('renderTokenHUD', (tokenHUD, html, app) => {
     const actor = token?.actor;
     const engine = stealthy.engine;
 
-    const hiddenEffect = engine.findHiddenEffect(actor);
-    let stealthFlag = engine.getStealthFlag({ effect: hiddenEffect, token });
+    let stealthFlag = engine.getStealthFlag(token);
     if (stealthFlag) {
       let value = engine.getStealthValue(stealthFlag);
       const inputBox = $(

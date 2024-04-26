@@ -78,8 +78,9 @@ export class EnginePF1 extends Engine {
     return actor?.items.find(i => i.name === 'Spot' && i.system.active);
   }
 
-  canDetectHidden(visionSource, hiddenEffect, tgtToken, detectionMode) {
-    const stealthFlag = this.getStealthFlag({ effect: hiddenEffect, token: tgtToken });
+  canDetectHidden(visionSource, tgtToken, detectionMode) {
+    const stealthFlag = this.getStealthFlag(tgtToken);
+    if (!stealthFlag) return true;
     const stealth = this.getStealthValue(stealthFlag);
 
     const source = visionSource.object?.actor;

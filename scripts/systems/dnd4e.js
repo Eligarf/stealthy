@@ -22,8 +22,9 @@ class Engine4e extends Engine {
     });
   }
 
-  canDetectHidden(visionSource, hiddenEffect, tgtToken) {
-    const stealthFlag = this.getStealthFlag({ effect: hiddenEffect, token: tgtToken });
+  canDetectHidden(visionSource, tgtToken, detectionMode) {
+    const stealthFlag = this.getStealthFlag(tgtToken);
+    if (!stealthFlag) return true;
     const stealth = this.getStealthValue(stealthFlag);
 
     const source = visionSource.object?.actor;

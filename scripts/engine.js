@@ -64,10 +64,7 @@ export default class Engine {
       if (friendlyStealth === 'ignore' || !game.combat && friendlyStealth === 'inCombat') return false;
     }
 
-    const hiddenEffect = this.findHiddenEffect(tgtToken?.actor);
-    if (!hiddenEffect) return false;
-
-    return !this.canDetectHidden(visionSource, hiddenEffect, tgtToken, detectionMode);
+    return !this.canDetectHidden(visionSource, tgtToken, detectionMode);
   }
 
   findHiddenEffect(actor) {
@@ -78,7 +75,7 @@ export default class Engine {
     return actor?.effects.find(e => !e.disabled && e.name === this.spotName);
   }
 
-  canDetectHidden(visionSource, hiddenEffect, target) {
+  canDetectHidden(visionSource, target, detectionMode) {
     // Implement your system's method for testing spot data vs hidden data
     // This should would in the absence of a spot effect on the viewer, using
     // a passive or default value as necessary
@@ -177,7 +174,9 @@ export default class Engine {
     return effect?.flags?.stealthy;
   }
 
-  getStealthFlag({ effect, token }) {
+  getStealthFlag(token) {
+    const actor = token?.actor;
+    const effect = this.findHiddenEffect(actor);
     if (!effect) return undefined;
     const flags = this.getFlags(effect);
     const stealth = flags?.stealth ?? flags?.hidden;
