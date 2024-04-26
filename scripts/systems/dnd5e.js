@@ -257,7 +257,18 @@ class Engine5e extends Engine {
       }
     }
 
-    await this.updateOrCreateSpotEffect(actor, { perception });
+    if (stealthy.useTokenFlags) {
+      const token = canvas.tokens.controlled.find((t) => t.actor === actor);
+      if (!token) return;
+      let update = {
+        _id: token.id,
+        'flags.stealthy.perception': perception
+      };
+      Stealthy.log('update', update);
+      await canvas.scene.updateEmbeddedDocuments("Token", [update]);
+    } else {
+      await this.updateOrCreateSpotEffect(actor, { perception });
+    }
 
     super.rollPerception();
   }
@@ -265,7 +276,17 @@ class Engine5e extends Engine {
   async rollStealth(actor, roll) {
     Stealthy.log('Stealthy5e.rollStealth', { actor, roll });
 
-    await this.updateOrCreateHiddenEffect(actor, { stealth: roll.total });
+    if (stealthy.useTokenFlags) {
+      const token = canvas.tokens.controlled.find((t) => t.actor === actor);
+      if (!token) return;
+      let update = {
+        _id: token.id,
+        'flags.stealthy.stealth': roll.total
+      };
+      await canvas.scene.updateEmbeddedDocuments("Token", [update]);
+    } else {
+      await this.updateOrCreateHiddenEffect(actor, { stealth: roll.total });
+    }
 
     super.rollStealth();
   }
