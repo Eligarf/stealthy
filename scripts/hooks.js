@@ -144,9 +144,9 @@ Hooks.on('renderTokenHUD', (tokenHUD, html, app) => {
     const engine = stealthy.engine;
 
     const hiddenEffect = engine.findHiddenEffect(actor);
-    let stealthFlag = engine.getStealthFlag(hiddenEffect);
+    let stealthFlag = engine.getStealthFlag({ effect: hiddenEffect, actor });
     if (stealthFlag) {
-      let value = engine.getStealthValue(stealthFlag, actor);
+      let value = engine.getStealthValue(stealthFlag);
       const inputBox = $(
         `<input id="ste_hid_inp_box" title="${game.i18n.localize("stealthy.hidden.inputBox")}" type="text" name="hidden_value_inp_box" value="${value}"></input>`
       );
@@ -154,15 +154,15 @@ Hooks.on('renderTokenHUD', (tokenHUD, html, app) => {
       if (game.user.isGM == true) {
         inputBox.change(async (inputbox) => {
           if (token === undefined) return;
-          await engine.setStealthValue(stealthFlag, Number(inputbox.target.value), actor, duplicate(hiddenEffect));
+          await engine.setStealthValue(stealthFlag, Number(inputbox.target.value));
         });
       }
     }
 
     const spotEffect = engine.findSpotEffect(actor);
-    let perceptionFlag = engine.getPerceptionFlag(spotEffect);
+    let perceptionFlag = engine.getPerceptionFlag({ effect: spotEffect, actor });
     if (perceptionFlag) {
-      let value = engine.getPerceptionValue(perceptionFlag, actor);
+      let value = engine.getPerceptionValue(perceptionFlag);
       const inputBox = $(
         `<input id="ste_spt_inp_box" title="${game.i18n.localize("stealthy.spot.inputBox")}" type="text" name="spot_value_inp_box" value="${value}"></input>`
       );
@@ -170,7 +170,7 @@ Hooks.on('renderTokenHUD', (tokenHUD, html, app) => {
       if (game.user.isGM == true) {
         inputBox.change(async (inputbox) => {
           if (token === undefined) return;
-          await engine.setPerceptionValue(perceptionFlag, Number(inputbox.target.value), actor, duplicate(spotEffect));
+          await engine.setPerceptionValue(perceptionFlag, Number(inputbox.target.value));
         });
       }
     }

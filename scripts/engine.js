@@ -177,21 +177,24 @@ export default class Engine {
     return effect?.flags?.stealthy;
   }
 
-  getStealthFlag(effect) {
+  getStealthFlag({ effect, actor }) {
     if (!effect) return undefined;
     const flags = this.getFlags(effect);
-    const hidden = flags?.hidden;
-    return { hidden };
+    const stealth = flags?.stealth ?? flags?.hidden;
+    return { stealth, effect, actor };
   }
 
-  getStealthValue(flag, actor) {
-    return flag?.hidden;
+  getStealthValue(flag) {
+    return flag?.stealth;
   }
 
-  async setStealthValue(flag, value, actor, effect) {
-    Stealthy.log(`Setting ${actor.name}'s Stealth to ${value}`);
-    flag.hidden = value;
-    effect.flags.stealthy = flag;
+  async setStealthValue(flag, value) {
+    Stealthy.log('setStealthValue', { flag, value });
+    let effect = duplicate(flag?.effect);
+    if (!('stealthy' in effect.flags)) effect.flags.stealthy = { stealth: value };
+    else effect.flags.stealthy.stealth = value;
+
+    const actor = flag?.actor;
     await actor.updateEmbeddedDocuments('ActiveEffect', [effect]);
     stealthy.socket.executeForEveryone('RefreshPerception');
   }
@@ -207,21 +210,24 @@ export default class Engine {
     canvas.perception.update({ initializeVision: true }, true);
   }
 
-  getPerceptionFlag(effect) {
+  getPerceptionFlag({ effect, actor }) {
     if (!effect) return undefined;
     const flags = this.getFlags(effect);
-    const spot = flags?.spot;
-    return { spot };
+    const perception = flags?.perception ?? flags?.spot;
+    return { perception, effect, actor };
   }
 
-  getPerceptionValue(flag, actor) {
-    return flag?.spot;
+  getPerceptionValue(flag) {
+    return flag?.perception;
   }
 
-  async setPerceptionValue(flag, value, actor, effect) {
-    Stealthy.log(`Setting ${actor.name}'s Perception to ${value}`);
-    flag.spot = value;
-    effect.flags.stealthy = flag;
+  async setPerceptionValue(flag, value) {
+    Stealthy.log('setPerceptionValue', { flag, value });
+    let effect = duplicate(flag?.effect);
+    if (!('stealthy' in effect.flags)) effect.flags.stealthy = { perception: value };
+    else effect.flags.stealthy.perception = value;
+
+    const actor = flag?.actor;
     await actor.updateEmbeddedDocuments('ActiveEffect', [effect]);
     canvas.perception.update({ initializeVision: true }, true);
   }
@@ -254,8 +260,8 @@ export default class Engine {
     const token = visionSource.object.document;
     const actor = token.actor;
     const effect = this.findSpotEffect(actor);
-    const flag = this.getPerceptionFlag(effect);
-    const perception = this.getPerceptionValue(flag, actor);
+    const flag = this.getPerceptionFlag({ effect, actor });
+    const perception = this.getPerceptionValue(flag);
     return perception >= stealth;
   }
 }

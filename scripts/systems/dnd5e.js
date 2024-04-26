@@ -167,23 +167,28 @@ class Engine5e extends Engine {
   static LIGHT_LABELS = ['dark', 'dim', 'bright', 'bright'];
 
   canDetectHidden(visionSource, hiddenEffect, tgtToken, detectionMode) {
+    const target = tgtToken?.actor;
+    const stealthFlag = this.getStealthFlag({ effect: hiddenEffect, actor: target });
+    const stealth = this.getStealthValue(stealthFlag);
+    
     const srcToken = visionSource.object.document;
     const source = srcToken?.actor;
-    const stealth = hiddenEffect.flags.stealthy?.hidden ?? target.actor.system.skills.ste.passive;
-    const spotEffect = this.findSpotEffect(source);
+    const perceptionEffect = this.findSpotEffect(source);
+    const perceptionFlag = this.getPerceptionFlag({ effect: perceptionEffect, actor: source });
 
     // active perception loses ties, passive perception wins ties to simulate the
     // idea that active skills need to win outright to change the status quo. Passive
     // perception means that stealth is being the active skill.
-    const spotPair = spotEffect?.flags.stealthy?.spot;
+    const valuePair = perceptionFlag?.perception;
     let perception;
 
     if (game.settings.get(Stealthy.MODULE_ID, 'tokenLighting')) {
-      perception = this.adjustForLightingConditions(spotPair, visionSource, source, tgtToken.actor, detectionMode);
+      perception = this.adjustForLightingConditions(valuePair, visionSource, source, tgtToken.actor, detectionMode);
     }
     else {
-      perception = this.adjustForDefaultConditions(spotPair, visionSource, source, tgtToken.actor, detectionMode);
+      perception = this.adjustForDefaultConditions(valuePair, visionSource, source, tgtToken.actor, detectionMode);
     }
+    Stealthy.logIfDebug('canDetectHidden', { stealthFlag, stealth, perceptionFlag, perception });
 
     return perception > stealth;
   }
@@ -196,35 +201,36 @@ class Engine5e extends Engine {
     };
   }
 
-  getStealthValue(flag, actor) {
-    return super.getStealthValue(flag, actor) ?? actor.system.skills.ste.passive;
+  getStealthValue(flag) {
+    return super.getStealthValue(flag) ?? flag?.actor.system.skills.ste.passive;
   }
 
-  getPerceptionFlag(effect) {
+  getPerceptionFlag({ effect, actor }) {
     if (!effect) return undefined;
     const flags = this.getFlags(effect);
-    let spot = flags?.spot;
-    const active = spot?.normal ?? spot;
+    let perception = flags?.perception ?? flags?.spot;
+    const active = perception?.normal ?? perception;
     if (active !== undefined) {
-      spot.normal = active;
-      spot.disadvantaged = spot?.disadvantaged ?? active - 5;
+      perception.normal = active;
+      perception.disadvantaged = perception?.disadvantaged ?? active - 5;
     }
-    return { spot };
+    return { perception, effect, actor };
   }
 
-  getPerceptionValue(flag, actor) {
-    return flag?.spot?.normal ??
-      flag?.spot ??
-      actor.system.skills.prc.passive;
+  getPerceptionValue(flag) {
+    return flag?.perception?.normal ??
+      flag?.perception ??
+      flag?.actor.system.skills.prc.passive;
   }
 
-  async setPerceptionValue(flag, value, actor, effect) {
-    Stealthy.log(`Setting ${actor.name}'s Perception to ${value}`);
-    const delta = value - flag.spot.normal;
-    flag.spot.normal = value;
-    flag.spot.disadvantaged += delta;
-    effect.flags.stealthy = flag;
+  async setPerceptionValue(flag, value) {
+    Stealthy.log('setPerceptionValue', { flag, value });
+    let effect = duplicate(flag?.effect);
+    const pair = { normal: value, disadvantaged: value - 5 };
+    if (!('stealthy' in effect.flags)) effect.flags.stealthy = { perception: pair };
+    else effect.flags.stealthy.perception = pair;
 
+    const actor = flag?.actor;
     await actor.updateEmbeddedDocuments('ActiveEffect', [effect]);
     canvas.perception.update({ initializeVision: true }, true);
   }
@@ -251,7 +257,7 @@ class Engine5e extends Engine {
       }
     }
 
-    await this.updateOrCreateSpotEffect(actor, { spot: perception });
+    await this.updateOrCreateSpotEffect(actor, { perception });
 
     super.rollPerception();
   }
@@ -259,7 +265,7 @@ class Engine5e extends Engine {
   async rollStealth(actor, roll) {
     Stealthy.log('Stealthy5e.rollStealth', { actor, roll });
 
-    await this.updateOrCreateHiddenEffect(actor, { hidden: roll.total });
+    await this.updateOrCreateHiddenEffect(actor, { stealth: roll.total });
 
     super.rollStealth();
   }

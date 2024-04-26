@@ -23,20 +23,24 @@ class Engine4e extends Engine {
   }
 
   canDetectHidden(visionSource, hiddenEffect, tgtToken) {
+    const target = tgtToken?.actor;
+    const stealthFlag = this.getStealthFlag({ effect: hiddenEffect, actor: target });
+    const stealth = this.getStealthValue(stealthFlag);
+
     const source = visionSource.object?.actor;
-    const stealth = hiddenEffect.flags.stealthy?.hidden ?? (10 + tgtToken.actor.system.skills.stl.total);
     const spotEffect = this.findSpotEffect(source);
-    const perception = spotEffect?.flags.stealthy?.spot ?? (10 + source.system.skills.prc.total);
+    const perceptionFlag = this.getPerceptionFlag({ effect: spotEffect, actor: source });
+    const perception = this.getPerceptionValue(perceptionFlag);
 
     return  perception > stealth;
   }
 
-  getStealthValue(flag, actor) {
-    return super.getStealthValue(flag, actor) ?? (10 + actor.system.skills.stl.total);
+  getStealthValue(flag) {
+    return super.getStealthValue(flag) ?? (10 + flag?.actor.system.skills.stl.total);
   }
 
-  getPerceptionValue(flag, actor) {
-    return super.getPerceptionValue(flag, actor) ?? (10 + actor.system.skills.prc.total);
+  getPerceptionValue(flag) {
+    return super.getPerceptionValue(flag) ?? (10 + flag?.actor.system.skills.prc.total);
   }
 
   async rollPerception(message, options, id) {
@@ -44,7 +48,7 @@ class Engine4e extends Engine {
 
     const token = canvas.tokens.get(message.speaker.token);
     const actor = token.actor;
-    await this.updateOrCreateSpotEffect(actor, { spot: message.rolls[0].total });
+    await this.updateOrCreateSpotEffect(actor, { perception: message.rolls[0].total });
 
     super.rollPerception();
   }
@@ -54,7 +58,7 @@ class Engine4e extends Engine {
 
     const token = canvas.tokens.get(message.speaker.token);
     const actor = token.actor;
-    await this.updateOrCreateHiddenEffect(actor, { hidden: message.rolls[0].total });
+    await this.updateOrCreateHiddenEffect(actor, { stealth: message.rolls[0].total });
 
     super.rollStealth();
   }

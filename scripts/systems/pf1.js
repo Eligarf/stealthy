@@ -79,12 +79,15 @@ export class EnginePF1 extends Engine {
   }
 
   canDetectHidden(visionSource, hiddenEffect, tgtToken, detectionMode) {
+    const target = tgtToken?.actor;
+    const stealthFlag = this.getStealthFlag({ effect: hiddenEffect, actor: target });
+    const stealth = this.getStealthValue(stealthFlag);
+
     const source = visionSource.object?.actor;
-    const stealth = hiddenEffect.flags.stealthy?.hidden ?? (10 + tgtToken.actor.system.skills.ste.mod);
     const spotEffect = this.findSpotEffect(source);
     const spotTake10 = game.settings.get(Stealthy.MODULE_ID, 'spotTake10');
-    const perception = spotEffect?.flags.stealthy?.spot
-      ?? (spotTake10 ? 10 + source.system.skills.per.mod : undefined);
+    const perceptionFlag = this.getPerceptionFlag({ effect: spotEffect, actor: source });
+    const perception = this.getPerceptionValue(perceptionFlag);
 
     return !(perception === undefined || perception <= stealth);
   }
@@ -132,14 +135,17 @@ export class EnginePF1 extends Engine {
     stealthy.socket.executeForEveryone('RefreshPerception');
   }
 
-  getStealthValue(flag, actor) {
-    return super.getStealthValue(flag, actor) ?? (10 + actor.system.skills.ste.value);
+  getStealthValue(flag) {
+    return super.getStealthValue(flag) ?? (10 + actor?.system.skills.ste.value);
   }
 
-  async setStealthValue(flag, value, actor, effect) {
-    Stealthy.log(`Setting ${actor.name}'s Stealth to ${value}`);
-    flag.hidden = value;
-    effect.flags.stealthy = flag;
+  async setStealthValue(flag, value) {
+    Stealthy.log('setStealthValue', { flag, value });
+    let effect = duplicate(flag?.effect);
+    if (!('stealthy' in effect.flags)) effect.flags.stealthy = { stealth: value };
+    else effect.flags.stealthy.stealth = value;
+
+    const actor = flag?.actor;
     await actor.updateEmbeddedDocuments('Item', [effect]);
     stealthy.socket.executeForEveryone('RefreshPerception');
   }
@@ -180,15 +186,18 @@ export class EnginePF1 extends Engine {
     canvas.perception.update({ initializeVision: true }, true);
   }
 
-  getPerceptionValue(flag, actor) {
+  getPerceptionValue(flag) {
     const spotTake10 = game.settings.get(Stealthy.MODULE_ID, 'spotTake10');
-    return super.getPerceptionValue(flag, actor) ?? (spotTake10 ? 10 + actor.system.skills.per.mod : undefined);
+    return super.getPerceptionValue(flag) ?? (spotTake10 ? 10 + flag?.actor.system.skills.per.mod : undefined);
   }
 
-  async setPerceptionValue(flag, value, actor, effect) {
-    Stealthy.log(`Setting ${actor.name}'s Perception to ${value}`);
-    flag.spot = value;
-    effect.flags.stealthy = flag;
+  async setPerceptionValue(flag, value) {
+    Stealthy.log('setPerceptionValue', { flag, value });
+    let effect = duplicate(flag?.effect);
+    if (!('stealthy' in effect.flags)) effect.flags.stealthy = { perception: value };
+    else effect.flags.stealthy.perception = value;
+
+    const actor = flag?.actor;
     await actor.updateEmbeddedDocuments('Item', [effect]);
     canvas.perception.update({ initializeVision: true }, true);
   }
@@ -196,7 +205,7 @@ export class EnginePF1 extends Engine {
   async rollPerception(actor, message) {
     Stealthy.log('rollPerception', { actor, message });
 
-    await this.updateOrCreateSpotEffect(actor, { spot: message.rolls[0].total });
+    await this.updateOrCreateSpotEffect(actor, { perception: message.rolls[0].total });
 
     super.rollPerception();
   }
@@ -204,7 +213,7 @@ export class EnginePF1 extends Engine {
   async rollStealth(actor, message) {
     Stealthy.log('rollStealth', { actor, message });
 
-    await this.updateOrCreateHiddenEffect(actor, { hidden: message.rolls[0].total });
+    await this.updateOrCreateHiddenEffect(actor, { stealth: message.rolls[0].total });
 
     super.rollStealth();
   }
