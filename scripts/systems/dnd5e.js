@@ -66,27 +66,33 @@ class Engine5e extends Engine {
       });
 
       if (tlcActive) {
-        game.settings.register(Stealthy.MODULE_ID, 'darkLabel', {
-          name: game.i18n.localize("stealthy.dnd5e.dark.key"),
-          scope: 'world',
-          requiresReload: true,
-          config: true,
-          type: String,
-          default: 'stealthy.dnd5e.dark.name',
-        });
-
         game.settings.register(Stealthy.MODULE_ID, 'dimLabel', {
           name: game.i18n.localize("stealthy.dnd5e.dim.key"),
           scope: 'world',
-          requiresReload: true,
           config: true,
           type: String,
           default: 'stealthy.dnd5e.dim.name',
+          onChange: value => {
+            this.dimName = value;
+            Stealthy.log(`dimName='${this.dimName}'`);
+          }
         });
-
         this.dimName = game.i18n.localize(game.settings.get(Stealthy.MODULE_ID, 'dimLabel'));
+        Stealthy.log(`dimName='${this.dimName}'`);
+
+        game.settings.register(Stealthy.MODULE_ID, 'darkLabel', {
+          name: game.i18n.localize("stealthy.dnd5e.dark.key"),
+          scope: 'world',
+          config: true,
+          type: String,
+          default: 'stealthy.dnd5e.dark.name',
+          onChange: value => {
+            this.darkName = value;
+            Stealthy.log(`darkName='${value}'`);
+          }
+        });
         this.darkName = game.i18n.localize(game.settings.get(Stealthy.MODULE_ID, 'darkLabel'));
-        Stealthy.log(`dimName='${this.dimName}', darkName='${this.darkName}'`);
+        Stealthy.log(`darkName='${this.darkName}'`);
 
         Hooks.on('renderSettingsConfig', (app, html, data) => {
           $('<div>').addClass('form-group group-header')

@@ -14,10 +14,12 @@ Hooks.once('setup', () => {
     name: game.i18n.localize("stealthy.tokenBased.name"),
     hint: game.i18n.localize("stealthy.tokenBased.hint"),
     scope: 'world',
-    requiresReload: true,
     config: true,
     type: Boolean,
     default: false,
+    onChange: value => {
+      stealthy.isTokenBased = value;
+    }
   });
   stealthy.isTokenBased = game.settings.get(Stealthy.MODULE_ID, 'isTokenBased');
 
@@ -104,19 +106,23 @@ Hooks.once('setup', () => {
     name: game.i18n.localize("stealthy.hidden.preloc.key"),
     hint: game.i18n.localize("stealthy.hidden.preloc.hint"),
     scope: 'world',
-    requiresReload: true,
     config: true,
     type: String,
     default: 'stealthy.hidden.name',
+    onChange: value => {
+      stealthy.engine.hiddenName = value;
+    }
   });
 
   game.settings.register(Stealthy.MODULE_ID, 'spotLabel', {
     name: game.i18n.localize("stealthy.spot.preloc.key"),
     scope: 'world',
-    requiresReload: true,
     config: true,
     type: String,
     default: 'stealthy.spot.name',
+    onChange: value => {
+      stealthy.engine.spotName = value;
+    }
   });
 
   game.settings.register(Stealthy.MODULE_ID, 'logLevel', {
