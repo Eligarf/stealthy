@@ -40,9 +40,9 @@
     "playerHud": {
       "name": "Autoriser les joueurs à voir (et non à modifier) ​​les valeurs cachées et ponctuelles sur le HUD du jeton"
     },
-    "useTokenFlags": {
-      "name": "Utiliser des indicateurs de jeton",
-      "hint": "Stockez les drapeaux de furtivité et de perception dans des jetons plutôt que de mettre des effets sur les acteurs. Cela permet à un acteur lié d’avoir différentes valeurs de furtivité simultanément dans plusieurs scènes."
+    "tokenBased": {
+      "name": "Store values on token",
+      "hint": "Store stealth and perception flags in tokens rather than putting Effects on Actors. This enables a linked actor to have different stealth values simultaneously in multiple scenes."
     },
     "source": {
       "hint": "Où trouver l'effet",
@@ -53,6 +53,10 @@
       },
       "ae": "Effet Furtif",
       "min": "Effet Furtif - juste une icône"
+    },
+    "schema": {
+      "name": "Schema Version",
+      "hint": "Set this to a previous version to force a data migration from the specified version to the current version"
     },
     "logLevel": {
       "name": "Niveau de journalisation",

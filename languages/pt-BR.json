@@ -34,9 +34,9 @@
     "playerHud": {
       "name": "Permitir que os jogadores vejam (não editem) valores ocultos e visíveis no HUD do token"
     },
-    "useTokenFlags": {
-      "name": "Usar sinalizadores de token",
-      "hint": "Armazene bandeiras de furtividade e percepção em tokens em vez de colocar Efeitos em Atores. Isso permite que um ator vinculado tenha diferentes valores de furtividade simultaneamente em várias cenas."
+    "tokenBased": {
+      "name": "Store values on token",
+      "hint": "Store stealth and perception flags in tokens rather than putting Effects on Actors. This enables a linked actor to have different stealth values simultaneously in multiple scenes."
     },
     "friendlyStealth": {
       "name": "Como tratar tokens amigáveis ​​sob Furtividade",
@@ -53,6 +53,10 @@
       },
       "ae": "Stealthy",
       "min": "Stealthy - apenas um ícone"
+    },
+    "schema": {
+      "name": "Schema Version",
+      "hint": "Set this to a previous version to force a data migration from the specified version to the current version"
     },
     "logLevel": {
       "name": "Nível de Registro",

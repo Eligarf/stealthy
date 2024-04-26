@@ -1,8 +1,25 @@
 import { Stealthy } from "./stealthy.js";
 
+function migrate(moduleVersion, oldVersion) {
+
+  // ui.notifications.warn(`Updated Stealthy from ${oldVersion} to ${moduleVersion}`);
+  return moduleVersion;
+}
+
 Hooks.once('setup', () => {
   const module = game.modules.get(Stealthy.MODULE_ID);
   const moduleVersion = module.version;
+
+  game.settings.register(Stealthy.MODULE_ID, 'isTokenBased', {
+    name: game.i18n.localize("stealthy.tokenBased.name"),
+    hint: game.i18n.localize("stealthy.tokenBased.hint"),
+    scope: 'world',
+    requiresReload: true,
+    config: true,
+    type: Boolean,
+    default: false,
+  });
+  stealthy.isTokenBased = game.settings.get(Stealthy.MODULE_ID, 'isTokenBased');
 
   game.settings.register(Stealthy.MODULE_ID, 'friendlyStealth', {
     name: game.i18n.localize("stealthy.friendlyStealth.name"),
@@ -102,17 +119,6 @@ Hooks.once('setup', () => {
     default: 'stealthy.spot.name',
   });
 
-  game.settings.register(Stealthy.MODULE_ID, 'useTokenFlags', {
-    name: game.i18n.localize("stealthy.useTokenFlags.name"),
-    hint: game.i18n.localize("stealthy.useTokenFlags.hint"),
-    scope: 'world',
-    requiresReload: true,
-    config: true,
-    type: Boolean,
-    default: false,
-  });
-  stealthy.useTokenFlags = game.settings.get(Stealthy.MODULE_ID, 'useTokenFlags');
-
   game.settings.register(Stealthy.MODULE_ID, 'logLevel', {
     name: game.i18n.localize("stealthy.logLevel.name"),
     scope: 'client',
@@ -125,6 +131,27 @@ Hooks.once('setup', () => {
     },
     default: 'none'
   });
+
+  game.settings.register(Stealthy.MODULE_ID, 'schema', {
+    name: game.i18n.localize(`${Stealthy.MODULE_ID}.schema.name`),
+    hint: game.i18n.localize(`${Stealthy.MODULE_ID}.schema.hint`),
+    scope: 'world',
+    config: true,
+    type: String,
+    default: `${moduleVersion}`,
+    onChange: value => {
+      const newValue = migrate(moduleVersion, value);
+      if (value != newValue) {
+        game.settings.set(MODULE_ID, 'schema', newValue);
+      }
+    }
+  });
+  const schemaVersion = game.settings.get(Stealthy.MODULE_ID, 'schema');
+  if (schemaVersion !== moduleVersion) {
+    Hooks.once('ready', () => {
+      game.settings.set(Stealthy.MODULE_ID, 'schema', migrate(moduleVersion, schemaVersion));
+    });
+  }
 
   game.settings.register(Stealthy.MODULE_ID, 'activeSpot', {
     scope: 'world',
@@ -191,7 +218,7 @@ Hooks.on('getSceneControlButtons', (controls) => {
 });
 
 Hooks.on('renderSettingsConfig', (app, html, data) => {
-  $('<div>').addClass('form-group group-header').html(game.i18n.localize("stealthy.config.general")).insertBefore($('[name="stealthy.friendlyStealth"]').parents('div.form-group:first'));
+  $('<div>').addClass('form-group group-header').html(game.i18n.localize("stealthy.config.general")).insertBefore($('[name="stealthy.isTokenBased"]').parents('div.form-group:first'));
   $('<div>').addClass('form-group group-header').html(game.i18n.localize("stealthy.config.advanced")).insertBefore($('[name="stealthy.hiddenLabel"]').parents('div.form-group:first'));
   $('<div>').addClass('form-group group-header').html(game.i18n.localize("stealthy.config.debug")).insertBefore($('[name="stealthy.logLevel"]').parents('div.form-group:first'));
 });
