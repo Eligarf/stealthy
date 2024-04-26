@@ -278,6 +278,12 @@ class Engine5e extends Engine {
       }
     }
 
+    if (!game.settings.get(Stealthy.MODULE_ID, 'ignorePassiveFloor')) {
+      const passivePrc = actor.system.skills.prc.passive;
+      perception.normal = Math.max(perception.normal, passivePrc);
+      perception.disadvantaged = Math.max(perception.disadvantaged, passivePrc - 5);
+    }
+
     if (stealthy.isTokenBased) {
       const token = canvas.tokens.controlled.find((t) => t.actor === actor);
       if (!token) return;
@@ -323,10 +329,6 @@ class Engine5e extends Engine {
       ?? spotPair
       ?? (passivePrc + 1);
     debugData.perception = perception;
-    if (!game.settings.get(Stealthy.MODULE_ID, 'ignorePassiveFloor')) {
-      perception = Math.max(perception, passivePrc);
-      debugData.clampedPerception = perception;
-    }
     Stealthy.logIfDebug('adjustForDefaultConditions', debugData);
     return perception;
   }
@@ -360,7 +362,6 @@ class Engine5e extends Engine {
     }
 
     // Extract the normal perception values from the source
-    const ignorePassiveFloor = game.settings.get(Stealthy.MODULE_ID, 'ignorePassiveFloor');
     let active = spotPair?.normal ?? spotPair;
     let value;
     const passivePrc = source?.system?.skills?.prc?.passive ?? -100;
@@ -387,10 +388,10 @@ class Engine5e extends Engine {
       else {
         value = passiveDisadv;
       }
-      perception = (ignorePassiveFloor) ? value : Math.max(value, passiveDisadv);
+      perception = value;
     }
     else {
-      perception = (ignorePassiveFloor) ? value : Math.max(value, passivePrc);
+      perception = value;
     }
     debugData.perception = perception;
 
