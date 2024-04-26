@@ -185,7 +185,8 @@ Hooks.on('renderTokenHUD', (tokenHUD, html, app) => {
       if (game.user.isGM == true) {
         inputBox.change(async (inputbox) => {
           if (token === undefined) return;
-          await engine.setStealthValue(stealthFlag, Number(inputbox.target.value));
+          const newValue = (!inputbox.target.value.length && stealthy.isTokenBased) ? undefined : Number(inputbox.target.value);
+          await engine.setStealthValue(stealthFlag, newValue);
         });
       }
     }
@@ -200,7 +201,8 @@ Hooks.on('renderTokenHUD', (tokenHUD, html, app) => {
       if (game.user.isGM == true) {
         inputBox.change(async (inputbox) => {
           if (token === undefined) return;
-          await engine.setPerceptionValue(perceptionFlag, Number(inputbox.target.value));
+          const newValue = (!inputbox.target.value.length) ? undefined : Number(inputbox.target.value);
+          await engine.setPerceptionValue(perceptionFlag, newValue);
         });
       }
     }

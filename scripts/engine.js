@@ -175,10 +175,17 @@ export default class Engine {
   }
 
   getStealthFlag(token) {
+    let flags = undefined;
     const actor = token?.actor;
     const effect = this.findHiddenEffect(actor);
-    if (!effect) return undefined;
-    const flags = this.getFlags(effect);
+    if (effect) {
+      flags = this.getFlags(effect);
+    }
+    else if (stealthy.isTokenBased) {
+      const tokenDoc = token instanceof Token ? token.document : token;
+      flags = tokenDoc.flags?.stealthy;
+      if (!flags || !('stealth' in flags)) return undefined;
+    }
     const stealth = flags?.stealth ?? flags?.hidden;
     return { stealth, effect, token };
   }
@@ -187,14 +194,42 @@ export default class Engine {
     return flag?.stealth;
   }
 
+  async setStealthValueInEffect(flag, value, sourceEffect) {
+    Stealthy.log('setStealthValueInEffect', { flag, value, effect });
+    const token = flag.token;
+    let effect = duplicate(sourceEffect);
+    if (!('stealthy' in effect.flags))
+      effect.flags.stealthy = { stealth: value };
+    else effect.flags.stealthy.stealth = value;
+    const actor = token.actor;
+    await actor.updateEmbeddedDocuments('ActiveEffect', [effect]);
+  }
+
   async setStealthValue(flag, value) {
     Stealthy.log('setStealthValue', { flag, value });
-    let effect = duplicate(flag?.effect);
-    if (!('stealthy' in effect.flags)) effect.flags.stealthy = { stealth: value };
-    else effect.flags.stealthy.stealth = value;
+    const token = flag.token;
+    const sourceEffect = flag?.effect;
 
-    const actor = flag.token.actor;
-    await actor.updateEmbeddedDocuments('ActiveEffect', [effect]);
+    // If there is an effect, stuff the flag in it
+    if (sourceEffect) {
+      await this.setStealthValueInEffect(flag, value, sourceEffect);
+    }
+
+    // Otherwise, if we are token based then we need to update the token value
+    else if (stealthy.isTokenBased) {
+      let update = { _id: token.id, };
+      if (value === undefined) {
+        update['flags.stealthy.-=stealth'] = true;
+      } else {
+        update['flags.stealthy.stealth'] = value;
+      }
+      await canvas.scene.updateEmbeddedDocuments("Token", [update]);
+    }
+
+    // Not sure how we could get here, but don't do anything if we do
+    else
+      return;
+
     stealthy.socket.executeForEveryone('RefreshPerception');
   }
 

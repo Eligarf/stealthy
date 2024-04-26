@@ -139,15 +139,14 @@ export class EnginePF1 extends Engine {
     return flag;
   }
 
-  async setStealthValue(flag, value) {
-    Stealthy.log('setStealthValue', { flag, value });
-    let effect = duplicate(flag?.effect);
-    if (!('stealthy' in effect.flags)) effect.flags.stealthy = { stealth: value };
+  async setStealthValueInEffect(flag, value, sourceEffect) {
+    const token = flag.token;
+    let effect = duplicate(sourceEffect);
+    if (!('stealthy' in effect.flags))
+      effect.flags.stealthy = { stealth: value };
     else effect.flags.stealthy.stealth = value;
-
-    const actor = flag.token.actor;
+    const actor = token.actor;
     await actor.updateEmbeddedDocuments('Item', [effect]);
-    stealthy.socket.executeForEveryone('RefreshPerception');
   }
 
   async updateOrCreateSpotEffect(actor, flag) {
