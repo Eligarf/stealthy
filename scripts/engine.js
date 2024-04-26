@@ -209,7 +209,9 @@ export default class Engine {
     canvas.perception.update({ initializeVision: true }, true);
   }
 
-  getPerceptionFlag({ effect, token }) {
+  getPerceptionFlag(token) {
+    const actor = token?.actor;
+    const effect = this.findSpotEffect(actor);
     if (!effect) return undefined;
     const flags = this.getFlags(effect);
     const perception = flags?.perception ?? flags?.spot;
@@ -255,13 +257,10 @@ export default class Engine {
     if (distance > maxRange) return false;
 
     // Now just compare the perception and the door's stealth
-    const stealth = stealthyFlags.stealth;
-    const token = visionSource.object.document;
-    const actor = token.actor;
-    const effect = this.findSpotEffect(actor);
-    const flag = this.getPerceptionFlag({ effect, token });
-    const perception = this.getPerceptionValue(flag);
-    return perception >= stealth;
+    const stealthValue = stealthyFlags.stealth;
+    const perceptionFlag = this.getPerceptionFlag(visionSource.object.document);
+    const perceptionValue = this.getPerceptionValue(perceptionFlag);
+    return perceptionValue >= stealthValue;
   }
 }
 

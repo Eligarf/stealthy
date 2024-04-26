@@ -81,14 +81,12 @@ export class EnginePF1 extends Engine {
   canDetectHidden(visionSource, tgtToken, detectionMode) {
     const stealthFlag = this.getStealthFlag(tgtToken);
     if (!stealthFlag) return true;
-    const stealth = this.getStealthValue(stealthFlag);
 
-    const source = visionSource.object?.actor;
-    const spotEffect = this.findSpotEffect(source);
-    const perceptionFlag = this.getPerceptionFlag({ effect: spotEffect, token: visionSource.object });
-    const perception = this.getPerceptionValue(perceptionFlag);
+    const stealthValue = this.getStealthValue(stealthFlag);
+    const perceptionFlag = this.getPerceptionFlag(visionSource.object);
+    const perceptionValue = this.getPerceptionValue(perceptionFlag);
 
-    return !(perception === undefined || perception <= stealth);
+    return !(perceptionValue === undefined || perceptionValue <= stealthValue);
   }
 
   makeHiddenEffectMaker(name) {

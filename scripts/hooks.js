@@ -158,8 +158,7 @@ Hooks.on('renderTokenHUD', (tokenHUD, html, app) => {
       }
     }
 
-    const spotEffect = engine.findSpotEffect(actor);
-    let perceptionFlag = engine.getPerceptionFlag({ effect: spotEffect, token });
+    let perceptionFlag = engine.getPerceptionFlag(token);
     if (perceptionFlag) {
       let value = engine.getPerceptionValue(perceptionFlag);
       const inputBox = $(

@@ -169,28 +169,26 @@ class Engine5e extends Engine {
   canDetectHidden(visionSource, tgtToken, detectionMode) {
     const stealthFlag = this.getStealthFlag(tgtToken);
     if (!stealthFlag) return true;
-    const stealth = this.getStealthValue(stealthFlag);
-    
+   
     const srcToken = visionSource.object.document;
     const source = srcToken?.actor;
-    const perceptionEffect = this.findSpotEffect(source);
-    const perceptionFlag = this.getPerceptionFlag({ effect: perceptionEffect, token: srcToken });
+    const perceptionFlag = this.getPerceptionFlag(srcToken);
 
     // active perception loses ties, passive perception wins ties to simulate the
     // idea that active skills need to win outright to change the status quo. Passive
     // perception means that stealth is being the active skill.
     const valuePair = perceptionFlag?.perception;
-    let perception;
-
+    let perceptionValue;
     if (game.settings.get(Stealthy.MODULE_ID, 'tokenLighting')) {
-      perception = this.adjustForLightingConditions(valuePair, visionSource, source, tgtToken.actor, detectionMode);
+      perceptionValue = this.adjustForLightingConditions(valuePair, visionSource, source, tgtToken.actor, detectionMode);
     }
     else {
-      perception = this.adjustForDefaultConditions(valuePair, visionSource, source, tgtToken.actor, detectionMode);
+      perceptionValue = this.adjustForDefaultConditions(valuePair, visionSource, source, tgtToken.actor, detectionMode);
     }
-    Stealthy.logIfDebug('canDetectHidden', { stealthFlag, stealth, perceptionFlag, perception });
 
-    return perception > stealth;
+    const stealthValue = this.getStealthValue(stealthFlag);
+    Stealthy.logIfDebug('canDetectHidden', { stealthFlag: stealthFlag, stealth: stealthValue, perceptionFlag: perceptionFlag, perception: perceptionValue });
+    return perceptionValue > stealthValue;
   }
 
   makeSpotEffectMaker(name) {
@@ -205,7 +203,9 @@ class Engine5e extends Engine {
     return super.getStealthValue(flag) ?? flag?.token?.actor.system.skills.ste.passive;
   }
 
-  getPerceptionFlag({ effect, token }) {
+  getPerceptionFlag(token) {
+    const actor = token?.actor;
+    const effect = this.findSpotEffect(actor);
     if (!effect) return undefined;
     const flags = this.getFlags(effect);
     let perception = flags?.perception ?? flags?.spot;
