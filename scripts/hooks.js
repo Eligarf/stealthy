@@ -144,7 +144,7 @@ Hooks.on('renderTokenHUD', (tokenHUD, html, app) => {
     const engine = stealthy.engine;
 
     const hiddenEffect = engine.findHiddenEffect(actor);
-    let stealthFlag = engine.getStealthFlag({ effect: hiddenEffect, actor });
+    let stealthFlag = engine.getStealthFlag({ effect: hiddenEffect, token });
     if (stealthFlag) {
       let value = engine.getStealthValue(stealthFlag);
       const inputBox = $(
@@ -160,7 +160,7 @@ Hooks.on('renderTokenHUD', (tokenHUD, html, app) => {
     }
 
     const spotEffect = engine.findSpotEffect(actor);
-    let perceptionFlag = engine.getPerceptionFlag({ effect: spotEffect, actor });
+    let perceptionFlag = engine.getPerceptionFlag({ effect: spotEffect, token });
     if (perceptionFlag) {
       let value = engine.getPerceptionValue(perceptionFlag);
       const inputBox = $(

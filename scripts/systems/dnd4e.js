@@ -23,24 +23,23 @@ class Engine4e extends Engine {
   }
 
   canDetectHidden(visionSource, hiddenEffect, tgtToken) {
-    const target = tgtToken?.actor;
-    const stealthFlag = this.getStealthFlag({ effect: hiddenEffect, actor: target });
+    const stealthFlag = this.getStealthFlag({ effect: hiddenEffect, token: tgtToken });
     const stealth = this.getStealthValue(stealthFlag);
 
     const source = visionSource.object?.actor;
     const spotEffect = this.findSpotEffect(source);
-    const perceptionFlag = this.getPerceptionFlag({ effect: spotEffect, actor: source });
+    const perceptionFlag = this.getPerceptionFlag({ effect: spotEffect, token: visionSource.object });
     const perception = this.getPerceptionValue(perceptionFlag);
 
     return  perception > stealth;
   }
 
   getStealthValue(flag) {
-    return super.getStealthValue(flag) ?? (10 + flag?.actor.system.skills.stl.total);
+    return super.getStealthValue(flag) ?? (10 + flag?.token?.actor.system.skills.stl.total);
   }
 
   getPerceptionValue(flag) {
-    return super.getPerceptionValue(flag) ?? (10 + flag?.actor.system.skills.prc.total);
+    return super.getPerceptionValue(flag) ?? (10 + flag?.token?.actor.system.skills.prc.total);
   }
 
   async rollPerception(message, options, id) {

@@ -177,11 +177,11 @@ export default class Engine {
     return effect?.flags?.stealthy;
   }
 
-  getStealthFlag({ effect, actor }) {
+  getStealthFlag({ effect, token }) {
     if (!effect) return undefined;
     const flags = this.getFlags(effect);
     const stealth = flags?.stealth ?? flags?.hidden;
-    return { stealth, effect, actor };
+    return { stealth, effect, token };
   }
 
   getStealthValue(flag) {
@@ -194,7 +194,7 @@ export default class Engine {
     if (!('stealthy' in effect.flags)) effect.flags.stealthy = { stealth: value };
     else effect.flags.stealthy.stealth = value;
 
-    const actor = flag?.actor;
+    const actor = flag?.token?.actor;
     await actor.updateEmbeddedDocuments('ActiveEffect', [effect]);
     stealthy.socket.executeForEveryone('RefreshPerception');
   }
@@ -210,11 +210,11 @@ export default class Engine {
     canvas.perception.update({ initializeVision: true }, true);
   }
 
-  getPerceptionFlag({ effect, actor }) {
+  getPerceptionFlag({ effect, token }) {
     if (!effect) return undefined;
     const flags = this.getFlags(effect);
     const perception = flags?.perception ?? flags?.spot;
-    return { perception, effect, actor };
+    return { perception, effect, token };
   }
 
   getPerceptionValue(flag) {
@@ -227,7 +227,7 @@ export default class Engine {
     if (!('stealthy' in effect.flags)) effect.flags.stealthy = { perception: value };
     else effect.flags.stealthy.perception = value;
 
-    const actor = flag?.actor;
+    const actor = flag?.token?.actor;
     await actor.updateEmbeddedDocuments('ActiveEffect', [effect]);
     canvas.perception.update({ initializeVision: true }, true);
   }
@@ -260,7 +260,7 @@ export default class Engine {
     const token = visionSource.object.document;
     const actor = token.actor;
     const effect = this.findSpotEffect(actor);
-    const flag = this.getPerceptionFlag({ effect, actor });
+    const flag = this.getPerceptionFlag({ effect, token });
     const perception = this.getPerceptionValue(flag);
     return perception >= stealth;
   }

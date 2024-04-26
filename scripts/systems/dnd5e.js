@@ -167,14 +167,13 @@ class Engine5e extends Engine {
   static LIGHT_LABELS = ['dark', 'dim', 'bright', 'bright'];
 
   canDetectHidden(visionSource, hiddenEffect, tgtToken, detectionMode) {
-    const target = tgtToken?.actor;
-    const stealthFlag = this.getStealthFlag({ effect: hiddenEffect, actor: target });
+    const stealthFlag = this.getStealthFlag({ effect: hiddenEffect, token: tgtToken });
     const stealth = this.getStealthValue(stealthFlag);
     
     const srcToken = visionSource.object.document;
     const source = srcToken?.actor;
     const perceptionEffect = this.findSpotEffect(source);
-    const perceptionFlag = this.getPerceptionFlag({ effect: perceptionEffect, actor: source });
+    const perceptionFlag = this.getPerceptionFlag({ effect: perceptionEffect, token: srcToken });
 
     // active perception loses ties, passive perception wins ties to simulate the
     // idea that active skills need to win outright to change the status quo. Passive
@@ -202,10 +201,10 @@ class Engine5e extends Engine {
   }
 
   getStealthValue(flag) {
-    return super.getStealthValue(flag) ?? flag?.actor.system.skills.ste.passive;
+    return super.getStealthValue(flag) ?? flag?.token?.actor.system.skills.ste.passive;
   }
 
-  getPerceptionFlag({ effect, actor }) {
+  getPerceptionFlag({ effect, token }) {
     if (!effect) return undefined;
     const flags = this.getFlags(effect);
     let perception = flags?.perception ?? flags?.spot;
@@ -214,13 +213,13 @@ class Engine5e extends Engine {
       perception.normal = active;
       perception.disadvantaged = perception?.disadvantaged ?? active - 5;
     }
-    return { perception, effect, actor };
+    return { perception, effect, token };
   }
 
   getPerceptionValue(flag) {
     return flag?.perception?.normal ??
       flag?.perception ??
-      flag?.actor.system.skills.prc.passive;
+      flag?.token?.actor.system.skills.prc.passive;
   }
 
   async setPerceptionValue(flag, value) {
@@ -230,7 +229,7 @@ class Engine5e extends Engine {
     if (!('stealthy' in effect.flags)) effect.flags.stealthy = { perception: pair };
     else effect.flags.stealthy.perception = pair;
 
-    const actor = flag?.actor;
+    const actor = flag?.token?.actor;
     await actor.updateEmbeddedDocuments('ActiveEffect', [effect]);
     canvas.perception.update({ initializeVision: true }, true);
   }

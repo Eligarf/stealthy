@@ -79,14 +79,12 @@ export class EnginePF1 extends Engine {
   }
 
   canDetectHidden(visionSource, hiddenEffect, tgtToken, detectionMode) {
-    const target = tgtToken?.actor;
-    const stealthFlag = this.getStealthFlag({ effect: hiddenEffect, actor: target });
+    const stealthFlag = this.getStealthFlag({ effect: hiddenEffect, token: tgtToken });
     const stealth = this.getStealthValue(stealthFlag);
 
     const source = visionSource.object?.actor;
     const spotEffect = this.findSpotEffect(source);
-    const spotTake10 = game.settings.get(Stealthy.MODULE_ID, 'spotTake10');
-    const perceptionFlag = this.getPerceptionFlag({ effect: spotEffect, actor: source });
+    const perceptionFlag = this.getPerceptionFlag({ effect: spotEffect, token: visionSource.object });
     const perception = this.getPerceptionValue(perceptionFlag);
 
     return !(perception === undefined || perception <= stealth);
@@ -136,7 +134,7 @@ export class EnginePF1 extends Engine {
   }
 
   getStealthValue(flag) {
-    return super.getStealthValue(flag) ?? (10 + actor?.system.skills.ste.value);
+    return super.getStealthValue(flag) ?? (10 + flag?.token?.actor.system.skills.ste.value);
   }
 
   async setStealthValue(flag, value) {
@@ -145,7 +143,7 @@ export class EnginePF1 extends Engine {
     if (!('stealthy' in effect.flags)) effect.flags.stealthy = { stealth: value };
     else effect.flags.stealthy.stealth = value;
 
-    const actor = flag?.actor;
+    const actor = flag?.token?.actor;
     await actor.updateEmbeddedDocuments('Item', [effect]);
     stealthy.socket.executeForEveryone('RefreshPerception');
   }
@@ -188,7 +186,7 @@ export class EnginePF1 extends Engine {
 
   getPerceptionValue(flag) {
     const spotTake10 = game.settings.get(Stealthy.MODULE_ID, 'spotTake10');
-    return super.getPerceptionValue(flag) ?? (spotTake10 ? 10 + flag?.actor.system.skills.per.mod : undefined);
+    return super.getPerceptionValue(flag) ?? (spotTake10 ? 10 + flag?.token?.actor.system.skills.per.mod : undefined);
   }
 
   async setPerceptionValue(flag, value) {
@@ -197,7 +195,7 @@ export class EnginePF1 extends Engine {
     if (!('stealthy' in effect.flags)) effect.flags.stealthy = { perception: value };
     else effect.flags.stealthy.perception = value;
 
-    const actor = flag?.actor;
+    const actor = flag?.token?.actor;
     await actor.updateEmbeddedDocuments('Item', [effect]);
     canvas.perception.update({ initializeVision: true }, true);
   }
