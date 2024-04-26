@@ -132,8 +132,11 @@ export class EnginePF1 extends Engine {
     stealthy.socket.executeForEveryone('RefreshPerception');
   }
 
-  getStealthValue(flag) {
-    return super.getStealthValue(flag) ?? (10 + flag?.token?.actor.system.skills.ste.value);
+  getStealthFlag(token) {
+    let flag = super.getStealthFlag(token);
+    if (flag && flag.stealth === undefined)
+      flag.stealth = flag.token.actor.system.skills.ste.value;
+    return flag;
   }
 
   async setStealthValue(flag, value) {
@@ -142,7 +145,7 @@ export class EnginePF1 extends Engine {
     if (!('stealthy' in effect.flags)) effect.flags.stealthy = { stealth: value };
     else effect.flags.stealthy.stealth = value;
 
-    const actor = flag?.token?.actor;
+    const actor = flag.token.actor;
     await actor.updateEmbeddedDocuments('Item', [effect]);
     stealthy.socket.executeForEveryone('RefreshPerception');
   }

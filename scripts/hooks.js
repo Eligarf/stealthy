@@ -140,7 +140,6 @@ Hooks.once('setup', () => {
 Hooks.on('renderTokenHUD', (tokenHUD, html, app) => {
   if (game.user.isGM == true || game.settings.get(Stealthy.MODULE_ID, 'playerHud')) {
     const token = tokenHUD.object;
-    const actor = token?.actor;
     const engine = stealthy.engine;
 
     let stealthFlag = engine.getStealthFlag(token);

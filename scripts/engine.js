@@ -193,7 +193,7 @@ export default class Engine {
     if (!('stealthy' in effect.flags)) effect.flags.stealthy = { stealth: value };
     else effect.flags.stealthy.stealth = value;
 
-    const actor = flag?.token?.actor;
+    const actor = flag.token.actor;
     await actor.updateEmbeddedDocuments('ActiveEffect', [effect]);
     stealthy.socket.executeForEveryone('RefreshPerception');
   }
@@ -228,7 +228,7 @@ export default class Engine {
     if (!('stealthy' in effect.flags)) effect.flags.stealthy = { perception: value };
     else effect.flags.stealthy.perception = value;
 
-    const actor = flag?.token?.actor;
+    const actor = flag.token.actor;
     await actor.updateEmbeddedDocuments('ActiveEffect', [effect]);
     canvas.perception.update({ initializeVision: true }, true);
   }

@@ -29,12 +29,15 @@ class Engine4e extends Engine {
     const stealthValue = this.getStealthValue(stealthFlag);
     const perceptionFlag = this.getPerceptionFlag(visionSource.object);
     const perceptionValue = this.getPerceptionValue(perceptionFlag);
-    
-    return  perceptionValue > stealthValue;
+
+    return perceptionValue > stealthValue;
   }
 
-  getStealthValue(flag) {
-    return super.getStealthValue(flag) ?? (10 + flag?.token?.actor.system.skills.stl.total);
+  getStealthFlag(token) {
+    let flag = super.getStealthFlag(token);
+    if (flag && flag.stealth === undefined)
+      flag.stealth = 10 + token.actor.system.skills.stl.total;
+    return flag;
   }
 
   getPerceptionValue(flag) {

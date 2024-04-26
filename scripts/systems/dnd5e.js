@@ -199,8 +199,11 @@ class Engine5e extends Engine {
     };
   }
 
-  getStealthValue(flag) {
-    return super.getStealthValue(flag) ?? flag?.token?.actor.system.skills.ste.passive;
+  getStealthFlag(token) {
+    let flag = super.getStealthFlag(token);
+    if (flag && flag.stealth === undefined)
+      flag.stealth = flag.token.actor.system.skills.ste.passive;
+    return flag;
   }
 
   getPerceptionFlag(token) {
@@ -230,7 +233,7 @@ class Engine5e extends Engine {
     if (!('stealthy' in effect.flags)) effect.flags.stealthy = { perception: pair };
     else effect.flags.stealthy.perception = pair;
 
-    const actor = flag?.token?.actor;
+    const actor = flag.token.actor;
     await actor.updateEmbeddedDocuments('ActiveEffect', [effect]);
     canvas.perception.update({ initializeVision: true }, true);
   }
