@@ -25,7 +25,7 @@
       "icon": "Ícone Percebendo",
       "iconhint": "Ícone padrão para o efeito Percebendo"
     },
-    "recordPerception": "Record Perception rolls",
+    "bankPerception": "Bank perception rolls",
     "title": "Stealthy",
     "spotHiddenDoors": {
       "name": "Detecção automática de portas escondidas",
@@ -34,9 +34,13 @@
     "playerHud": {
       "name": "Permitir que os jogadores vejam (não editem) valores ocultos e visíveis no HUD do token"
     },
-    "rollsOnToken": {
-      "name": "Store rolls on selected token",
-      "hint": "Store stealth and perception rolls on the selected token rather than putting an Effect on its actor."
+    "stealthToActor": {
+      "name": "Bank stealth rolls to actor",
+      "hint": "Bank stealth rolls in an actor effect/item rather than the token."
+    },
+    "perceptionToActor": {
+      "name": "Bank perception rolls to actor",
+      "hint": "Bank perception rolls in an actor effect/item rather than the token."
     },
     "friendlyStealth": {
       "name": "Como tratar tokens amigáveis ​​sob Furtividade",
@@ -112,7 +116,7 @@
       "name": "Pathfinder",
       "spotTake10": {
         "name": "Percepção pegue-10",
-        "hint": "Se nenhum efeito Percebendo estiver ativo, assuma o resultado de Percepção - 10 para o teste de visibilidade. Se desativado, os tokens Escondidos não serão vistos sem um efeito Percebendo ativo."
+        "hint": "If no banked perception roll is available, assume the Perception take-10 result for the visibility test. If disabled, Hidden tokens will not be seen without a banked perception roll."
       }
     },
     "pf2e": {

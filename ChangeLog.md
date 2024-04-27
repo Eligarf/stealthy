@@ -1,7 +1,8 @@
 # v4.0.0
-* Big code reorganization to allow the choice of recording stealth and perception rolls directly on tokens or applying effects to the actor.
-* Roll results can be removed from the token by clicking into the token HUD result and deleting its text.
-* 'Active Spot' changed to 'Record perception rolls' and the control icon has changed to binoculars.
+* Big code changes to allow the choice of banking stealth and perception rolls to tokens or actors via effects.
+* Banked results can be removed from tokens by clicking into the token HUD result and deleting its text. This won't work for banked results stored on effects.
+* By default, banked perception rolls go to the token and banked stealth rolls go to an effect on the actor. Choice is controlled by game settings.
+* 'Active Spot' changed to 'Bank perception rolls' and the control icon has changed to a piggy bank.
 * The new text hasn't been localized yet - I put english placeholders in the language json files.
 * Added a data schema setting to allow future data migration
 * Drop V10 and CUB support

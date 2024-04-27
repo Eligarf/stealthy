@@ -25,7 +25,7 @@
       "icon": "Icône Détection",
       "iconhint": "Icône par défaut pour l'effet Détection"
     },
-    "recordPerception": "Record Perception rolls",
+    "bankPerception": "Bank perception rolls",
     "title": "Furtif",
     "spotHiddenDoors": {
       "name": "Détection automatique de porte cachée",
@@ -40,9 +40,13 @@
     "playerHud": {
       "name": "Autoriser les joueurs à voir (et non à modifier) ​​les valeurs cachées et ponctuelles sur le HUD du jeton"
     },
-    "rollsOnToken": {
-      "name": "Store rolls on selected token",
-      "hint": "Store stealth and perception rolls on the selected token rather than putting an Effect on its actor."
+    "stealthToActor": {
+      "name": "Bank stealth rolls to actor",
+      "hint": "Bank stealth rolls in an actor effect/item rather than the token."
+    },
+    "perceptionToActor": {
+      "name": "Bank perception rolls to actor",
+      "hint": "Bank perception rolls in an actor effect/item rather than the token."
     },
     "source": {
       "hint": "Où trouver l'effet",
@@ -112,7 +116,7 @@
       "name": "Pathfinder",
       "spotTake10": {
         "name": "Test de perception-10",
-        "hint": "Si aucun effet Détection n'est actif, supposez que le résultat Perception prend -10 pour le test de visibilité."
+        "hint": "If no banked perception roll is available, assume the Perception take-10 result for the visibility test. If disabled, Hidden tokens will not be seen without a banked perception roll."
       }
     },
     "pf2e": {

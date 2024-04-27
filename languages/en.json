@@ -25,7 +25,7 @@
       "icon": "Spot icon",
       "iconhint": "Default icon for Spot effect"
     },
-    "recordPerception": "Record Perception rolls",
+    "bankPerception": "Bank perception rolls",
     "title": "Stealthy",
     "spotHiddenDoors": {
       "name": "Automatic hidden door detection",
@@ -40,9 +40,13 @@
     "playerHud": {
       "name": "Allow players to see (not edit) Hidden and Spot values on the token HUD"
     },
-    "rollsOnToken": {
-      "name": "Store rolls on selected token",
-      "hint": "Store stealth and perception rolls on the selected token rather than putting an Effect on its actor."
+    "stealthToActor": {
+      "name": "Bank stealth rolls to actor",
+      "hint": "Bank stealth rolls in an actor effect/item rather than the token."
+    },
+    "perceptionToActor": {
+      "name": "Bank perception rolls to actor",
+      "hint": "Bank perception rolls in an actor effect/item rather than the token."
     },
     "source": {
       "hint": "Where to find the effect",
@@ -112,7 +116,7 @@
       "name": "Pathfinder",
       "spotTake10": {
         "name": "Perception take-10",
-        "hint": "If no Spot effect is active, assume the Perception take-10 result for the visibility test. If disabled, Hidden tokens will not be seen without an active Spot effect."
+        "hint": "If no banked perception roll is available, assume the Perception take-10 result for the visibility test. If disabled, Hidden tokens will not be seen without a banked perception roll."
       }
     },
     "pf2e": {

@@ -8,15 +8,15 @@ export class Stealthy {
     this.engine.patchFoundry();
     Hooks.once('setup', () => {
       this.socket = socketlib.registerModule(Stealthy.MODULE_ID);
-      this.socket.register('RecordPerception', Stealthy.RecordPerception);
-      this.socket.register('GetActiveSpot', Stealthy.GetActiveSpot);
+      this.socket.register('TogglePerceptionBanking', Stealthy.TogglePerceptionBanking);
+      this.socket.register('GetPerceptionBanking', Stealthy.GetPerceptionBanking);
       this.socket.register('RefreshPerception', Stealthy.RefreshPerception);
     });
   }
 
-  static async RecordPerception(toggled) {
-    Stealthy.log(`RecordPerception <= ${toggled}`);
-    stealthy.activeSpot = toggled;
+  static async TogglePerceptionBanking(toggled) {
+    Stealthy.log(`ToggletPerceptionBanking <= ${toggled}`);
+    stealthy.bankingPerception = toggled;
 
     if (!toggled && game.user.isGM) {
       const name = game.i18n.localize('stealthy.spot.name');
@@ -27,7 +27,6 @@ export class Stealthy {
         if (spot) {
           actor.deleteEmbeddedDocuments('ActiveEffect', [spot.id]);
         }
-        if (!stealthy.rollsOnToken) continue;
         const tokenDoc = (token instanceof Token) ? token.document : token;
         if (tokenDoc.flags?.stealthy?.perception) {
           let update = { _id: token.id, };
@@ -35,7 +34,8 @@ export class Stealthy {
           updates.push(update);
         }
       }
-      await canvas.scene.updateEmbeddedDocuments("Token", updates);
+      if (updates.length > 0)
+        await canvas.scene.updateEmbeddedDocuments("Token", updates);
     }
   }
 
@@ -44,9 +44,9 @@ export class Stealthy {
     canvas.perception.update({ initializeVision: true }, true);
   }
 
-  static async GetActiveSpot() {
-    Stealthy.log(`GetActiveSpot => ${stealthy.activeSpot}`);
-    return stealthy.activeSpot;
+  static async GetPerceptionBanking() {
+    Stealthy.log(`GetPerceptionBanking => ${stealthy.bankingPerception}`);
+    return stealthy.bankingPerception;
   }
 
   static CONSOLE_COLORS = ['background: #222; color: #80ffff', 'color: #fff'];

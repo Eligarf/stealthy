@@ -10,18 +10,31 @@ Hooks.once('setup', () => {
   const module = game.modules.get(Stealthy.MODULE_ID);
   const moduleVersion = module.version;
 
-  game.settings.register(Stealthy.MODULE_ID, 'rollsOnToken', {
-    name: game.i18n.localize("stealthy.rollsOnToken.name"),
-    hint: game.i18n.localize("stealthy.rollsOnToken.hint"),
+  game.settings.register(Stealthy.MODULE_ID, 'stealthToActor', {
+    name: game.i18n.localize("stealthy.stealthToActor.name"),
+    hint: game.i18n.localize("stealthy.stealthToActor.hint"),
+    scope: 'world',
+    config: true,
+    type: Boolean,
+    default: true,
+    onChange: value => {
+      stealthy.stealthToActor = value;
+    }
+  });
+  stealthy.stealthToActor = game.settings.get(Stealthy.MODULE_ID, 'stealthToActor');
+
+  game.settings.register(Stealthy.MODULE_ID, 'perceptionToActor', {
+    name: game.i18n.localize("stealthy.perceptionToActor.name"),
+    hint: game.i18n.localize("stealthy.perceptionToActor.hint"),
     scope: 'world',
     config: true,
     type: Boolean,
     default: false,
     onChange: value => {
-      stealthy.rollsOnToken = value;
+      stealthy.perceptionToActor = value;
     }
   });
-  stealthy.rollsOnToken = game.settings.get(Stealthy.MODULE_ID, 'rollsOnToken');
+  stealthy.perceptionToActor = game.settings.get(Stealthy.MODULE_ID, 'perceptionToActor');
 
   game.settings.register(Stealthy.MODULE_ID, 'friendlyStealth', {
     name: game.i18n.localize("stealthy.friendlyStealth.name"),
@@ -165,7 +178,7 @@ Hooks.once('setup', () => {
     type: Boolean,
     default: true,
   });
-  stealthy.activeSpot = game.settings.get(Stealthy.MODULE_ID, 'activeSpot');
+  stealthy.bankingPerception = game.settings.get(Stealthy.MODULE_ID, 'activeSpot');
 
   Stealthy.log(`Initialized ${moduleVersion}`);
 });
@@ -185,7 +198,7 @@ Hooks.on('renderTokenHUD', (tokenHUD, html, app) => {
       if (game.user.isGM == true) {
         inputBox.change(async (inputbox) => {
           if (token === undefined) return;
-          const newValue = (!inputbox.target.value.length && stealthy.rollsOnToken)
+          const newValue = (!inputbox.target.value.length && !stealthy.stealthToActor)
             ? undefined
             : Number(inputbox.target.value);
           await engine.setStealthValue(stealthFlag, newValue);
@@ -204,7 +217,7 @@ Hooks.on('renderTokenHUD', (tokenHUD, html, app) => {
       if (game.user.isGM == true) {
         inputBox.change(async (inputbox) => {
           if (token === undefined) return;
-          const newValue = (!inputbox.target.value.length && stealthy.rollsOnToken)
+          const newValue = (!inputbox.target.value.length && !stealthy.perceptionToActor)
             ? undefined
             : Number(inputbox.target.value);
           await engine.setPerceptionValue(perceptionFlag, newValue);
@@ -218,27 +231,27 @@ Hooks.on('getSceneControlButtons', (controls) => {
   if (!game.user.isGM) return;
   let tokenControls = controls.find(x => x.name === 'token');
   tokenControls.tools.push({
-    icon: 'fa-solid fa-binoculars',
+    icon: 'fa-solid fa-piggy-bank',
     name: 'stealthy-perception-toggle',
-    title: game.i18n.localize("stealthy.recordPerception"),
+    title: game.i18n.localize("stealthy.bankPerception"),
     toggle: true,
-    active: stealthy.activeSpot,
+    active: stealthy.bankingPerception,
     onClick: (toggled) => {
       game.settings.set(Stealthy.MODULE_ID, 'activeSpot', toggled);
-      stealthy.socket.executeForEveryone('RecordPerception', toggled);
+      stealthy.socket.executeForEveryone('TogglePerceptionBanking', toggled);
     }
   });
 });
 
 Hooks.on('renderSettingsConfig', (app, html, data) => {
-  $('<div>').addClass('form-group group-header').html(game.i18n.localize("stealthy.config.general")).insertBefore($('[name="stealthy.rollsOnToken"]').parents('div.form-group:first'));
+  $('<div>').addClass('form-group group-header').html(game.i18n.localize("stealthy.config.general")).insertBefore($('[name="stealthy.stealthToActor"]').parents('div.form-group:first'));
   $('<div>').addClass('form-group group-header').html(game.i18n.localize("stealthy.config.advanced")).insertBefore($('[name="stealthy.hiddenLabel"]').parents('div.form-group:first'));
   $('<div>').addClass('form-group group-header').html(game.i18n.localize("stealthy.config.debug")).insertBefore($('[name="stealthy.logLevel"]').parents('div.form-group:first'));
 });
 
 Hooks.once('ready', async () => {
   if (!game.user.isGM) {
-    stealthy.activeSpot = await stealthy.socket.executeAsGM('GetActiveSpot');
+    stealthy.bankingPerception = await stealthy.socket.executeAsGM('GetPerceptionBanking');
     return;
   }
 

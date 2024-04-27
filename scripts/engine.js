@@ -215,7 +215,7 @@ export default class Engine {
     }
 
     // Otherwise, if we are token based then we need to update the token value
-    else if (stealthy.rollsOnToken) {
+    else if (!stealthy.stealthToActor) {
       let update = { _id: token.id, };
       if (value === undefined) {
         update['flags.stealthy.-=stealth'] = true;
@@ -275,7 +275,7 @@ export default class Engine {
     }
 
     // Otherwise, if we are token based then we need to update the token value
-    else if (stealthy.rollsOnToken) {
+    else if (!stealthy.perceptionToActor) {
       let update = { _id: token.id, };
       if (value === undefined) {
         update['flags.stealthy.-=perception'] = true;

@@ -240,8 +240,8 @@ class Engine5e extends Engine {
   }
 
   async rollPerception(actor, roll) {
-    if (!stealthy.activeSpot) return;
     Stealthy.log('Stealthy5e.rollPerception', { actor, roll });
+    if (!stealthy.bankingPerception) return;
 
     let perception = { normal: roll.total, disadvantaged: roll.total };
     if (!roll.hasDisadvantage && game.settings.get(Stealthy.MODULE_ID, 'spotPair')) {
@@ -267,10 +267,10 @@ class Engine5e extends Engine {
       perception.disadvantaged = Math.max(perception.disadvantaged, passivePrc - 5);
     }
 
-    if (stealthy.rollsOnToken) {
-      await this.putRollOnToken(actor, 'perception', perception);
-    } else {
+    if (stealthy.perceptionToActor) {
       await this.updateOrCreateSpotEffect(actor, { perception });
+    } else {
+      await this.putRollOnToken(actor, 'perception', perception);
     }
 
     super.rollPerception();
@@ -279,10 +279,10 @@ class Engine5e extends Engine {
   async rollStealth(actor, roll) {
     Stealthy.log('Stealthy5e.rollStealth', { actor, roll });
 
-    if (stealthy.rollsOnToken) {
-      await this.putRollOnToken(actor, 'stealth', roll.total);
-    } else {
+    if (stealthy.stealthToActor) {
       await this.updateOrCreateHiddenEffect(actor, { stealth: roll.total });
+    } else {
+      await this.putRollOnToken(actor, 'stealth', roll.total);
     }
 
     super.rollStealth();
