@@ -25,7 +25,7 @@
       "icon": "Spot icon",
       "iconhint": "Default icon for Spot effect"
     },
-    "activeSpot": "Active Spot",
+    "recordPerception": "Record Perception rolls",
     "title": "Stealthy",
     "spotHiddenDoors": {
       "name": "Automatic hidden door detection",

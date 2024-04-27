@@ -25,7 +25,7 @@
       "icon": "Icône Détection",
       "iconhint": "Icône par défaut pour l'effet Détection"
     },
-    "activeSpot": "Détection active",
+    "recordPerception": "Record Perception rolls",
     "title": "Furtif",
     "spotHiddenDoors": {
       "name": "Détection automatique de porte cachée",

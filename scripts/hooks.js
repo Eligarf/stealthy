@@ -218,14 +218,14 @@ Hooks.on('getSceneControlButtons', (controls) => {
   if (!game.user.isGM) return;
   let tokenControls = controls.find(x => x.name === 'token');
   tokenControls.tools.push({
-    icon: 'fa-solid fa-eyes',
-    name: 'stealthy-spotting',
-    title: game.i18n.localize("stealthy.activeSpot"),
+    icon: 'fa-solid fa-binoculars',
+    name: 'stealthy-perception-toggle',
+    title: game.i18n.localize("stealthy.recordPerception"),
     toggle: true,
     active: stealthy.activeSpot,
     onClick: (toggled) => {
       game.settings.set(Stealthy.MODULE_ID, 'activeSpot', toggled);
-      stealthy.socket.executeForEveryone('ToggleActiveSpot', toggled);
+      stealthy.socket.executeForEveryone('RecordPerception', toggled);
     }
   });
 });

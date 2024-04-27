@@ -8,14 +8,14 @@ export class Stealthy {
     this.engine.patchFoundry();
     Hooks.once('setup', () => {
       this.socket = socketlib.registerModule(Stealthy.MODULE_ID);
-      this.socket.register('ToggleActiveSpot', Stealthy.ToggleActiveSpot);
+      this.socket.register('RecordPerception', Stealthy.RecordPerception);
       this.socket.register('GetActiveSpot', Stealthy.GetActiveSpot);
       this.socket.register('RefreshPerception', Stealthy.RefreshPerception);
     });
   }
 
-  static async ToggleActiveSpot(toggled) {
-    Stealthy.log(`ToggleActiveSpot <= ${toggled}`);
+  static async RecordPerception(toggled) {
+    Stealthy.log(`RecordPerception <= ${toggled}`);
     stealthy.activeSpot = toggled;
 
     if (!toggled && game.user.isGM) {

@@ -25,7 +25,7 @@
       "icon": "Ícone Percebendo",
       "iconhint": "Ícone padrão para o efeito Percebendo"
     },
-    "activeSpot": "Percebendo Passivamente",
+    "recordPerception": "Record Perception rolls",
     "title": "Stealthy",
     "spotHiddenDoors": {
       "name": "Detecção automática de portas escondidas",
