@@ -20,13 +20,22 @@ export class Stealthy {
 
     if (!toggled && game.user.isGM) {
       const name = game.i18n.localize('stealthy.spot.name');
+      let updates = [];
       for (let token of canvas.tokens.placeables) {
         const actor = token.actor;
         const spot = actor.effects.find(e => e.name === name);
         if (spot) {
           actor.deleteEmbeddedDocuments('ActiveEffect', [spot.id]);
         }
+        if (!stealthy.rollsOnToken) continue;
+        const tokenDoc = (token instanceof Token) ? token.document : token;
+        if (tokenDoc.flags?.stealthy?.perception) {
+          let update = { _id: token.id, };
+          update['flags.stealthy.-=perception'] = true;
+          updates.push(update);
+        }
       }
+      await canvas.scene.updateEmbeddedDocuments("Token", updates);
     }
   }
 
