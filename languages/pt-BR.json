@@ -84,18 +84,8 @@
         "hint": "Encerra o turno se você é dono do atual combatente."
       },
       "tokenLighting": {
-        "name": "Verificar as condições de iluminação dos tokens",
-        "hint": "Verifica se há efeitos no token que indicam a condição de iluminação dos tokens."
-      },
-      "dark": {
-        "label": "Escuridão",
-        "name": "Escuridão",
-        "key": "Chave de localização para rótulo Escuridão."
-      },
-      "dim": {
-        "label": "Penumbra",
-        "name": "Penumbra",
-        "key": "Chave de localização para rótulo Penumbra."
+        "name": "Check token lighting",
+        "hint": "Use the lighting status on stealthy tokens to determine if perception disadvantage applies. This can be computed or looked up"
       },
       "spotPair": {
         "name": "Registar desvantagem de Percepção ao rolar um teste",

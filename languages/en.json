@@ -84,18 +84,8 @@
         "hint": "End turn if you are owner of the current combatant"
       },
       "tokenLighting": {
-        "name": "Check token lighting conditions",
-        "hint": "Check for token effects that indicate lighting condition of the token."
-      },
-      "dark": {
-        "label": "Dark",
-        "name": "Dark",
-        "key": "Localization key for Dark label"
-      },
-      "dim": {
-        "label": "Dim",
-        "name": "Dim",
-        "key": "Localization key for Dim label"
+        "name": "Check token lighting",
+        "hint": "Use the lighting status on stealthy tokens to determine if perception disadvantage applies. This can be computed or looked up"
       },
       "spotPair": {
         "name": "Record disadvantaged Perception when rolling a check",

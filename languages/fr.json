@@ -84,18 +84,8 @@
         "hint": "Fin du tour si vous êtes propriétaire du combattant actuel"
       },
       "tokenLighting": {
-        "name": "Vérifier les conditions d'éclairage des tokens",
-        "hint": "Vérifiez les effets de tokens qui indiquent l'état d'éclairage du token."
-      },
-      "dark": {
-        "label": "Dark",
-        "name": "Dark",
-        "key": "Clé de localisation pour Dark"
-      },
-      "dim": {
-        "label": "Faible",
-        "name": "Faible",
-        "key": "Clé de localisation pour Faible"
+        "name": "Check token lighting",
+        "hint": "Use the lighting status on stealthy tokens to determine if perception disadvantage applies. This can be computed or looked up"
       },
       "spotPair": {
         "name": "Enregistrer la perception désavantagée lors du lancer d'un test",

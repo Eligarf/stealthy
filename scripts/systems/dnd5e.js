@@ -45,13 +45,11 @@ class Engine5e extends Engine {
         default: 'inCombat'
       });
 
-      const tlcActive = game.modules.get("tokenlightcondition")?.active;
-
       game.settings.register(Stealthy.MODULE_ID, 'tokenLighting', {
         name: game.i18n.localize("stealthy.dnd5e.tokenLighting.name"),
         hint: game.i18n.localize("stealthy.dnd5e.tokenLighting.hint"),
         scope: 'world',
-        config: tlcActive,
+        config: true,
         type: Boolean,
         default: false,
       });
@@ -60,53 +58,10 @@ class Engine5e extends Engine {
         name: game.i18n.localize("stealthy.dnd5e.spotPair.name"),
         hint: game.i18n.localize("stealthy.dnd5e.spotPair.hint"),
         scope: 'world',
-        config: tlcActive,
+        config: true,
         type: Boolean,
         default: false,
       });
-
-      if (tlcActive) {
-        game.settings.register(Stealthy.MODULE_ID, 'dimLabel', {
-          name: game.i18n.localize("stealthy.dnd5e.dim.key"),
-          scope: 'world',
-          config: true,
-          type: String,
-          default: 'stealthy.dnd5e.dim.name',
-          onChange: value => {
-            this.dimName = value;
-            Stealthy.log(`dimName='${this.dimName}'`);
-          }
-        });
-        this.dimName = game.i18n.localize(game.settings.get(Stealthy.MODULE_ID, 'dimLabel'));
-        Stealthy.log(`dimName='${this.dimName}'`);
-
-        game.settings.register(Stealthy.MODULE_ID, 'darkLabel', {
-          name: game.i18n.localize("stealthy.dnd5e.dark.key"),
-          scope: 'world',
-          config: true,
-          type: String,
-          default: 'stealthy.dnd5e.dark.name',
-          onChange: value => {
-            this.darkName = value;
-            Stealthy.log(`darkName='${value}'`);
-          }
-        });
-        this.darkName = game.i18n.localize(game.settings.get(Stealthy.MODULE_ID, 'darkLabel'));
-        Stealthy.log(`darkName='${this.darkName}'`);
-
-        Hooks.on('renderSettingsConfig', (app, html, data) => {
-          $('<div>').addClass('form-group group-header')
-            .html('Token Lighting')
-            .insertBefore($('[name="stealthy.tokenLighting"]')
-              .parents('div.form-group:first'));
-        });
-      }
-      else {
-        Hooks.once('ready', () => {
-          game.settings.set(Stealthy.MODULE_ID, 'tokenLighting', false);
-          game.settings.set(Stealthy.MODULE_ID, 'spotPair', false);
-        });
-      }
     });
 
     Hooks.on('dnd5e.rollSkill', async (actor, roll, skill) => {
@@ -171,11 +126,12 @@ class Engine5e extends Engine {
   }
 
   static LIGHT_LABELS = ['dark', 'dim', 'bright', 'bright'];
+  static EXPOSURE = { dim: 1, bright: 2 };
 
   canDetectHidden(visionSource, tgtToken, detectionMode) {
     const stealthFlag = this.getStealthFlag(tgtToken);
     if (!stealthFlag) return true;
-   
+
     const srcToken = visionSource.object.document;
     const source = srcToken?.actor;
     const perceptionFlag = this.getPerceptionFlag(srcToken);
@@ -186,10 +142,10 @@ class Engine5e extends Engine {
     const valuePair = perceptionFlag?.perception;
     let perceptionValue;
     if (game.settings.get(Stealthy.MODULE_ID, 'tokenLighting')) {
-      perceptionValue = this.adjustForLightingConditions(valuePair, visionSource, source, tgtToken.actor, detectionMode);
+      perceptionValue = this.adjustForLightingConditions(valuePair, visionSource, source, tgtToken, detectionMode);
     }
     else {
-      perceptionValue = this.adjustForDefaultConditions(valuePair, visionSource, source, tgtToken.actor, detectionMode);
+      perceptionValue = this.adjustForDefaultConditions(valuePair, visionSource, source, tgtToken, detectionMode);
     }
 
     const stealthValue = this.getStealthValue(stealthFlag);
@@ -293,7 +249,7 @@ class Engine5e extends Engine {
     return source.system.skills.prc.passive - 5;
   }
 
-  adjustForDefaultConditions(spotPair, visionSource, source, target, detectionMode) {
+  adjustForDefaultConditions(spotPair, visionSource, source, tgtToken, detectionMode) {
     const passivePrc = source?.system?.skills?.prc?.passive ?? -100;
     let debugData = { passivePrc };
     let perception = spotPair?.normal
@@ -304,16 +260,59 @@ class Engine5e extends Engine {
     return perception;
   }
 
+  getLightExposure(token) {
+    token = token instanceof Token ? token : token.object;
+
+    const scene = token.scene;
+    if (scene !== canvas.scene || !scene.tokenVision || scene.darkness < scene.globalLightThreshold) return undefined;
+
+    const center = token.center;
+    let exposure = null;
+
+    for (const light of canvas.effects.lightSources) {
+      if (!light.active) continue;
+
+      const bright = light.data.bright;
+      const dim = light.data.dim;
+
+      if (light.object === token) {
+        if (bright) return 'bright';
+        if (dim) exposure = 'dim';
+        continue;
+      }
+
+      if (!light.shape.contains(center.x, center.y)) {
+        continue;
+      }
+
+      if (light.ratio === 1) {
+        return 'bright';
+      }
+
+      if (light.ratio === 0) {
+        exposure = 'dim';
+        continue;
+      }
+
+      const distance = new Ray(light, center).distance;
+      if (distance <= bright) {
+        return 'bright';
+      } else {
+        exposure = 'dim';
+      }
+    }
+
+    return exposure;
+  }
+
   // check target Token Lighting conditions via effects usage
   // look for effects that indicate Dim or Dark condition on the token
-  adjustForLightingConditions(spotPair, visionSource, source, target, detectionMode) {
+  adjustForLightingConditions(spotPair, visionSource, source, tgtToken, detectionMode) {
     let debugData = { spotPair };
     let perception;
 
     // What light band are we told we sit in?
-    let lightBand = 2;
-    if (target?.effects.find(e => e.name === this.darkName && !e.disabled)) { lightBand = 0; }
-    if (target?.effects.find(e => e.name === this.dimName && !e.disabled)) { lightBand = 1; }
+    let lightBand = Engine5e.EXPOSURE[this.getLightExposure(tgtToken)] ?? 0;
     debugData.initialLightLevel = Engine5e.LIGHT_LABELS[lightBand];
 
     // Adjust the light band based on conditions

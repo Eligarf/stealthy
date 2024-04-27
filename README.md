@@ -80,6 +80,5 @@ Stealthy will not automatically remove a banked stealth roll - the dnd5e [Skulke
 ## Optional modules
 * [Active Token Effects](https://foundryvtt.com/packages/ATL)
 * [DFreds Convenient Effects](https://foundryvtt.com/packages/dfreds-convenient-effects)
-* [Token Light Condition](https://foundryvtt.com/packages/tokenlightcondition)
 * [Vision5e](https://foundryvtt.com/packages/vision-5e)
 * [Visual Active Effects](https://foundryvtt.com/packages/visual-active-effects)
