@@ -7,21 +7,23 @@
 
 # Stealthy
 
-A module for [FoundryVTT](https://foundryvtt.com) that adds perception vs stealth testing to Foundry's visibility tests. It filters out any objects with the Hidden condition if the viewing Perception value fails to beat the object's Stealth value.
+A module that adds perception vs stealth testing to Foundry's visibility tests. It filters out any objects with the Hidden condition if the viewing Perception value fails to beat the object's Stealth value.
 
-## [Stealthy Wiki](https://github.com/Eligarf/stealthy/wiki)
+Foundry V10 won't be supported in stealthy 4.x.x, the final V10-compatible stealthy build is [3.18.1](https://github.com/Eligarf/stealthy/releases/download/v3.18.1/module.json)
+
+[Stealthy Wiki](https://github.com/Eligarf/stealthy/wiki)
 ---
 # Features
 
-## Stealth and Perception rolls are banked!
+## Stealth and Perception rolls are banked
 The last stealth and perception rolls for each token or actor is recorded (banked) and used to control token visibility on the canvas. The roll results are displayed in the token HUD for GMs to see as token buttons with an input box on the bottom: perception is on the left, stealth is on the right. Changing the values in these input boxes will alter the stored results for any future visibility tests while that roll remains active.
 
-Perception banking has an overall token control `Bank perception rolls` which the GM uses to control when perception check banking is enabled. Toggling it off will also clear out all banked perception rolls for the current scene.
+Perception banking has an overall token control *Bank perception rolls* which the GM uses to control when perception check banking is enabled. Toggling it off will also clear out all banked perception rolls for the current scene.
 
 ![override](https://user-images.githubusercontent.com/16523503/213258088-73098735-321f-4542-9c8a-433be26cd014.gif)
 ![control](https://github.com/Eligarf/avoid-notice/assets/16523503/38d512f0-27dc-4eda-9e59-4a14078ba3f4)
 
-## Where rolls are banked
+## Rolls banked in token or actor 
 
 A game setting individually controls whether stealth or perception roll results are banked in the actor or token.
 
@@ -32,15 +34,16 @@ A game setting individually controls whether stealth or perception roll results 
 
 ### Actor
 * Default for stealth
-* Banked rolls are deleted by deleting the effect.
-* Rolling a stealth skill check will apply the Hidden effect to the actor and bank the result of the check in that effect for later comparisons, replacing an existing banking if the Hidden effect is already present. Stealthy's default Hidden effect can be overriden by adding a custom Hidden effect in Convenient Effects. ***See [Handling Hidden removal](#handling-hidden-removal)***
-* Rolling a perception check will add a Spot effect to the actor which banks the result of that perception check.
+* Banked rolls are actually stored in an effect or item on the actor.
+* Banked rolls are deleted by deleting the effect they are banked in.
+* Rolling a stealth skill check will apply the *Hidden* effect to the actor and bank the result there for later comparisons, replacing an existing banking if the *Hidden* effect is already present. Stealthy's default *Hidden* effect can be overriden by adding a custom Hidden effect in *Convenient Effects*. ***See [Handling Hidden removal](#handling-hidden-removal)***
+* Rolling a perception check will add a *Spot* effect to the actor to bank the roll. The default *Spot* effect can be overriden as well.
 
 ![stealth-roll](https://user-images.githubusercontent.com/16523503/209989026-e0d2dad2-8dc1-459c-8824-a2332ce8a9cd.gif)
 ![perception](https://user-images.githubusercontent.com/16523503/213257350-e382f584-1c5c-41a8-bf00-60705ec89bd0.gif)
 
-## Invisible characters can hide from See Invisibility
-An invisible actor with a banked stealth roll will check vs perception before showing up in the 'See Invisibility' vision mode.
+## Invisible characters can hide from *See Invisibility*
+An invisible token with a banked stealth roll will check vs perception before showing up in the *See Invisibility* vision mode.
 
 ![invisible](https://user-images.githubusercontent.com/16523503/210176827-03fda57a-6d09-4144-8253-b8b7cd9155ac.gif)
 
@@ -56,7 +59,7 @@ Doors can have a detection range that will hide the door control until the viewi
 ![hidden-door](https://user-images.githubusercontent.com/16523503/217671740-41aa7832-d495-49da-a149-948ebb6ccb2a.PNG)
 
 # End Turn keybinding
-It doesn't really belong in this module but I want to be able to press the 'End' key to end my turn, and so I added an editable keybinding that will allow owners of the current combatant to do so.
+It doesn't really belong in this module but I want to be able to press the *End* key to end my turn, and so I added an editable keybinding that will allow owners of the current combatant to do so.
 
 # Systems
 Stealthy supports the following systems (specific notes about a given system are in the [Wiki](https://github.com/Eligarf/stealthy/wiki)):
