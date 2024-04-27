@@ -231,15 +231,12 @@ class Engine5e extends Engine {
   }
 
   async setPerceptionValue(flag, value) {
-    Stealthy.log('setPerceptionValue', { flag, value });
-    let effect = duplicate(flag?.effect);
-    const pair = { normal: value, disadvantaged: value - 5 };
-    if (!('stealthy' in effect.flags)) effect.flags.stealthy = { perception: pair };
-    else effect.flags.stealthy.perception = pair;
-
-    const actor = flag.token.actor;
-    await actor.updateEmbeddedDocuments('ActiveEffect', [effect]);
-    canvas.perception.update({ initializeVision: true }, true);
+    if (value === undefined)
+      await super.setPerceptionValue(flag, value);
+    else {
+      const pair = { normal: value, disadvantaged: value - 5 };
+      await super.setPerceptionValue(flag, pair);
+    }
   }
 
   async rollPerception(actor, roll) {
@@ -271,13 +268,7 @@ class Engine5e extends Engine {
     }
 
     if (stealthy.rollsOnToken) {
-      const token = canvas.tokens.controlled.find((t) => t.actor === actor);
-      if (!token) return;
-      let update = {
-        _id: token.id,
-        'flags.stealthy.perception': perception
-      };
-      await canvas.scene.updateEmbeddedDocuments("Token", [update]);
+      await this.putRollOnToken(actor, 'perception', perception);
     } else {
       await this.updateOrCreateSpotEffect(actor, { perception });
     }
@@ -289,13 +280,7 @@ class Engine5e extends Engine {
     Stealthy.log('Stealthy5e.rollStealth', { actor, roll });
 
     if (stealthy.rollsOnToken) {
-      const token = canvas.tokens.controlled.find((t) => t.actor === actor);
-      if (!token) return;
-      let update = {
-        _id: token.id,
-        'flags.stealthy.stealth': roll.total
-      };
-      await canvas.scene.updateEmbeddedDocuments("Token", [update]);
+      await this.putRollOnToken(actor, 'stealth', roll.total);
     } else {
       await this.updateOrCreateHiddenEffect(actor, { stealth: roll.total });
     }

@@ -195,6 +195,7 @@ Hooks.on('renderTokenHUD', (tokenHUD, html, app) => {
 
     let perceptionFlag = engine.getPerceptionFlag(token);
     if (perceptionFlag && !perceptionFlag?.passive) {
+      Stealthy.log('perceptionFlag', perceptionFlag);
       let value = engine.getPerceptionValue(perceptionFlag);
       const inputBox = $(
         `<input id="ste_spt_inp_box" title="${game.i18n.localize("stealthy.spot.inputBox")}" type="text" name="spot_value_inp_box" value="${value}"></input>`

@@ -210,7 +210,12 @@ export class EnginePF1 extends Engine {
   async rollPerception(actor, message) {
     Stealthy.log('rollPerception', { actor, message });
 
-    await this.updateOrCreateSpotEffect(actor, { perception: message.rolls[0].total });
+    const token = canvas.tokens.get(message.speaker.token);
+    if (stealthy.rollsOnToken) {
+      await this.putRollOnToken(token, 'perception', message.rolls[0].total);
+    } else {
+      await this.updateOrCreateSpotEffect(actor, { perception: message.rolls[0].total });
+    }
 
     super.rollPerception();
   }
@@ -218,7 +223,12 @@ export class EnginePF1 extends Engine {
   async rollStealth(actor, message) {
     Stealthy.log('rollStealth', { actor, message });
 
-    await this.updateOrCreateHiddenEffect(actor, { stealth: message.rolls[0].total });
+    const token = canvas.tokens.get(message.speaker.token);
+    if (stealthy.rollsOnToken) {
+      await this.putRollOnToken(token, 'stealth', message.rolls[0].total);
+    } else {
+      await this.updateOrCreateHiddenEffect(actor, { stealth: message.rolls[0].total });
+    }
 
     super.rollStealth();
   }
