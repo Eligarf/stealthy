@@ -34,9 +34,9 @@
     "playerHud": {
       "name": "Permitir que os jogadores vejam (não editem) valores ocultos e visíveis no HUD do token"
     },
-    "tokenBased": {
-      "name": "Store values on token",
-      "hint": "Store stealth and perception flags in tokens rather than putting Effects on Actors. This enables a linked actor to have different stealth values simultaneously in multiple scenes."
+    "rollsOnToken": {
+      "name": "Store rolls on selected token",
+      "hint": "Store stealth and perception rolls on the selected token rather than putting an Effect on its actor."
     },
     "friendlyStealth": {
       "name": "Como tratar tokens amigáveis ​​sob Furtividade",

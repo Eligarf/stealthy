@@ -270,7 +270,7 @@ class Engine5e extends Engine {
       perception.disadvantaged = Math.max(perception.disadvantaged, passivePrc - 5);
     }
 
-    if (stealthy.isTokenBased) {
+    if (stealthy.rollsOnToken) {
       const token = canvas.tokens.controlled.find((t) => t.actor === actor);
       if (!token) return;
       let update = {
@@ -288,7 +288,7 @@ class Engine5e extends Engine {
   async rollStealth(actor, roll) {
     Stealthy.log('Stealthy5e.rollStealth', { actor, roll });
 
-    if (stealthy.isTokenBased) {
+    if (stealthy.rollsOnToken) {
       const token = canvas.tokens.controlled.find((t) => t.actor === actor);
       if (!token) return;
       let update = {

@@ -40,9 +40,9 @@
     "playerHud": {
       "name": "Allow players to see (not edit) Hidden and Spot values on the token HUD"
     },
-    "tokenBased": {
-      "name": "Store values on token",
-      "hint": "Store stealth and perception flags in tokens rather than putting Effects on Actors. This enables a linked actor to have different stealth values simultaneously in multiple scenes."
+    "rollsOnToken": {
+      "name": "Store rolls on selected token",
+      "hint": "Store stealth and perception rolls on the selected token rather than putting an Effect on its actor."
     },
     "source": {
       "hint": "Where to find the effect",

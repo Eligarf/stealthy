@@ -181,7 +181,7 @@ export default class Engine {
     if (effect) {
       flags = this.getFlags(effect);
     }
-    else if (stealthy.isTokenBased) {
+    else {
       const tokenDoc = token instanceof Token ? token.document : token;
       flags = tokenDoc.flags?.stealthy;
       if (!flags || !('stealth' in flags)) return undefined;
@@ -216,7 +216,7 @@ export default class Engine {
     }
 
     // Otherwise, if we are token based then we need to update the token value
-    else if (stealthy.isTokenBased) {
+    else if (stealthy.rollsOnToken) {
       let update = { _id: token.id, };
       if (value === undefined) {
         update['flags.stealthy.-=stealth'] = true;
@@ -245,11 +245,18 @@ export default class Engine {
   }
 
   getPerceptionFlag(token) {
+    let flags = undefined;
     const actor = token?.actor;
     const effect = this.findSpotEffect(actor);
-    if (!effect) return undefined;
-    const flags = this.getFlags(effect);
-    const perception = flags?.perception ?? flags?.spot;
+    if (effect) {
+      flags = this.getFlags(effect);
+    }
+    else {
+      const tokenDoc = token instanceof Token ? token.document : token;
+      flags = tokenDoc.flags?.stealthy;
+      if (!flags || !('perception' in flags)) return undefined;
+    }
+    const stealth = flags?.perception ?? flags?.spot;
     return { perception, effect, token };
   }
 

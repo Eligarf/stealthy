@@ -10,18 +10,18 @@ Hooks.once('setup', () => {
   const module = game.modules.get(Stealthy.MODULE_ID);
   const moduleVersion = module.version;
 
-  game.settings.register(Stealthy.MODULE_ID, 'isTokenBased', {
-    name: game.i18n.localize("stealthy.tokenBased.name"),
-    hint: game.i18n.localize("stealthy.tokenBased.hint"),
+  game.settings.register(Stealthy.MODULE_ID, 'rollsOnToken', {
+    name: game.i18n.localize("stealthy.rollsOnToken.name"),
+    hint: game.i18n.localize("stealthy.rollsOnToken.hint"),
     scope: 'world',
     config: true,
     type: Boolean,
     default: false,
     onChange: value => {
-      stealthy.isTokenBased = value;
+      stealthy.rollsOnToken = value;
     }
   });
-  stealthy.isTokenBased = game.settings.get(Stealthy.MODULE_ID, 'isTokenBased');
+  stealthy.rollsOnToken = game.settings.get(Stealthy.MODULE_ID, 'rollsOnToken');
 
   game.settings.register(Stealthy.MODULE_ID, 'friendlyStealth', {
     name: game.i18n.localize("stealthy.friendlyStealth.name"),
@@ -185,7 +185,9 @@ Hooks.on('renderTokenHUD', (tokenHUD, html, app) => {
       if (game.user.isGM == true) {
         inputBox.change(async (inputbox) => {
           if (token === undefined) return;
-          const newValue = (!inputbox.target.value.length && stealthy.isTokenBased) ? undefined : Number(inputbox.target.value);
+          const newValue = (!inputbox.target.value.length && stealthy.rollsOnToken)
+            ? undefined
+            : Number(inputbox.target.value);
           await engine.setStealthValue(stealthFlag, newValue);
         });
       }
@@ -201,7 +203,9 @@ Hooks.on('renderTokenHUD', (tokenHUD, html, app) => {
       if (game.user.isGM == true) {
         inputBox.change(async (inputbox) => {
           if (token === undefined) return;
-          const newValue = (!inputbox.target.value.length) ? undefined : Number(inputbox.target.value);
+          const newValue = (!inputbox.target.value.length && stealthy.rollsOnToken)
+            ? undefined
+            : Number(inputbox.target.value);
           await engine.setPerceptionValue(perceptionFlag, newValue);
         });
       }
@@ -226,7 +230,7 @@ Hooks.on('getSceneControlButtons', (controls) => {
 });
 
 Hooks.on('renderSettingsConfig', (app, html, data) => {
-  $('<div>').addClass('form-group group-header').html(game.i18n.localize("stealthy.config.general")).insertBefore($('[name="stealthy.isTokenBased"]').parents('div.form-group:first'));
+  $('<div>').addClass('form-group group-header').html(game.i18n.localize("stealthy.config.general")).insertBefore($('[name="stealthy.rollsOnToken"]').parents('div.form-group:first'));
   $('<div>').addClass('form-group group-header').html(game.i18n.localize("stealthy.config.advanced")).insertBefore($('[name="stealthy.hiddenLabel"]').parents('div.form-group:first'));
   $('<div>').addClass('form-group group-header').html(game.i18n.localize("stealthy.config.debug")).insertBefore($('[name="stealthy.logLevel"]').parents('div.form-group:first'));
 });
