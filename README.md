@@ -13,28 +13,31 @@ A module for [FoundryVTT](https://foundryvtt.com) that adds perception vs stealt
 ---
 # Features
 
-## Rolling Stealth checks applies the Hidden effect
-Rolling a Stealth skill check will apply the Hidden effect to the actor and record the result of the check in that effect for later comparisons, replacing the stored result if the Hidden effect is already present. Stealthy's default Hidden effect can be overriden by adding a custom Hidden effect in Convenient Effects.
-
-***See [Handling Hidden removal](#handling-hidden-removal)***
-
-![stealth-roll](https://user-images.githubusercontent.com/16523503/209989026-e0d2dad2-8dc1-459c-8824-a2332ce8a9cd.gif)
-
-## Rolling Perception checks applies the Spot effect
-Rolling a Perception check will add a Spot effect to the actor which records the result of that perception check (the passive value for Perception is used if this effect isn't present on the actor).
-
-A toggle named 'Active Spot' is available under token controls to suspend adding of the Spot condition as the GM sees fit. Toggling it off will also clear out all Spot effects.
-
-![perception](https://user-images.githubusercontent.com/16523503/213257350-e382f584-1c5c-41a8-bf00-60705ec89bd0.gif)
-![control](https://user-images.githubusercontent.com/16523503/210176825-3fcb3183-81db-4f64-836a-81f29199b580.png)
-
-## GM Overrides
-Once the Hidden or Spot effects are applied, GMs will see token buttons with an input box on the bottom which shows the rolled values, or the passive values if the effect was added directly without rolling. Perception is on the left, Stealth is on the right. Changing the value in this input box will alter the stored results for future visibility tests while that effect remains.
+## Stealth and Perception rolls are recorded
+The last stealth and perception rolls for each token or actor are recorded and used to control token visibility on the canvas. The roll results are displayed in the token HUD for GMs to see as token buttons with an input box on the bottom: perception is on the left, stealth is on the right. Changing the values in these input boxes will alter the stored results for any future visibility tests while that roll remains active.
 
 ![override](https://user-images.githubusercontent.com/16523503/213258088-73098735-321f-4542-9c8a-433be26cd014.gif)
 
+## Where rolls are recorded
+
+A game setting controls whether roll results are stored either in an effect or directly on the selected token. A toggle named 'Record perception rolls' is available under token controls to suspend recording of perception rolls as the GM sees fit. Toggling it off will also clear out all recorded perception rolls for the current scene.
+
+![control](https://github.com/Eligarf/stealthy/assets/16523503/0afd28e1-5e72-4109-a34c-ef1fffea267e)
+
+### Tokens
+* Rolls are deleted by deleting the value in the token button
+* No icons are added to the token for a cleaner look
+
+### Effects
+* Rolls are deleted by deleting the effect.
+* Rolling a stealth skill check will apply the Hidden effect to the actor and record the result of the check in that effect for later comparisons, replacing the stored result if the Hidden effect is already present. Stealthy's default Hidden effect can be overriden by adding a custom Hidden effect in Convenient Effects. ***See [Handling Hidden removal](#handling-hidden-removal)***
+* Rolling a perception check will add a Spot effect to the actor which records the result of that perception check.
+
+![stealth-roll](https://user-images.githubusercontent.com/16523503/209989026-e0d2dad2-8dc1-459c-8824-a2332ce8a9cd.gif)
+![perception](https://user-images.githubusercontent.com/16523503/213257350-e382f584-1c5c-41a8-bf00-60705ec89bd0.gif)
+
 ## Invisible characters can hide from See Invisibility
-An invisible actor that also has the 'Hidden' effect will check Perception vs Stealth before showing up in the 'See Invisibility' vision mode.
+An invisible actor with an active stealth roll will check vs perception before showing up in the 'See Invisibility' vision mode.
 
 ![invisible](https://user-images.githubusercontent.com/16523503/210176827-03fda57a-6d09-4144-8253-b8b7cd9155ac.gif)
 
@@ -63,7 +66,7 @@ I've abandoned trying to get this to work on PF2e. Instead, I use *PF2e Percepti
 # Limitations
 
 ## Handling Hidden removal
-Stealthy will not automatically remove the Hidden effect - the dnd5e [Skulker](https://www.dndbeyond.com/feats/skulker) feat demonstrates why removing Hidden gets complicated without heavier automation support provided by modules like the excellent [Midi-QOL](https://foundryvtt.com/packages/midi-qol) which handles this for my games. I suggest [Visual Active Effects](https://foundryvtt.com/packages/visual-active-effects) as an easier way to manually remove it, especially for low automation level games. 
+Stealthy will not automatically remove a stealth roll or the Hidden effect - the dnd5e [Skulker](https://www.dndbeyond.com/feats/skulker) feat demonstrates why removing Hidden gets complicated without heavier automation support provided by modules like the excellent [Midi-QOL](https://foundryvtt.com/packages/midi-qol) which handles this for my games. I suggest [Visual Active Effects](https://foundryvtt.com/packages/visual-active-effects) as an easier way to manually remove it, especially for low automation level games. 
 
 # Required modules
 * [lib-wrapper](https://foundryvtt.com/packages/lib-wrapper)

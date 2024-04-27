@@ -139,12 +139,12 @@ export class EnginePF1 extends Engine {
     return flag;
   }
 
-  async setStealthValueInEffect(flag, value, sourceEffect) {
+  async setValueInEffect(flag, skill, value, sourceEffect) {
     const token = flag.token;
     let effect = duplicate(sourceEffect);
     if (!('stealthy' in effect.flags))
-      effect.flags.stealthy = { stealth: value };
-    else effect.flags.stealthy.stealth = value;
+      effect.flags.stealthy = {};
+    effect.flags.stealthy[skill] = value;
     const actor = token.actor;
     await actor.updateEmbeddedDocuments('Item', [effect]);
   }
@@ -194,17 +194,6 @@ export class EnginePF1 extends Engine {
       passive: true,
       perception: 10 + token.actor.system.skills.per.mod
     };
-  }
-
-  async setPerceptionValue(flag, value) {
-    Stealthy.log('setPerceptionValue', { flag, value });
-    let effect = duplicate(flag?.effect);
-    if (!('stealthy' in effect.flags)) effect.flags.stealthy = { perception: value };
-    else effect.flags.stealthy.perception = value;
-
-    const actor = flag.token.actor;
-    await actor.updateEmbeddedDocuments('Item', [effect]);
-    canvas.perception.update({ initializeVision: true }, true);
   }
 
   async rollPerception(actor, message) {

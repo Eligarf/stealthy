@@ -1,5 +1,9 @@
-# pending
-* Use token flags rather than actor effects to support having an actor on multiple scenes.
+# v4.0.0
+* Big code reorganization to allow the choice of recording stealth and perception rolls directly on tokens or applying effects to the actor.
+* Roll results can be removed from the token by clicking into the token HUD result and deleting its text.
+* 'Active Spot' changed to 'Record perception rolls' and the control icon has changed to binoculars.
+* The new text hasn't been localized yet - I put english placeholders in the language json files.
+* Added a data schema setting to allow future data migration
 * Drop V10 and CUB support
 
 # v3.18.1
