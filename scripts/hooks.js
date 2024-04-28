@@ -209,47 +209,49 @@ Hooks.on('renderTokenHUD', (tokenHUD, html, app) => {
   if (game.settings.get(Stealthy.MODULE_ID, 'exposure') && !game.modules.get('tokenlightcondition')?.active) {
     const exposure = engine.getLightExposure(token) ?? 'dark';
     const icon = LIGHT_ICONS[exposure];
-    Stealthy.log('exposure', exposure);
-    html.find(".right").append($(`<div class="control-icon" title="${game.i18n.localize("stealthy.exposure."+exposure)}">${icon}</div>`));
+    const title = game.i18n.localize(`stealthy.exposure.${exposure}`);
+    html.find(".right").append($(`<div class="control-icon" title="${title}">${icon}</div>`));
   }
 
-  if (game.user.isGM == true || game.settings.get(Stealthy.MODULE_ID, 'playerHud')) {
+  if (!(game.user.isGM == true) && !game.settings.get(Stealthy.MODULE_ID, 'playerHud')) return;
+  const editMode = game.user.isGM ? '' : 'disabled ';
 
-    let stealthFlag = engine.getStealthFlag(token);
-    if (stealthFlag) {
-      let value = engine.getStealthValue(stealthFlag);
-      const inputBox = $(
-        `<input ${game.user.isGM ? '' : 'disabled '} id="ste_hid_inp_box" title="${game.i18n.localize("stealthy.hidden.inputBox")}" type="text" name="hidden_value_inp_box" value="${value}"></input>`
-      );
-      html.find(".right").append(inputBox);
-      if (game.user.isGM == true) {
-        inputBox.change(async (inputbox) => {
-          if (token === undefined) return;
-          const newValue = (!inputbox.target.value.length && !stealthy.stealthToActor)
-            ? undefined
-            : Number(inputbox.target.value);
-          await engine.setStealthValue(stealthFlag, newValue);
-        });
-      }
+  let stealthFlag = engine.getStealthFlag(token);
+  if (stealthFlag) {
+    let value = engine.getStealthValue(stealthFlag);
+    const title = game.i18n.localize("stealthy.hidden.description");
+    const inputBox = $(
+      `<input ${editMode}id="ste_hid_inp_box" title="${title}" type="text" name="hidden_value_inp_box" value="${value}"></input>`
+    );
+    html.find(".right").append(inputBox);
+    if (game.user.isGM == true) {
+      inputBox.change(async (inputbox) => {
+        if (token === undefined) return;
+        const newValue = (!inputbox.target.value.length && !stealthy.stealthToActor)
+          ? undefined
+          : Number(inputbox.target.value);
+        await engine.setStealthValue(stealthFlag, newValue);
+      });
     }
+  }
 
-    let perceptionFlag = engine.getPerceptionFlag(token);
-    if (perceptionFlag && !perceptionFlag?.passive) {
-      Stealthy.log('perceptionFlag', perceptionFlag);
-      let value = engine.getPerceptionValue(perceptionFlag);
-      const inputBox = $(
-        `<input ${game.user.isGM ? '' : 'disabled '} id="ste_spt_inp_box" title="${game.i18n.localize("stealthy.spot.inputBox")}" type="text" name="spot_value_inp_box" value="${value}"></input>`
-      );
-      html.find(".left").append(inputBox);
-      if (game.user.isGM == true) {
-        inputBox.change(async (inputbox) => {
-          if (token === undefined) return;
-          const newValue = (!inputbox.target.value.length && !stealthy.perceptionToActor)
-            ? undefined
-            : Number(inputbox.target.value);
-          await engine.setPerceptionValue(perceptionFlag, newValue);
-        });
-      }
+  let perceptionFlag = engine.getPerceptionFlag(token);
+  if (perceptionFlag && !perceptionFlag?.passive) {
+    Stealthy.log('perceptionFlag', perceptionFlag);
+    let value = engine.getPerceptionValue(perceptionFlag);
+    const title = game.i18n.localize("stealthy.hidden.description");
+    const inputBox = $(
+      `<input ${editMode}id="ste_spt_inp_box" title="${title}" type="text" name="spot_value_inp_box" value="${value}"></input>`
+    );
+    html.find(".left").append(inputBox);
+    if (game.user.isGM == true) {
+      inputBox.change(async (inputbox) => {
+        if (token === undefined) return;
+        const newValue = (!inputbox.target.value.length && !stealthy.perceptionToActor)
+          ? undefined
+          : Number(inputbox.target.value);
+        await engine.setPerceptionValue(perceptionFlag, newValue);
+      });
     }
   }
 });
