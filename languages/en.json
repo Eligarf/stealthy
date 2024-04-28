@@ -1,26 +1,24 @@
 {
   "stealthy": {
     "hidden": {
-      "label": "Hidden",
       "name": "Hidden",
       "description": "Banked stealth roll",
       "inputBox": "Banked stealth roll",
       "source": "Hidden effect source",
       "preloc": {
-        "key": "Localization key for Hidden label",
+        "key": "Localization key for Hidden name",
         "hint": "This string will be sent through i18n.localize(). Changing these may affect overall automation of Stealthy's effects."
       },
       "icon": "Hidden icon",
       "iconhint": "Default icon for Hidden effect"
     },
     "spot": {
-      "label": "Spot",
       "name": "Spot",
       "description": "Banked perception roll",
       "inputBox": "Banked perception roll",
       "source": "Spot effect source",
       "preloc": {
-        "key": "Localization key for Spot label"
+        "key": "Localization key for Spot name"
       },
       "icon": "Spot icon",
       "iconhint": "Default icon for Spot effect"
@@ -63,8 +61,8 @@
         "beforeLabel": "Couldn't find effect",
         "afterLabel": "in CE, using Stealthy's default instead"
       },
-      "ae": "Stealthy",
-      "min": "Stealthy - just an icon"
+      "ae": "Stealthy (icon and token effect)",
+      "min": "Stealthy (icon only)"
     },
     "schema": {
       "name": "Schema Version",

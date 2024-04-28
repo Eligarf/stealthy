@@ -1,7 +1,6 @@
 {
   "stealthy": {
     "hidden": {
-      "label": "Caché",
       "name": "Caché",
       "description": "Banked stealth roll",
       "inputBox": "Banked stealth roll",
@@ -14,7 +13,6 @@
       "iconhint": "Icône par défaut pour l'effet masqué"
     },
     "spot": {
-      "label": "Détection",
       "name": "Détection",
       "description": "Banked perception roll",
       "inputBox": "Banked perception roll",
@@ -63,8 +61,8 @@
         "beforeLabel": "Impossible de trouver l'effet",
         "afterLabel": "dans CE, en utilisant la valeur par défaut de Stealthy à la place"
       },
-      "ae": "Effet Furtif",
-      "min": "Effet Furtif - juste une icône"
+      "ae": "Stealthy (icon and token effect)",
+      "min": "Stealthy (icon only)"
     },
     "schema": {
       "name": "Schema Version",

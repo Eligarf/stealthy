@@ -1,7 +1,6 @@
 {
   "stealthy": {
     "hidden": {
-      "label": "Escondido",
       "name": "Escondido",
       "description": "Banked stealth roll",
       "inputBox": "Banked stealth roll",
@@ -14,7 +13,6 @@
       "iconhint": "Ícone padrão para o efeito Escondido"
     },
     "spot": {
-      "label": "Percebendo",
       "name": "Percebendo",
       "description": "Banked perception roll",
       "inputBox": "Banked perception roll",
@@ -63,8 +61,8 @@
         "beforeLabel": "Não foi possível encontrar o efeito",
         "afterLabel": "no CE, usando o padrão do Stealthy"
       },
-      "ae": "Stealthy",
-      "min": "Stealthy - apenas um ícone"
+      "ae": "Stealthy (icon and token effect)",
+      "min": "Stealthy (icon only)"
     },
     "schema": {
       "name": "Schema Version",
