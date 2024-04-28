@@ -212,7 +212,7 @@ export default class Engine {
 
     // If there is an effect, stuff the flag in it
     if (sourceEffect) {
-      await this.setStealthValueInEffect(flag, 'stealth', value, sourceEffect);
+      await this.setValueInEffect(flag, 'stealth', value, sourceEffect);
     }
 
     // Otherwise, if we are token based then we need to update the token value
