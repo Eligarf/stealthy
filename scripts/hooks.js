@@ -202,7 +202,6 @@ const LIGHT_ICONS = {
 };
 
 Hooks.on('renderTokenHUD', (tokenHUD, html, app) => {
-  Stealthy.log('renderTokenHUD');
   const engine = stealthy.engine;
   const token = tokenHUD.object;
 
@@ -237,7 +236,6 @@ Hooks.on('renderTokenHUD', (tokenHUD, html, app) => {
 
   let perceptionFlag = engine.getPerceptionFlag(token);
   if (perceptionFlag && !perceptionFlag?.passive) {
-    Stealthy.log('perceptionFlag', perceptionFlag);
     let value = engine.getPerceptionValue(perceptionFlag);
     const title = game.i18n.localize("stealthy.hidden.description");
     const inputBox = $(
