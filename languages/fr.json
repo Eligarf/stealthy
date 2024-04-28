@@ -44,9 +44,9 @@
     "exposure": {
       "name": "Show light exposure",
       "hint": "Shows the selected token's light exposure on the Token HUD",
-      "bright": "in bright light",
-      "dim": "in dim light",
-      "dark": "in dark"
+      "bright": "in Bright light",
+      "dim": "in Dim light",
+      "dark": "in Dark"
     },
     "stealthToActor": {
       "name": "Bank stealth rolls to actor",
