@@ -3,7 +3,6 @@
     "hidden": {
       "name": "Caché",
       "description": "Banked stealth roll",
-      "inputBox": "Banked stealth roll",
       "source": "Source d'effets cachés",
       "preloc": {
         "key": "Clé de localisation pour l'étiquette masquée",
@@ -15,7 +14,6 @@
     "spot": {
       "name": "Détection",
       "description": "Banked perception roll",
-      "inputBox": "Banked perception roll",
       "source": "Source d'effet ponctuel",
       "preloc": {
         "key": "Clé de localisation pour l'étiquette Spot"

@@ -3,7 +3,6 @@
     "hidden": {
       "name": "Hidden",
       "description": "Banked stealth roll",
-      "inputBox": "Banked stealth roll",
       "source": "Hidden effect source",
       "preloc": {
         "key": "Localization key for Hidden name",
@@ -15,7 +14,6 @@
     "spot": {
       "name": "Spot",
       "description": "Banked perception roll",
-      "inputBox": "Banked perception roll",
       "source": "Spot effect source",
       "preloc": {
         "key": "Localization key for Spot name"

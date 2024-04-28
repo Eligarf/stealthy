@@ -3,7 +3,6 @@
     "hidden": {
       "name": "Escondido",
       "description": "Banked stealth roll",
-      "inputBox": "Banked stealth roll",
       "source": "Origem Escondida",
       "preloc": {
         "key": "Chave de localização para rótulo Escondido",
@@ -15,7 +14,6 @@
     "spot": {
       "name": "Percebendo",
       "description": "Banked perception roll",
-      "inputBox": "Banked perception roll",
       "source": "Origem Percebendo",
       "preloc": {
         "key": "Chave de localização para rótulo Percebido"
