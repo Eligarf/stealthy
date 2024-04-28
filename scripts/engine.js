@@ -86,45 +86,43 @@ export default class Engine {
 
   makeHiddenEffectMaker(name) {
     return (flag, source) => {
-      let hidden;
-      const hiddenIcon = game.settings.get(Stealthy.MODULE_ID, 'hiddenIcon');
-      hidden = {
-        name,
-        icon: hiddenIcon,
-        changes: [],
+      let effect = {
+        icon: game.settings.get(Stealthy.MODULE_ID, 'hiddenIcon'),
         description: game.i18n.localize("stealthy.hidden.description"),
         flags: {
           stealthy: flag,
         },
         statuses: ['hidden'],
+        changes: [],
       };
+      effect[(Math.floor(game.version) < 11) ? 'label' : 'name'] = name;
+
       if (source === 'ae') {
         if (typeof ATLUpdate !== 'undefined') {
-          hidden.changes.push({
+          effect.changes.push({
             key: 'ATL.alpha',
             mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
             value: '0.75'
           });
         }
       }
-      return hidden;
+      return effect;
     };
   }
 
   makeSpotEffectMaker(name) {
     return (flag, source) => {
-      let spot;
-      const spotIcon = game.settings.get(Stealthy.MODULE_ID, 'spotIcon');
-      spot = {
-        name,
-        icon: spotIcon,
+      let effect = {
+        icon: game.settings.get(Stealthy.MODULE_ID, 'spotIcon'),
         description: game.i18n.localize("stealthy.spot.description"),
         flags: {
           stealthy: flag,
         },
         statuses: ['spot'],
       };
-      return spot;
+      effect[(Math.floor(game.version) < 11) ? 'label' : 'name'] = name;
+      
+      return effect;
     };
   }
 
