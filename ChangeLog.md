@@ -1,5 +1,5 @@
 # v4.0.0
-* V10 is no longer supported due to big code changes. V11 games should have a seamless upgrade since no data migrations are required.
+* Big code changes, but games should have a seamless upgrade since no data migrations are required.
 * Stealthy now allows the choice of banking stealth and perception rolls to tokens or actors via effects.
 * Game setting defaults will bank perception rolls on the token and stealth rolls on an actor's effect.
 * 'Active Spot' control title changed to 'Bank perception rolls' and the control icon has changed to a piggy bank.

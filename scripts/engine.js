@@ -68,11 +68,13 @@ export default class Engine {
   }
 
   findHiddenEffect(actor) {
-    return actor?.effects.find((e) => !e.disabled && e.name === this.hiddenName);
+    const v10 = Math.floor(game.version) < 11;
+    return actor?.effects.find((e) => !e.disabled && this.hiddenName === (v10 ? e.label : e.name));
   }
 
   findSpotEffect(actor) {
-    return actor?.effects.find(e => !e.disabled && e.name === this.spotName);
+    const v10 = Math.floor(game.version) < 11;
+    return actor?.effects.find((e) => !e.disabled && this.spotName === (v10 ? e.label : e.name));
   }
 
   canDetectHidden(visionSource, target, detectionMode) {
@@ -127,14 +129,15 @@ export default class Engine {
   }
 
   async updateOrCreateEffect({ name, actor, flag, source, makeEffect }) {
-    let effect = actor.effects.find(e => e.name === name);
+    const v10 = Math.floor(game.version) < 11;
+    let effect = actor.effects.find((e) => name === (v10 ? e.label : e.name));
 
     if (!effect) {
       // See if we can source from outside
       if (source === 'ce') {
         if (game.dfreds?.effectInterface?.findEffectByName(name)) {
           await game.dfreds.effectInterface.addEffect({ effectName: name, uuid: actor.uuid });
-          effect = actor.effects.find(e => e.name === name);
+          effect = actor.effects.find((e) => name === (v10 ? e.label : e.name));
         }
         if (!effect && !this.warnedMissingCE) {
           this.warnedMissingCE = true;

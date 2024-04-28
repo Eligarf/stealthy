@@ -17,26 +17,27 @@ export class Stealthy {
   static async TogglePerceptionBanking(toggled) {
     Stealthy.log(`ToggletPerceptionBanking <= ${toggled}`);
     stealthy.bankingPerception = toggled;
+    if (toggled || !game.user.isGM)
+      return;
 
-    if (!toggled && game.user.isGM) {
-      const name = game.i18n.localize('stealthy.spot.name');
-      let updates = [];
-      for (let token of canvas.tokens.placeables) {
-        const actor = token.actor;
-        const spot = actor.effects.find(e => e.name === name);
-        if (spot) {
-          actor.deleteEmbeddedDocuments('ActiveEffect', [spot.id]);
-        }
-        const tokenDoc = (token instanceof Token) ? token.document : token;
-        if (tokenDoc.flags?.stealthy?.perception) {
-          let update = { _id: token.id, };
-          update['flags.stealthy.-=perception'] = true;
-          updates.push(update);
-        }
+    const v10 = Math.floor(game.version) < 11;
+    const name = game.i18n.localize('stealthy.spot.name');
+    let updates = [];
+    for (let token of canvas.tokens.placeables) {
+      const actor = token.actor;
+      const spot = actor.effects.find((e) => name === (v10 ? e.label : e.name));
+      if (spot) {
+        actor.deleteEmbeddedDocuments('ActiveEffect', [spot.id]);
       }
-      if (updates.length > 0)
-        await canvas.scene.updateEmbeddedDocuments("Token", updates);
+      const tokenDoc = (token instanceof Token) ? token.document : token;
+      if (tokenDoc.flags?.stealthy?.perception) {
+        let update = { _id: token.id, };
+        update['flags.stealthy.-=perception'] = true;
+        updates.push(update);
+      }
     }
+    if (updates.length > 0)
+      await canvas.scene.updateEmbeddedDocuments("Token", updates);
   }
 
   static RefreshPerception() {

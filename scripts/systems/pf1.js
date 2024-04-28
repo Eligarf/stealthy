@@ -71,11 +71,13 @@ export class EnginePF1 extends Engine {
   }
 
   findHiddenEffect(actor) {
-    return actor?.items.find(i => i.name === 'Hidden' && i.system.active);
+    const v10 = Math.floor(game.version) < 11;
+    return actor?.items.find((i) => i.system.active && (v10 ? i.label : i.name) === 'Hidden');
   }
 
   findSpotEffect(actor) {
-    return actor?.items.find(i => i.name === 'Spot' && i.system.active);
+    const v10 = Math.floor(game.version) < 11;
+    return actor?.items.find((i) => i.system.active && (v10 ? i.label : i.name) === 'Spot');
   }
 
   canDetectHidden(visionSource, tgtToken, detectionMode) {
@@ -106,7 +108,8 @@ export class EnginePF1 extends Engine {
 
   async updateOrCreateHiddenEffect(actor, flag) {
     let hidden = this.findHiddenEffect(actor);
-    if (!hidden) hidden = actor?.items.find(i => i.name === 'Hidden');
+    const v10 = Math.floor(game.version) < 11;
+    if (!hidden) hidden = actor?.items.find((i) => (v10 ? i.label : i.name) === 'Hidden');
     if (!hidden) {
       const effect = {
         "name": "Hidden",
@@ -153,7 +156,8 @@ export class EnginePF1 extends Engine {
     let spot = this.findSpotEffect(actor);
 
     // PF1 buffs can be disabled, if so, look for one already on the actor
-    if (!spot) spot = actor?.items.find(i => i.name === 'Spot');
+    const v10 = Math.floor(game.version) < 11;
+    if (!spot) spot = actor?.items.find((i) => (v10 ? i.label : i.name) === 'Spot');
     if (!spot) {
       const effect = {
         "name": "Spot",
