@@ -312,6 +312,51 @@ export default class Engine {
     stealthy.socket.executeForEveryone('RefreshPerception');
   }
 
+  getLightExposure(token) {
+    token = token instanceof Token ? token : token.object;
+
+    const scene = token.scene;
+    if (scene !== canvas.scene || !scene.tokenVision || scene.darkness < scene.globalLightThreshold) return undefined;
+
+    const center = token.center;
+    let exposure = null;
+
+    for (const light of canvas.effects.lightSources) {
+      if (!light.active) continue;
+
+      const bright = light.data.bright;
+      const dim = light.data.dim;
+
+      if (light.object === token) {
+        if (bright) return 'bright';
+        if (dim) exposure = 'dim';
+        continue;
+      }
+
+      if (!light.shape.contains(center.x, center.y)) {
+        continue;
+      }
+
+      if (light.ratio === 1) {
+        return 'bright';
+      }
+
+      if (light.ratio === 0) {
+        exposure = 'dim';
+        continue;
+      }
+
+      const distance = new Ray(light, center).distance;
+      if (distance <= bright) {
+        return 'bright';
+      } else {
+        exposure = 'dim';
+      }
+    }
+
+    return exposure;
+  }
+
   canSpotDoor(doorControl, visionSource) {
     // Open doors are visible
     const door = doorControl.wall.document;

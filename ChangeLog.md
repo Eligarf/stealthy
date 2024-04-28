@@ -3,12 +3,14 @@
 * Banked results can be removed from tokens by clicking into the token HUD result and deleting its text. This won't work for banked results stored on effects.
 * By default, banked perception rolls go to the token and banked stealth rolls go to an effect on the actor. Choice is controlled by game settings.
 * 'Active Spot' changed to 'Bank perception rolls' and the control icon has changed to a piggy bank.
-* Stealthy Tokens now use the scene's light state for determining perception disadvantage rather than looking up lighting state in the actor effects
-* The new text hasn't been localized yet - I put english placeholders in the language json files.
+* The new text hasn't been properly localized yet - I put english placeholders in the language json files.
+* Added client setting to add a lighting exposure icon to the token HUD. It doesn't add this if the tokenlightcondition module is active. 
 * Added a data schema setting to allow future data migration
 * Drop V10 and CUB support
+* Dnd5e: Stealthy Tokens now use the scene's lighting state to determine perception disadvantage rather than looking up dim/dark effects on its actor
 
 # v3.18.1
+* FINAL V10-compatible version. Only V11+ in the future.
 * Update pt-BR.json (thanks Kharmans)
 
 # v3.18.0

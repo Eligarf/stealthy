@@ -3,8 +3,8 @@
     "hidden": {
       "label": "Caché",
       "name": "Caché",
-      "description": "Nécessite un test de perception pour détecter",
-      "inputBox": "Test de Discrétion",
+      "description": "Banked stealth roll",
+      "inputBox": "Banked stealth roll",
       "source": "Source d'effets cachés",
       "preloc": {
         "key": "Clé de localisation pour l'étiquette masquée",
@@ -16,8 +16,8 @@
     "spot": {
       "label": "Détection",
       "name": "Détection",
-      "description": "Résultat de la vérification de la perception active",
-      "inputBox": "Test de Perception",
+      "description": "Banked perception roll",
+      "inputBox": "Banked perception roll",
       "source": "Source d'effet ponctuel",
       "preloc": {
         "key": "Clé de localisation pour l'étiquette Spot"
@@ -38,7 +38,15 @@
       "ignore": "Ignorer les tests de perception"
     },
     "playerHud": {
-      "name": "Autoriser les joueurs à voir (et non à modifier) ​​les valeurs cachées et ponctuelles sur le HUD du jeton"
+      "name": "Players can see banked rolls",
+      "hint": "Players can see banked rolls on the token HUD but can't change them"
+    },
+    "exposure": {
+      "name": "Show light exposure",
+      "hint": "Shows the selected token's light exposure on the Token HUD",
+      "bright": "in bright light",
+      "dim": "in dim light",
+      "dark": "in dark"
     },
     "stealthToActor": {
       "name": "Bank stealth rolls to actor",

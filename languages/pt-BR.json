@@ -3,8 +3,8 @@
     "hidden": {
       "label": "Escondido",
       "name": "Escondido",
-      "description": "Requer teste de Percepção para detectar.",
-      "inputBox": "Teste de Furtividade",
+      "description": "Banked stealth roll",
+      "inputBox": "Banked stealth roll",
       "source": "Origem Escondida",
       "preloc": {
         "key": "Chave de localização para rótulo Escondido",
@@ -16,8 +16,8 @@
     "spot": {
       "label": "Percebendo",
       "name": "Percebendo",
-      "description": "Resultado do teste ativo de Percepção.",
-      "inputBox": "Teste de Percepção.",
+      "description": "Banked perception roll",
+      "inputBox": "Banked perception roll",
       "source": "Origem Percebendo",
       "preloc": {
         "key": "Chave de localização para rótulo Percebido"
@@ -32,7 +32,15 @@
       "hint": "Tokens podem identificar portas ocultas se seu teste de Percepção superar o valor furtivo da porta."
     },
     "playerHud": {
-      "name": "Permitir que os jogadores vejam (não editem) valores ocultos e visíveis no HUD do token"
+      "name": "Players can see banked rolls",
+      "hint": "Players can see banked rolls on the token HUD but can't change them"
+    },
+    "exposure": {
+      "name": "Show light exposure",
+      "hint": "Shows the selected token's light exposure on the Token HUD",
+      "bright": "in bright light",
+      "dim": "in dim light",
+      "dark": "in dark"
     },
     "stealthToActor": {
       "name": "Bank stealth rolls to actor",

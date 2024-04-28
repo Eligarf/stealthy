@@ -3,8 +3,8 @@
     "hidden": {
       "label": "Hidden",
       "name": "Hidden",
-      "description": "Requires perception check to detect",
-      "inputBox": "Stealth check",
+      "description": "Banked stealth roll",
+      "inputBox": "Banked stealth roll",
       "source": "Hidden effect source",
       "preloc": {
         "key": "Localization key for Hidden label",
@@ -16,8 +16,8 @@
     "spot": {
       "label": "Spot",
       "name": "Spot",
-      "description": "Active Perception check result",
-      "inputBox": "Perception check",
+      "description": "Banked perception roll",
+      "inputBox": "Banked perception roll",
       "source": "Spot effect source",
       "preloc": {
         "key": "Localization key for Spot label"
@@ -38,7 +38,15 @@
       "ignore": "Ignore Perception tests"
     },
     "playerHud": {
-      "name": "Allow players to see (not edit) Hidden and Spot values on the token HUD"
+      "name": "Players can see banked rolls",
+      "hint": "Players can see banked rolls on the token HUD but can't change them"
+    },
+    "exposure": {
+      "name": "Show light exposure",
+      "hint": "Shows the selected token's light exposure on the Token HUD",
+      "bright": "in bright light",
+      "dim": "in dim light",
+      "dark": "in dark"
     },
     "stealthToActor": {
       "name": "Bank stealth rolls to actor",

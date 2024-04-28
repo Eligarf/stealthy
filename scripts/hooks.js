@@ -51,10 +51,20 @@ Hooks.once('setup', () => {
 
   game.settings.register(Stealthy.MODULE_ID, 'playerHud', {
     name: game.i18n.localize("stealthy.playerHud.name"),
+    name: game.i18n.localize("stealthy.playerHud.hint"),
     scope: 'world',
     config: true,
     type: Boolean,
     default: false,
+  });
+
+  game.settings.register(Stealthy.MODULE_ID, 'exposure', {
+    name: game.i18n.localize("stealthy.exposure.name"),
+    name: game.i18n.localize("stealthy.exposure.hint"),
+    scope: 'client',
+    config: true,
+    type: Boolean,
+    default: true,
   });
 
   game.settings.register(Stealthy.MODULE_ID, 'spotSecretDoors', {
@@ -183,16 +193,31 @@ Hooks.once('setup', () => {
   Stealthy.log(`Initialized ${moduleVersion}`);
 });
 
+const LIGHT_ICONS = {
+  bright: '<i class="fa-solid fa-circle"></i>',
+  dim: '<i class="fa-solid fa-circle-half-stroke"></i>',
+  dark: '<i class="fa-regular fa-circle"></i>'
+};
+
 Hooks.on('renderTokenHUD', (tokenHUD, html, app) => {
+  Stealthy.log('renderTokenHUD');
+  const engine = stealthy.engine;
+  const token = tokenHUD.object;
+
+  if (game.settings.get(Stealthy.MODULE_ID, 'exposure') && !game.modules.get('tokenlightcondition')?.active) {
+    const exposure = engine.getLightExposure(token) ?? 'dark';
+    const icon = LIGHT_ICONS[exposure];
+    Stealthy.log('exposure', exposure);
+    html.find(".right").append($(`<div class="control-icon" title="${game.i18n.localize("stealthy.exposure."+exposure)}">${icon}</div>`));
+  }
+
   if (game.user.isGM == true || game.settings.get(Stealthy.MODULE_ID, 'playerHud')) {
-    const token = tokenHUD.object;
-    const engine = stealthy.engine;
 
     let stealthFlag = engine.getStealthFlag(token);
     if (stealthFlag) {
       let value = engine.getStealthValue(stealthFlag);
       const inputBox = $(
-        `<input id="ste_hid_inp_box" title="${game.i18n.localize("stealthy.hidden.inputBox")}" type="text" name="hidden_value_inp_box" value="${value}"></input>`
+        `<input ${game.user.isGM ? '' : 'disabled '} id="ste_hid_inp_box" title="${game.i18n.localize("stealthy.hidden.inputBox")}" type="text" name="hidden_value_inp_box" value="${value}"></input>`
       );
       html.find(".right").append(inputBox);
       if (game.user.isGM == true) {
@@ -211,7 +236,7 @@ Hooks.on('renderTokenHUD', (tokenHUD, html, app) => {
       Stealthy.log('perceptionFlag', perceptionFlag);
       let value = engine.getPerceptionValue(perceptionFlag);
       const inputBox = $(
-        `<input id="ste_spt_inp_box" title="${game.i18n.localize("stealthy.spot.inputBox")}" type="text" name="spot_value_inp_box" value="${value}"></input>`
+        `<input ${game.user.isGM ? '' : 'disabled '} id="ste_spt_inp_box" title="${game.i18n.localize("stealthy.spot.inputBox")}" type="text" name="spot_value_inp_box" value="${value}"></input>`
       );
       html.find(".left").append(inputBox);
       if (game.user.isGM == true) {
