@@ -10,6 +10,7 @@
 * Drop CUB support
 * Dnd5e: The 'perception disadvantage' setting enables tokens with stealth to now use the scene's lighting state to determine if they should apply disadvantage to the opposing perception check rather than looking up dim/dark effects on its actor
 * Dnd5e: Unless disabled, passive perception clamping of perception rolls now happens at time of roll rather than at comparison. This allows you to edit the banked perception roll to be less than the passive perception value if you choose.
+* Dnd5e: added settings to allow custom skills to substitute for stealth or perception
 
 # v3.18.1
 * FINAL V10-compatible version. Only V11+ in the future.

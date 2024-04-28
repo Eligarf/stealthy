@@ -91,7 +91,7 @@
       },
       "perceptionDisadvantage": {
         "name": "Perception disadvantage in Dim light",
-        "hint": "Use scene lighting to determine if perception disadvantage applies for tokens with stealth"
+        "hint": "Use scene lighting to determine if perception disadvantage applies for tokens with stealth. Uses center X,Y of the token, nothing fancy"
       },
       "ignorePassiveFloor": {
         "name": "Ignore o valor mínimo de Percepção Passiva para verificações ativas",
@@ -102,6 +102,14 @@
         "allow": "Visão Umbral está escondida para Darkvision",
         "inCombat": "Ignore Visão Umbral a menos que esteja em combate",
         "ignore": "Ignorar Visão Umbral"
+      },
+      "stealthKey": {
+        "name": "Stealth skill key",
+        "hint": "Must be a key found in actor.system.skills, default is 'ste'. Used to redirect rolls from a custom skill into the stealth channel, all tooltips/etc will continue to use localize from 'stealth'"
+      },
+      "perceptionKey": {
+        "name": "Perception skill key",
+        "hint": "Must be a key found in actor.system.skills, default is 'prc'. See Stealth skill key hint but substitute perception"
       }
     },
     "pf1": {

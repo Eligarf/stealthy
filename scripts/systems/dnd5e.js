@@ -23,6 +23,33 @@ class Engine5e extends Engine {
     });
 
     Hooks.once('setup', () => {
+      game.settings.register(Stealthy.MODULE_ID, 'perceptionDisadvantage', {
+        name: game.i18n.localize("stealthy.dnd5e.perceptionDisadvantage.name"),
+        hint: game.i18n.localize("stealthy.dnd5e.perceptionDisadvantage.hint"),
+        scope: 'world',
+        config: true,
+        type: Boolean,
+        default: true,
+      });
+
+      game.settings.register(Stealthy.MODULE_ID, 'stealthKey', {
+        name: game.i18n.localize("stealthy.dnd5e.stealthKey.name"),
+        hint: game.i18n.localize("stealthy.dnd5e.stealthKey.hint"),
+        scope: 'world',
+        config: true,
+        type: String,
+        default: 'ste'
+      });
+
+      game.settings.register(Stealthy.MODULE_ID, 'perceptionKey', {
+        name: game.i18n.localize("stealthy.dnd5e.perceptionKey.name"),
+        hint: game.i18n.localize("stealthy.dnd5e.perceptionKey.hint"),
+        scope: 'world',
+        config: true,
+        type: String,
+        default: 'prc'
+      });
+
       game.settings.register(Stealthy.MODULE_ID, 'ignorePassiveFloor', {
         name: game.i18n.localize("stealthy.dnd5e.ignorePassiveFloor.name"),
         hint: game.i18n.localize("stealthy.dnd5e.ignorePassiveFloor.hint"),
@@ -44,22 +71,13 @@ class Engine5e extends Engine {
         },
         default: 'inCombat'
       });
-
-      game.settings.register(Stealthy.MODULE_ID, 'perceptionDisadvantage', {
-        name: game.i18n.localize("stealthy.dnd5e.perceptionDisadvantage.name"),
-        hint: game.i18n.localize("stealthy.dnd5e.perceptionDisadvantage.hint"),
-        scope: 'world',
-        config: true,
-        type: Boolean,
-        default: true,
-      });
     });
 
     Hooks.on('dnd5e.rollSkill', async (actor, roll, skill) => {
-      if (skill === 'ste') {
+      if (skill === game.settings.get(Stealthy.MODULE_ID, 'stealthKey')) {
         await this.rollStealth(actor, roll);
       }
-      else if (skill === 'prc') {
+      else if (skill === game.settings.get(Stealthy.MODULE_ID, 'perceptionKey')) {
         await this.rollPerception(actor, roll);
       }
     });
@@ -67,7 +85,7 @@ class Engine5e extends Engine {
     Hooks.on('renderSettingsConfig', (app, html, data) => {
       $('<div>').addClass('form-group group-header')
         .html(game.i18n.localize("stealthy.dnd5e.name"))
-        .insertBefore($('[name="stealthy.ignorePassiveFloor"]')
+        .insertBefore($('[name="stealthy.perceptionDisadvantage"]')
           .parents('div.form-group:first'));
     });
   }
@@ -155,14 +173,14 @@ class Engine5e extends Engine {
   getStealthFlag(token) {
     let flag = super.getStealthFlag(token);
     if (flag && flag.stealth === undefined)
-      flag.stealth = flag.token.actor.system.skills.ste.passive;
+      flag.stealth = flag.token.actor.system.skills[game.settings.get(Stealthy.MODULE_ID, 'stealthKey')].passive;
     return flag;
   }
 
   getPerceptionFlag(token) {
     const flag = super.getPerceptionFlag(token);
     if (flag) return flag;
-    const passive = token.actor.system.skills.prc.passive;
+    const passive = token.actor.system.skills[game.settings.get(Stealthy.MODULE_ID, 'perceptionKey')].passive;
     return {
       token,
       passive: true,
@@ -209,7 +227,7 @@ class Engine5e extends Engine {
     }
 
     if (!game.settings.get(Stealthy.MODULE_ID, 'ignorePassiveFloor')) {
-      const passivePrc = actor.system.skills.prc.passive;
+      const passivePrc = actor.system.skills[game.settings.get(Stealthy.MODULE_ID, 'perceptionKey')].passive;
       perception.normal = Math.max(perception.normal, passivePrc);
       perception.disadvantaged = Math.max(perception.disadvantaged, passivePrc - 5);
     }
@@ -237,57 +255,46 @@ class Engine5e extends Engine {
 
   static GetPassivePerceptionWithDisadvantage(source) {
     // todo: don't apply -5 if already disadvantaged
-    return source.system.skills.prc.passive - 5;
+    return source.system.skills[game.settings.get(Stealthy.MODULE_ID, 'stealthKey')].passive - 5;
   }
 
   adjustForDefaultConditions(perceptionPair, visionSource, source, tgtToken, detectionMode) {
-    const passivePrc = source?.system?.skills?.prc?.passive ?? -100;
-    let debugData = { passivePrc };
+    const passivePrc = source?.system?.skills?.[game.settings.get(Stealthy.MODULE_ID, 'perceptionKey')]?.passive ?? -100;
     let perception = perceptionPair?.normal
       ?? perceptionPair
       ?? (passivePrc + 1);
-    debugData.perception = perception;
-    Stealthy.logIfDebug('adjustForDefaultConditions', debugData);
     return perception;
   }
 
   // check target Token Lighting conditions via effects usage
   // look for effects that indicate Dim or Dark condition on the token
   adjustForLightingConditions(perceptionPair, visionSource, source, tgtToken, detectionMode) {
-    let debugData = { perceptionPair };
     let perception;
 
     // What light band are we told we sit in?
     let lightBand = Engine5e.EXPOSURE[this.getLightExposure(tgtToken)] ?? 0;
-    debugData.initialLightLevel = Engine5e.LIGHT_LABELS[lightBand];
 
     // Adjust the light band based on conditions
     if (detectionMode) {
-      debugData.detectionMode = detectionMode;
       if (detectionMode === 'basicSight') {
         lightBand = lightBand + 1;
-        debugData.adjustedLightLevel = Engine5e.LIGHT_LABELS[lightBand];
       }
     }
     else {
-      debugData.id = visionSource.visionMode?.id;
       if (visionSource.visionMode?.id === 'darkvision') {
         lightBand = lightBand + 1;
-        debugData.adjustedLightLevel = Engine5e.LIGHT_LABELS[lightBand];
       }
     }
 
     // Extract the normal perception values from the source
     let active = perceptionPair?.normal ?? perceptionPair;
     let value;
-    const passivePrc = source?.system?.skills?.prc?.passive ?? -100;
+    const passivePrc = source?.system?.skills?.[game.settings.get(Stealthy.MODULE_ID, 'perceptionKey')]?.passive ?? -100;
     if (active !== undefined) {
       value = active;
-      debugData.active = value;
     }
     else {
       value = passivePrc;
-      debugData.passive = value;
     }
 
     // dark = fail, dim = disadvantage, bright = normal
@@ -296,10 +303,8 @@ class Engine5e extends Engine {
     }
     else if (lightBand === 1) {
       let passiveDisadv = Engine5e.GetPassivePerceptionWithDisadvantage(source);
-      debugData.passiveDisadv = passiveDisadv;
       if (active !== undefined) {
         value = perceptionPair?.disadvantaged ?? value - 5;
-        debugData.activeDisadv = value;
       }
       else {
         value = passiveDisadv;
@@ -309,9 +314,7 @@ class Engine5e extends Engine {
     else {
       perception = value;
     }
-    debugData.perception = perception;
 
-    Stealthy.logIfDebug('adjustForLightingConditions', debugData);
     return perception;
   }
 
