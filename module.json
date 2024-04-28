@@ -10,7 +10,7 @@
   ],
   "version": "autoreplaced",
   "compatibility": {
-    "minimum": "11",
+    "minimum": "10.291",
     "verified": "11.315"
   },
   "relationships": {
