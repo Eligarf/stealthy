@@ -80,8 +80,10 @@ Hooks.once('setup', () => {
   let sources = {
     'none': game.i18n.localize("stealthy.source.min"),
     'ae': game.i18n.localize("stealthy.source.ae"),
-    'ce': game.i18n.localize("stealthy.source.ce.name")
   };
+  if (game.dfreds?.effectInterface) {
+    sources['ce'] = game.i18n.localize("stealthy.source.ce.name");
+  }
 
   game.settings.register(Stealthy.MODULE_ID, 'hiddenSource', {
     name: game.i18n.localize("stealthy.hidden.source"),
