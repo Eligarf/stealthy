@@ -91,13 +91,9 @@
         "name": "Encerrar Turno",
         "hint": "Encerra o turno se você é dono do atual combatente."
       },
-      "tokenLighting": {
-        "name": "Check token lighting",
-        "hint": "Use the lighting status on stealthy tokens to determine if perception disadvantage applies. This can be computed or looked up"
-      },
-      "spotPair": {
-        "name": "Registar desvantagem de Percepção ao rolar um teste",
-        "hint": "Analisa os resultados do teste de Percepção para obter um resultado normal e um com desvantagem, rolando um segundo dado se necessário."
+      "perceptionDisadvantage": {
+        "name": "Perception disadvantage in Dim light",
+        "hint": "Use scene lighting to determine if perception disadvantage applies for tokens with stealth"
       },
       "ignorePassiveFloor": {
         "name": "Ignore o valor mínimo de Percepção Passiva para verificações ativas",

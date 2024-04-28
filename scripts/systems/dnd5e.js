@@ -45,22 +45,13 @@ class Engine5e extends Engine {
         default: 'inCombat'
       });
 
-      game.settings.register(Stealthy.MODULE_ID, 'tokenLighting', {
-        name: game.i18n.localize("stealthy.dnd5e.tokenLighting.name"),
-        hint: game.i18n.localize("stealthy.dnd5e.tokenLighting.hint"),
+      game.settings.register(Stealthy.MODULE_ID, 'perceptionDisadvantage', {
+        name: game.i18n.localize("stealthy.dnd5e.perceptionDisadvantage.name"),
+        hint: game.i18n.localize("stealthy.dnd5e.perceptionDisadvantage.hint"),
         scope: 'world',
         config: true,
         type: Boolean,
-        default: false,
-      });
-
-      game.settings.register(Stealthy.MODULE_ID, 'spotPair', {
-        name: game.i18n.localize("stealthy.dnd5e.spotPair.name"),
-        hint: game.i18n.localize("stealthy.dnd5e.spotPair.hint"),
-        scope: 'world',
-        config: true,
-        type: Boolean,
-        default: false,
+        default: true,
       });
     });
 
@@ -141,7 +132,7 @@ class Engine5e extends Engine {
     // perception means that stealth is being the active skill.
     const valuePair = perceptionFlag?.perception;
     let perceptionValue;
-    if (game.settings.get(Stealthy.MODULE_ID, 'tokenLighting')) {
+    if (game.settings.get(Stealthy.MODULE_ID, 'perceptionDisadvantage')) {
       perceptionValue = this.adjustForLightingConditions(valuePair, visionSource, source, tgtToken, detectionMode);
     }
     else {
@@ -200,7 +191,7 @@ class Engine5e extends Engine {
     if (!stealthy.bankingPerception) return;
 
     let perception = { normal: roll.total, disadvantaged: roll.total };
-    if (!roll.hasDisadvantage && game.settings.get(Stealthy.MODULE_ID, 'spotPair')) {
+    if (!roll.hasDisadvantage && game.settings.get(Stealthy.MODULE_ID, 'perceptionDisadvantage')) {
       const dice = roll.dice[0];
       if (roll.hasAdvantage) {
         const delta = dice.results[1].result - dice.results[0].result;
@@ -249,11 +240,11 @@ class Engine5e extends Engine {
     return source.system.skills.prc.passive - 5;
   }
 
-  adjustForDefaultConditions(spotPair, visionSource, source, tgtToken, detectionMode) {
+  adjustForDefaultConditions(perceptionPair, visionSource, source, tgtToken, detectionMode) {
     const passivePrc = source?.system?.skills?.prc?.passive ?? -100;
     let debugData = { passivePrc };
-    let perception = spotPair?.normal
-      ?? spotPair
+    let perception = perceptionPair?.normal
+      ?? perceptionPair
       ?? (passivePrc + 1);
     debugData.perception = perception;
     Stealthy.logIfDebug('adjustForDefaultConditions', debugData);
@@ -262,8 +253,8 @@ class Engine5e extends Engine {
 
   // check target Token Lighting conditions via effects usage
   // look for effects that indicate Dim or Dark condition on the token
-  adjustForLightingConditions(spotPair, visionSource, source, tgtToken, detectionMode) {
-    let debugData = { spotPair };
+  adjustForLightingConditions(perceptionPair, visionSource, source, tgtToken, detectionMode) {
+    let debugData = { perceptionPair };
     let perception;
 
     // What light band are we told we sit in?
@@ -287,7 +278,7 @@ class Engine5e extends Engine {
     }
 
     // Extract the normal perception values from the source
-    let active = spotPair?.normal ?? spotPair;
+    let active = perceptionPair?.normal ?? perceptionPair;
     let value;
     const passivePrc = source?.system?.skills?.prc?.passive ?? -100;
     if (active !== undefined) {
@@ -307,7 +298,7 @@ class Engine5e extends Engine {
       let passiveDisadv = Engine5e.GetPassivePerceptionWithDisadvantage(source);
       debugData.passiveDisadv = passiveDisadv;
       if (active !== undefined) {
-        value = spotPair?.disadvantaged ?? value - 5;
+        value = perceptionPair?.disadvantaged ?? value - 5;
         debugData.activeDisadv = value;
       }
       else {

@@ -1,13 +1,15 @@
 # v4.0.0
-* Big code changes to allow the choice of banking stealth and perception rolls to tokens or actors via effects.
-* Banked results can be removed from tokens by clicking into the token HUD result and deleting its text. This won't work for banked results stored on effects.
-* By default, banked perception rolls go to the token and banked stealth rolls go to an effect on the actor. Choice is controlled by game settings.
-* 'Active Spot' changed to 'Bank perception rolls' and the control icon has changed to a piggy bank.
-* The new text hasn't been properly localized yet - I put english placeholders in the language json files.
-* Added client setting to add a lighting exposure icon to the token HUD. It doesn't add this if the tokenlightcondition module is active. 
+* V10 is no longer supported due to big code changes. V11 games should have a seamless upgrade since no data migrations are required.
+* Stealthy now allows the choice of banking stealth and perception rolls to tokens or actors via effects.
+* Game setting defaults will bank perception rolls on the token and stealth rolls on an actor's effect.
+* 'Active Spot' control title changed to 'Bank perception rolls' and the control icon has changed to a piggy bank.
+* Token-banked rolls can be removed by clicking into the token HUD result and deleting its text. Actor-banked rolls are removed by deleting the effect. All banked perception rolls are still removed when toggling off the 'Bank perception rolls' token control.
+* New text hasn't been properly localized yet - I put english placeholders in the language json files.
+* Added client setting to add a lighting exposure icon to the token HUD.
 * Added a data schema setting to allow future data migration
-* Drop V10 and CUB support
-* Dnd5e: Stealthy Tokens now use the scene's lighting state to determine perception disadvantage rather than looking up dim/dark effects on its actor
+* Drop CUB support
+* Dnd5e: The 'perception disadvantage' setting enables tokens with stealth to now use the scene's lighting state to determine if they should apply disadvantage to the opposing perception check rather than looking up dim/dark effects on its actor
+* Dnd5e: Unless disabled, passive perception clamping of perception rolls now happens at time of roll rather than at comparison. This allows you to edit the banked perception roll to be less than the passive perception value if you choose.
 
 # v3.18.1
 * FINAL V10-compatible version. Only V11+ in the future.

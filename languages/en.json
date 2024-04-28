@@ -91,13 +91,9 @@
         "name": "End Turn",
         "hint": "End turn if you are owner of the current combatant"
       },
-      "tokenLighting": {
-        "name": "Check token lighting",
-        "hint": "Use the lighting status on stealthy tokens to determine if perception disadvantage applies. This can be computed or looked up"
-      },
-      "spotPair": {
-        "name": "Record disadvantaged Perception when rolling a check",
-        "hint": "Parse Perception roll results to have both a normal and disadvantaged result, rolling a second die if necessary"
+      "perceptionDisadvantage": {
+        "name": "Perception disadvantage in Dim light",
+        "hint": "Use scene lighting to determine if perception disadvantage applies for tokens with stealth"
       },
       "ignorePassiveFloor": {
         "name": "Ignore passive perception minimum value for active checks",

@@ -91,13 +91,9 @@
         "name": "Fin du tour",
         "hint": "Fin du tour si vous êtes propriétaire du combattant actuel"
       },
-      "tokenLighting": {
-        "name": "Check token lighting",
-        "hint": "Use the lighting status on stealthy tokens to determine if perception disadvantage applies. This can be computed or looked up"
-      },
-      "spotPair": {
-        "name": "Enregistrer la perception désavantagée lors du lancer d'un test",
-        "hint": "Analyser les résultats du jet de perception pour avoir à la fois un résultat normal et désavantageux, en lançant un deuxième dé si nécessaire"
+      "perceptionDisadvantage": {
+        "name": "Perception disadvantage in Dim light",
+        "hint": "Use scene lighting to determine if perception disadvantage applies for tokens with stealth"
       },
       "ignorePassiveFloor": {
         "name": "Ignorer la valeur minimale de perception passive pour les contrôles actifs",
