@@ -9,8 +9,6 @@
 
 A module that adds perception vs stealth testing to Foundry's visibility tests. It filters out any objects with the Hidden condition if the viewing Perception value fails to beat the object's Stealth value.
 
-Foundry V10 won't be supported in stealthy 4.x.x, the final V10-compatible stealthy build is [3.18.1](https://github.com/Eligarf/stealthy/releases/download/v3.18.1/module.json)
-
 [Stealthy Wiki](https://github.com/Eligarf/stealthy/wiki)
 ---
 # Features
