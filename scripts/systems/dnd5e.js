@@ -135,7 +135,7 @@ class Engine5e extends Engine {
   }
 
   static LIGHT_LABELS = ['dark', 'dim', 'bright', 'bright'];
-  static EXPOSURE = { dim: 1, bright: 2 };
+  static EXPOSURE = { dark: 0, dim: 1, bright: 2 };
 
   canDetectHidden(visionSource, tgtToken, detectionMode) {
     const stealthFlag = this.getStealthFlag(tgtToken);
@@ -272,7 +272,7 @@ class Engine5e extends Engine {
     let perception;
 
     // What light band are we told we sit in?
-    let lightBand = Engine5e.EXPOSURE[this.getLightExposure(tgtToken)] ?? 0;
+    let lightBand = Engine5e.EXPOSURE[this.getLightExposure(tgtToken)];
 
     // Adjust the light band based on conditions
     if (detectionMode) {

@@ -121,7 +121,7 @@ export default class Engine {
         statuses: ['spot'],
       };
       effect[(Math.floor(game.version) < 11) ? 'label' : 'name'] = name;
-      
+
       return effect;
     };
   }
@@ -317,10 +317,10 @@ export default class Engine {
     token = token instanceof Token ? token : token.object;
 
     const scene = token.scene;
-    if (scene !== canvas.scene || !scene.tokenVision || scene.darkness < scene.globalLightThreshold) return undefined;
+    let exposure = 'dark';
+    if (scene !== canvas.scene || !scene.tokenVision || scene.darkness < scene.globalLightThreshold) return exposure;
 
     const center = token.center;
-    let exposure = null;
 
     for (const light of canvas.effects.lightSources) {
       if (!light.active) continue;
@@ -350,9 +350,8 @@ export default class Engine {
       const distance = new Ray(light, center).distance;
       if (distance <= bright) {
         return 'bright';
-      } else {
-        exposure = 'dim';
       }
+      exposure = 'dim';
     }
 
     return exposure;
