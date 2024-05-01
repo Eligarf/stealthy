@@ -8,9 +8,13 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
+
+    # shrink the files
+    - name: replace js and css files with minified ones
+      uses: nizarmah/auto-minify@v3
       with:
-        submodules: 'true'
+        overwrite: true
 
     # get part of the tag after the `v`
     - name: Extract tag version number
