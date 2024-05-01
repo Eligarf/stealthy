@@ -1,0 +1,124 @@
+{
+  "stealthy": {
+    "hidden": {
+      "name": "Hidden",
+      "description": "Banked stealth roll",
+      "source": "Hidden effect source",
+      "preloc": {
+        "key": "Localization key for Hidden name",
+        "hint": "This string will be sent through i18n.localize(). Changing these may affect overall automation of Stealthy's effects."
+      },
+      "icon": "Hidden icon",
+      "iconhint": "Default icon for Hidden effect"
+    },
+    "spot": {
+      "name": "Spot",
+      "description": "Banked perception roll",
+      "source": "Spot effect source",
+      "preloc": {
+        "key": "Localization key for Spot name"
+      },
+      "icon": "Spot icon",
+      "iconhint": "Default icon for Spot effect"
+    },
+    "bankPerception": "Bank perception rolls",
+    "title": "Stealthy",
+    "spotHiddenDoors": {
+      "name": "Automatic hidden door detection",
+      "hint": "Tokens can spot hidden doors if their perception check beats the door's stealth value"
+    },
+    "friendlyStealth": {
+      "name": "How to treat friendly tokens under stealth",
+      "allow": "Always test Perception",
+      "inCombat": "Only test Perception in combat",
+      "ignore": "Ignore Perception tests"
+    },
+    "playerHud": {
+      "name": "Players can see banked rolls",
+      "hint": "Players can see banked rolls on the token HUD but can't change them"
+    },
+    "exposure": {
+      "name": "Show light exposure",
+      "hint": "Shows the selected token's light exposure on the Token HUD",
+      "bright": "in Bright light",
+      "dim": "in Dim light",
+      "dark": "in Dark"
+    },
+    "stealthToActor": {
+      "name": "Bank stealth rolls to actor",
+      "hint": "Bank stealth rolls in an actor effect/item rather than the token."
+    },
+    "perceptionToActor": {
+      "name": "Bank perception rolls to actor",
+      "hint": "Bank perception rolls in an actor effect/item rather than the token."
+    },
+    "source": {
+      "hint": "Where to find the effect",
+      "ce": {
+        "name": "Convenient Effects",
+        "beforeLabel": "Couldn't find effect",
+        "afterLabel": "in CE, using Stealthy's default instead"
+      },
+      "ae": "Stealthy (icon and token effect)",
+      "min": "Stealthy (icon only)"
+    },
+    "schema": {
+      "name": "Schema Version",
+      "hint": "Set this to a previous version to force a data migration from the specified version to the current version"
+    },
+    "logLevel": {
+      "name": "Logging Level",
+      "none": "No logging",
+      "debug": "Debug level",
+      "log": "Log level"
+    },
+    "config": {
+      "general": "General Options",
+      "debug": "Debug Options",
+      "advanced": "Advanced Options"
+    },
+    "door": {
+      "stealth": "Stealth value",
+      "maxRange": "Detection distance"
+    },
+    "dnd5e": {
+      "name": "Dnd5e",
+      "endTurn": {
+        "name": "End Turn",
+        "hint": "End turn if you are owner of the current combatant"
+      },
+      "perceptionDisadvantage": {
+        "name": "Perception disadvantage in Dim light",
+        "hint": "Use scene lighting to determine if perception disadvantage applies for tokens with stealth. Uses center X,Y of the token, nothing fancy"
+      },
+      "ignorePassiveFloor": {
+        "name": "Ignore passive perception minimum value for active checks",
+        "hint": "Enables a homebrew option to ignore the passive perception value when rolling an active perception check"
+      },
+      "friendlyUmbralSight": {
+        "name": "DEPRECATED - How to treat friendly tokens with Umbral Sight",
+        "allow": "Umbral Sight is hidden to Darkvision",
+        "inCombat": "Ignore Umbral Sight unless in combat",
+        "ignore": "Ignore Umbral Sight"
+      },
+      "stealthKey": {
+        "name": "Stealth skill key",
+        "hint": "Must be a key found in actor.system.skills, default is 'ste'. Used to redirect rolls from a custom skill into the stealth channel, all tooltips/etc will continue to use localize from 'stealth'"
+      },
+      "perceptionKey": {
+        "name": "Perception skill key",
+        "hint": "Must be a key found in actor.system.skills, default is 'prc'. See Stealth skill key hint but substitute perception"
+      }
+    },
+    "pf1": {
+      "name": "Pathfinder",
+      "spotTake10": {
+        "name": "Perception take-10",
+        "hint": "If no banked perception roll is available, assume the Perception take-10 result for the visibility test. If disabled, Hidden tokens will not be seen without a banked perception roll."
+      }
+    },
+    "pf2e": {
+      "dependency": "Stealthy requires the Hide and Seek actions from Basic Action Macros in PF2e Workbench"
+    }
+  }
+}
