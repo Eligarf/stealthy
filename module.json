@@ -53,11 +53,11 @@
     ]
   },
   "esmodules": [
-    "esmodules/stealthy.mjs",
-    "esmodules/hooks.mjs",
-    "esmodules/systems/dnd4e.mjs",
-    "esmodules/systems/dnd5e.mjs",
-    "esmodules/systems/pf1.mjs"
+    "scripts/stealthy.js",
+    "scripts/hooks.js",
+    "scripts/systems/dnd4e.js",
+    "scripts/systems/dnd5e.js",
+    "scripts/systems/pf1.js"
   ],
   "styles": [
     "styles/stealthy.css"

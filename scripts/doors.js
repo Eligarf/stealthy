@@ -1,4 +1,4 @@
-import { Stealthy } from "./stealthy.mjs";
+import { Stealthy } from "./stealthy.js";
 
 export default class Doors {
 
