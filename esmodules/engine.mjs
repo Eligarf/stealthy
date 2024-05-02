@@ -1,4 +1,4 @@
-import { Stealthy } from "./stealthy.js";
+import { Stealthy } from "./stealthy.mjs";
 import Doors from "./doors.js";
 
 export default class Engine {
