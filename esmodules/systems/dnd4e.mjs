@@ -1,5 +1,5 @@
-import { Stealthy } from '../stealthy.js';
-import Engine from '../engine.js';
+import { Stealthy } from '../stealthy.mjs';
+import Engine from '../engine.mjs';
 
 class Engine4e extends Engine {
 
