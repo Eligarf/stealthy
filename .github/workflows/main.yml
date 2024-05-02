@@ -15,6 +15,7 @@ jobs:
       uses: nizarmah/auto-minify@v3
       with:
         overwrite: true
+        js_engine: 'uglify-js'
 
     # get part of the tag after the `v`
     - name: Extract tag version number
