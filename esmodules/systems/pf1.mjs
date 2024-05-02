@@ -1,7 +1,7 @@
-import { Stealthy } from '../stealthy.mjs';
-import Engine from '../engine.mjs';
+import { Stealthy } from '../stealthy.js';
+import Engine from '../engine.js';
 
-class EnginePF1 extends Engine {
+export class EnginePF1 extends Engine {
 
   constructor() {
     super();
