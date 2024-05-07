@@ -279,17 +279,19 @@ class Engine5e extends Engine {
   // look for effects that indicate Dim or Dark condition on the token
   adjustForLightingConditions({ perceptionPair, visionSource, source, tgtToken, detectionMode }) {
     // Extract the normal perception values from the source
+    const active = perceptionPair?.normal ?? perceptionPair;
     const passivePrc = source?.system?.skills?.[game.settings.get(Stealthy.MODULE_ID, 'perceptionKey')]?.passive ?? -100;
-    let active = perceptionPair?.normal ?? perceptionPair;
-    let value = active ?? passivePrc;
+    const value = active ?? passivePrc;
 
     // What light band are we told we sit in?
     const exposure = this.getLightExposure(tgtToken) ?? 2;
     let lightBand = Engine5e.EXPOSURE[exposure];
-    let oldBand = Engine5e.LIGHT_LABELS[lightBand];
+    const oldBand = lightBand;
     switch (detectionMode) {
       case 'basicSight':
-        if (source.system.attributes.senses.darkvision)
+        // For vision-5e, the only way to tell darkvision from normal vision is looking at the darkvision radius.
+        // zero means normal vision
+        if (visionSource.radius > 0)
           lightBand += 1;
         break;
       case 'devilsSight':
@@ -301,13 +303,15 @@ class Engine5e extends Engine {
         if (visionSource.visionMode?.id === 'darkvision') lightBand += 1;
         break;
     }
-    Stealthy.logIfDebug(`${detectionMode} vs '${tgtToken.name}': ${oldBand}-->${Engine5e.LIGHT_LABELS[lightBand]}`);
+    if (oldBand != lightBand)
+      Stealthy.logIfDebug(`${detectionMode} vs '${tgtToken.name}': ${Engine5e.LIGHT_LABELS[oldBand]}-->${Engine5e.LIGHT_LABELS[lightBand]}`);
 
     // dark = fail, dim = disadvantage, bright = normal
     if (lightBand <= 0) return -100;
     if (lightBand !== 1) return value;
-    let passiveDisadv = Engine5e.GetPassivePerceptionWithDisadvantage(source);
-    return (active !== undefined) ? (perceptionPair?.disadvantaged ?? value - 5) : passiveDisadv;
+    if (active === undefined)
+      return Engine5e.GetPassivePerceptionWithDisadvantage(source);
+    return perceptionPair?.disadvantaged ?? value - 5;
   }
 
 }
