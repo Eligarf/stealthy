@@ -25,7 +25,7 @@ class Engine4e extends Engine {
   getStealthFlag(token) {
     let flag = super.getStealthFlag(token);
     if (flag && flag.stealth === undefined)
-      flag.stealth = 10 + token.actor.system?.skills?.stl?.total ?? -110;
+      flag.stealth = 10 + (token.actor.system?.skills?.stl?.total ?? -110);
     return flag;
   }
 
@@ -35,7 +35,7 @@ class Engine4e extends Engine {
     return {
       token,
       passive: true,
-      perception: 10 + token.actor.system?.skills?.prc?.total ?? -110
+      perception: 10 + (token.actor.system?.skills?.prc?.total ?? -110)
     };
   }
 
