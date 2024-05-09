@@ -54,6 +54,7 @@ export default class Engine {
     );
   }
 
+  // deprecated
   isHidden(visionSource, tgtToken, detectionMode = undefined) {
     return false;
   }
@@ -70,18 +71,138 @@ export default class Engine {
     if (!stealthFlag) return true;
 
     // Otherwise, grab our flags/values and let the system decide
-    const stealthValue = this.getStealthValue(stealthFlag);
     const perceptionFlag = this.getPerceptionFlag(visionSource.object);
-    const perceptionValue = this.getPerceptionValue(perceptionFlag);
     return this.canDetect({
       visionSource,
       tgtToken,
       detectionMode,
       stealthFlag,
-      stealthValue,
+      stealthValue: this.getStealthValue(stealthFlag),
       perceptionFlag,
-      perceptionValue
+      perceptionValue: this.getPerceptionValue(perceptionFlag)
     });
+  }
+
+  canDetect({ stealthValue, perceptionValue }) {
+    return perceptionValue > stealthValue;
+  }
+
+  async setValueInEffect(flag, skill, value, sourceEffect) {
+    const token = flag.token;
+    let effect = duplicate(sourceEffect);
+    if (!('stealthy' in effect.flags))
+      effect.flags.stealthy = {};
+    effect.flags.stealthy[skill] = value;
+    const actor = token.actor;
+    await actor.updateEmbeddedDocuments('ActiveEffect', [effect]);
+  }
+
+  async setValue(skill, flag, value) {
+    Stealthy.log('setValue', { skill, flag, value });
+    const token = flag.token;
+    const sourceEffect = flag?.effect;
+
+    // If there is an effect, stuff the flag in it
+    if (sourceEffect) {
+      await this.setValueInEffect(flag, skill, value, sourceEffect);
+    }
+
+    // Otherwise, if we are token based then we need to update the token value
+    else if (!stealthy[`${skill}ToActor`]) {
+      let update = { _id: token.id, };
+      if (value === undefined) {
+        update[`flags.stealthy.-=${skill}`] = true;
+      } else {
+        update[`flags.stealthy.${skill}`] = value;
+      }
+      await canvas.scene.updateEmbeddedDocuments("Token", [update]);
+    }
+  }
+
+  async bankRollOnToken(tokenOrActor, skill, value) {
+    Stealthy.log('bankRollOnToken', { tokenOrActor, skill, value });
+    let token = tokenOrActor;
+    if (token instanceof Actor) {
+      token = canvas.tokens.controlled.find((t) => t.actor === tokenOrActor);
+      if (!token) return;
+    }
+    let update = { _id: token.id, };
+    update[`flags.stealthy.${skill}`] = value;
+    await canvas.scene.updateEmbeddedDocuments("Token", [update]);
+  }
+
+  getStealthFlag(token) {
+    let flags = undefined;
+    const actor = token?.actor;
+    const effect = this.findHiddenEffect(actor);
+    if (effect) {
+      flags = effect?.flags?.stealthy;
+    }
+    else {
+      const tokenDoc = token instanceof Token ? token.document : token;
+      flags = tokenDoc.flags?.stealthy;
+      if (!flags || !('stealth' in flags)) return undefined;
+    }
+    const stealth = flags?.stealth ?? flags?.hidden;
+    return { stealth, effect, token };
+  }
+
+  getPerceptionFlag(token) {
+    let flags = undefined;
+    const actor = token?.actor;
+    const effect = this.findSpotEffect(actor);
+    if (effect) {
+      flags = effect?.flags?.stealthy;
+    }
+    else {
+      const tokenDoc = token instanceof Token ? token.document : token;
+      flags = tokenDoc.flags?.stealthy;
+      if (!flags || !('perception' in flags)) return undefined;
+    }
+    const perception = flags?.perception ?? flags?.spot;
+    return { perception, effect, token };
+  }
+
+  getStealthValue(flag) {
+    return flag?.stealth;
+  }
+
+  getPerceptionValue(flag) {
+    return flag?.perception;
+  }
+
+  async setStealthValue(flag, value) {
+    await this.setValue('stealth', flag, value);
+    stealthy.socket.executeForEveryone('RefreshPerception');
+  }
+
+  async setPerceptionValue(flag, value) {
+    await this.setValue('perception', flag, value);
+    canvas.perception.update({ initializeVision: true }, true);
+  }
+
+  async bankStealth(token, value) {
+    if (stealthy.stealthToActor) {
+      await this.updateOrCreateHiddenEffect(token.actor, { stealth: value });
+    } else {
+      await this.bankRollOnToken(token, 'stealth', value);
+    }
+  }
+
+  async bankPerception(token, value) {
+    if (stealthy.perceptionToActor) {
+      await this.updateOrCreateSpotEffect(token.actor, { perception: value });
+    } else {
+      await this.bankRollOnToken(token, 'perception', value);
+    }
+  }
+
+  rollStealth() {
+    stealthy.socket.executeForEveryone('RefreshPerception');
+  }
+
+  rollPerception() {
+    canvas.perception.update({ initializeVision: true }, true);
   }
 
   findHiddenEffect(actor) {
@@ -92,10 +213,6 @@ export default class Engine {
   findSpotEffect(actor) {
     const v10 = Math.floor(game.version) < 11;
     return actor?.effects.find((e) => !e.disabled && this.spotName === (v10 ? e.label : e.name));
-  }
-
-  canDetect({ stealthValue, perceptionValue }) {
-    return perceptionValue > stealthValue;
   }
 
   makeHiddenEffectMaker(name) {
@@ -185,68 +302,6 @@ export default class Engine {
     stealthy.socket.executeForEveryone('RefreshPerception');
   }
 
-  getFlags(effect) {
-    return effect?.flags?.stealthy;
-  }
-
-  getStealthFlag(token) {
-    let flags = undefined;
-    const actor = token?.actor;
-    const effect = this.findHiddenEffect(actor);
-    if (effect) {
-      flags = this.getFlags(effect);
-    }
-    else {
-      const tokenDoc = token instanceof Token ? token.document : token;
-      flags = tokenDoc.flags?.stealthy;
-      if (!flags || !('stealth' in flags)) return undefined;
-    }
-    const stealth = flags?.stealth ?? flags?.hidden;
-    return { stealth, effect, token };
-  }
-
-  getStealthValue(flag) {
-    return flag?.stealth;
-  }
-
-  async setValueInEffect(flag, skill, value, sourceEffect) {
-    const token = flag.token;
-    let effect = duplicate(sourceEffect);
-    if (!('stealthy' in effect.flags))
-      effect.flags.stealthy = {};
-    effect.flags.stealthy[skill] = value;
-    const actor = token.actor;
-    await actor.updateEmbeddedDocuments('ActiveEffect', [effect]);
-  }
-
-  async setStealthValue(flag, value) {
-    Stealthy.log('setStealthValue', { flag, value });
-    const token = flag.token;
-    const sourceEffect = flag?.effect;
-
-    // If there is an effect, stuff the flag in it
-    if (sourceEffect) {
-      await this.setValueInEffect(flag, 'stealth', value, sourceEffect);
-    }
-
-    // Otherwise, if we are token based then we need to update the token value
-    else if (!stealthy.stealthToActor) {
-      let update = { _id: token.id, };
-      if (value === undefined) {
-        update['flags.stealthy.-=stealth'] = true;
-      } else {
-        update['flags.stealthy.stealth'] = value;
-      }
-      await canvas.scene.updateEmbeddedDocuments("Token", [update]);
-    }
-
-    // Not sure how we could get here, but don't do anything if we do
-    else
-      return;
-
-    stealthy.socket.executeForEveryone('RefreshPerception');
-  }
-
   async updateOrCreateSpotEffect(actor, flag) {
     await this.updateOrCreateEffect({
       name: this.spotName,
@@ -256,91 +311,6 @@ export default class Engine {
       makeEffect: this.makeSpotEffectMaker(this.spotName)
     });
     canvas.perception.update({ initializeVision: true }, true);
-  }
-
-  getPerceptionFlag(token) {
-    let flags = undefined;
-    const actor = token?.actor;
-    const effect = this.findSpotEffect(actor);
-    if (effect) {
-      flags = this.getFlags(effect);
-    }
-    else {
-      const tokenDoc = token instanceof Token ? token.document : token;
-      flags = tokenDoc.flags?.stealthy;
-      if (!flags || !('perception' in flags)) return undefined;
-    }
-    const perception = flags?.perception ?? flags?.spot;
-    return { perception, effect, token };
-  }
-
-  getPerceptionValue(flag) {
-    return flag?.perception;
-  }
-
-  async setPerceptionValue(flag, value) {
-    Stealthy.log('setPerceptionValue', { flag, value });
-
-    const token = flag.token;
-    const sourceEffect = flag?.effect;
-
-    // If there is an effect, stuff the flag in it
-    if (sourceEffect) {
-      await this.setValueInEffect(flag, 'perception', value, sourceEffect);
-    }
-
-    // Otherwise, if we are token based then we need to update the token value
-    else if (!stealthy.perceptionToActor) {
-      let update = { _id: token.id, };
-      if (value === undefined) {
-        update['flags.stealthy.-=perception'] = true;
-      } else {
-        update['flags.stealthy.perception'] = value;
-      }
-      await canvas.scene.updateEmbeddedDocuments("Token", [update]);
-    }
-
-    // Not sure how we could get here, but don't do anything if we do
-    else
-      return;
-
-    canvas.perception.update({ initializeVision: true }, true);
-  }
-
-  async bankRollOnToken(tokenOrActor, skill, value) {
-    Stealthy.log('bankRollOnToken', { tokenOrActor, skill, value });
-    let token = tokenOrActor;
-    if (token instanceof Actor) {
-      token = canvas.tokens.controlled.find((t) => t.actor === tokenOrActor);
-      if (!token) return;
-    }
-    let update = { _id: token.id, };
-    update[`flags.stealthy.${skill}`] = value;
-    await canvas.scene.updateEmbeddedDocuments("Token", [update]);
-  }
-
-  async bankPerception(token, value) {
-    if (stealthy.perceptionToActor) {
-      await this.updateOrCreateSpotEffect(token.actor, { perception: value });
-    } else {
-      await this.bankRollOnToken(token, 'perception', value);
-    }
-  }
-
-  async bankStealth(token, value) {
-    if (stealthy.stealthToActor) {
-      await this.updateOrCreateHiddenEffect(token.actor, { stealth: value });
-    } else {
-      await this.bankRollOnToken(token, 'stealth', value);
-    }
-  }
-
-  rollPerception() {
-    canvas.perception.update({ initializeVision: true }, true);
-  }
-
-  rollStealth() {
-    stealthy.socket.executeForEveryone('RefreshPerception');
   }
 
   getLightExposure(token) {

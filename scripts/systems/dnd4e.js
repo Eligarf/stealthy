@@ -25,7 +25,7 @@ class Engine4e extends Engine {
   getStealthFlag(token) {
     let flag = super.getStealthFlag(token);
     if (flag && flag.stealth === undefined)
-      flag.stealth = 10 + token.actor.system.skills.stl.total;
+      flag.stealth = 10 + token.actor.system?.skills?.stl?.total ?? -110;
     return flag;
   }
 
@@ -35,8 +35,17 @@ class Engine4e extends Engine {
     return {
       token,
       passive: true,
-      perception: 10 + token.actor.system.skills.prc.total
+      perception: 10 + token.actor.system?.skills?.prc?.total ?? -110
     };
+  }
+
+  async rollStealth(message, options, id) {
+    Stealthy.log('rollStealth', { message, options, id });
+
+    const token = canvas.tokens.get(message.speaker.token);
+    await this.bankStealth(token, message.rolls[0].total);
+
+    super.rollStealth();
   }
 
   async rollPerception(message, options, id) {
@@ -47,15 +56,6 @@ class Engine4e extends Engine {
     await this.bankPerception(token, message.rolls[0].total);
 
     super.rollPerception();
-  }
-
-  async rollStealth(message, options, id) {
-    Stealthy.log('rollStealth', { message, options, id });
-
-    const token = canvas.tokens.get(message.speaker.token);
-    await this.bankStealth(token, message.rolls[0].total);
-
-    super.rollStealth();
   }
 }
 

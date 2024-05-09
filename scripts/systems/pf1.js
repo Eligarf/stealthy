@@ -66,6 +66,53 @@ export class EnginePF1 extends Engine {
     // });
   }
 
+  async setValueInEffect(flag, skill, value, sourceEffect) {
+    const token = flag.token;
+    let effect = duplicate(sourceEffect);
+    if (!('stealthy' in effect.flags))
+      effect.flags.stealthy = {};
+    effect.flags.stealthy[skill] = value;
+    const actor = token.actor;
+    await actor.updateEmbeddedDocuments('Item', [effect]);
+  }
+
+  getStealthFlag(token) {
+    let flag = super.getStealthFlag(token);
+    if (flag && flag.stealth === undefined)
+      flag.stealth = 10 + token.actor.system?.skills?.ste?.mod ?? -100;
+    return flag;
+  }
+
+  getPerceptionFlag(token) {
+    const flag = super.getPerceptionFlag(token);
+    if (flag) return flag;
+    if (!game.settings.get(Stealthy.MODULE_ID, 'spotTake10')) return undefined;
+    return {
+      token,
+      passive: true,
+      perception: 10 + token.actor.system?.skills?.per?.mod ?? -110
+    };
+  }
+
+  async rollStealth(actor, message) {
+    Stealthy.log('rollStealth', { actor, message });
+
+    const token = canvas.tokens.get(message.speaker.token);
+    await this.bankStealth(token, message.rolls[0].total);
+
+    super.rollStealth();
+  }
+
+  async rollPerception(actor, message) {
+    Stealthy.log('rollPerception', { actor, message });
+    if (!stealthy.bankingPerception) return;
+
+    const token = canvas.tokens.get(message.speaker.token);
+    await this.bankPerception(token, message.rolls[0].total);
+
+    super.rollPerception();
+  }
+
   findHiddenEffect(actor) {
     const v10 = Math.floor(game.version) < 11;
     return actor?.items.find((i) => i.system.active && (v10 ? i.label : i.name) === 'Hidden');
@@ -120,23 +167,6 @@ export class EnginePF1 extends Engine {
     stealthy.socket.executeForEveryone('RefreshPerception');
   }
 
-  getStealthFlag(token) {
-    let flag = super.getStealthFlag(token);
-    if (flag && flag.stealth === undefined)
-      flag.stealth = 10 + token.actor.system.skills.ste.mod;
-    return flag;
-  }
-
-  async setValueInEffect(flag, skill, value, sourceEffect) {
-    const token = flag.token;
-    let effect = duplicate(sourceEffect);
-    if (!('stealthy' in effect.flags))
-      effect.flags.stealthy = {};
-    effect.flags.stealthy[skill] = value;
-    const actor = token.actor;
-    await actor.updateEmbeddedDocuments('Item', [effect]);
-  }
-
   async updateOrCreateSpotEffect(actor, flag) {
     let spot = this.findSpotEffect(actor);
 
@@ -172,36 +202,6 @@ export class EnginePF1 extends Engine {
       await actor.updateEmbeddedDocuments('Item', [update]);
     }
     canvas.perception.update({ initializeVision: true }, true);
-  }
-
-  getPerceptionFlag(token) {
-    const flag = super.getPerceptionFlag(token);
-    if (flag) return flag;
-    if (!game.settings.get(Stealthy.MODULE_ID, 'spotTake10')) return undefined;
-    return {
-      token,
-      passive: true,
-      perception: 10 + token.actor.system.skills.per.mod
-    };
-  }
-
-  async rollPerception(actor, message) {
-    Stealthy.log('rollPerception', { actor, message });
-    if (!stealthy.bankingPerception) return;
-
-    const token = canvas.tokens.get(message.speaker.token);
-    await this.bankPerception(token, message.rolls[0].total);
-
-    super.rollPerception();
-  }
-
-  async rollStealth(actor, message) {
-    Stealthy.log('rollStealth', { actor, message });
-
-    const token = canvas.tokens.get(message.speaker.token);
-    await this.bankStealth(token, message.rolls[0].total);
-
-    super.rollStealth();
   }
 }
 

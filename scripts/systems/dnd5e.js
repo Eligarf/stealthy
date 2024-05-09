@@ -148,123 +148,17 @@ class Engine5e extends Engine {
     // idea that active skills need to win outright to change the status quo. Passive
     // perception means that stealth is being the active skill.
     const perceptionPair = perceptionFlag?.perception;
-    let perceptionValue;
-    if (game.settings.get(Stealthy.MODULE_ID, 'perceptionDisadvantage')) {
-      perceptionValue = this.adjustForLightingConditions({ perceptionPair, visionSource, source, tgtToken, detectionMode });
-    }
-    else {
-      perceptionValue = this.adjustForDefaultConditions({ perceptionPair, visionSource, source, tgtToken, detectionMode });
-    }
+    const perceptionValue = (game.settings.get(Stealthy.MODULE_ID, 'perceptionDisadvantage'))
+      ? this.adjustForLightingConditions({ perceptionPair, visionSource, source, tgtToken, detectionMode })
+      : this.adjustForDefaultConditions({ perceptionPair, visionSource, source, tgtToken, detectionMode })
 
     Stealthy.logIfDebug(`${detectionMode} vs '${tgtToken.name}': ${perceptionValue} vs ${stealthValue}`, { stealthFlag, perceptionFlag });
     return perceptionValue > stealthValue;
   }
 
-  makeSpotEffectMaker(name) {
-    return (flag, source) => {
-      let effect = super.makeSpotEffectMaker(name)(flag, source);
-      if (game.combat) effect.duration = { turns: 1, seconds: 6 };
-      return effect;
-    };
-  }
-
-  getStealthFlag(token) {
-    let flag = super.getStealthFlag(token);
-    if (flag && flag.stealth === undefined)
-      flag.stealth = flag.token.actor.system.skills[game.settings.get(Stealthy.MODULE_ID, 'stealthKey')].passive;
-    return flag;
-  }
-
-  getPerceptionFlag(token) {
-    const flag = super.getPerceptionFlag(token);
-    if (flag) return flag;
-    const passive = token.actor.system.skills[game.settings.get(Stealthy.MODULE_ID, 'perceptionKey')].passive;
-    return {
-      token,
-      passive: true,
-      perception: {
-        normal: passive,
-        disadvantaged: passive - 5
-      }
-    };
-  }
-
-  getPerceptionValue(flag) {
-    return flag?.perception?.normal ?? flag?.perception;
-  }
-
-  async setPerceptionValue(flag, value) {
-    if (value === undefined)
-      await super.setPerceptionValue(flag, value);
-    else {
-      const pair = { normal: value, disadvantaged: value - 5 };
-      await super.setPerceptionValue(flag, pair);
-    }
-  }
-
-  async bankPerception(token, value) {
-    if (value?.normal === undefined) {
-      value = { normal: value, disadvantaged: value - 5 };
-    }
-    if (stealthy.perceptionToActor) {
-      await this.updateOrCreateSpotEffect(token.actor, { perception: value });
-    } else {
-      await this.bankRollOnToken(token, 'perception', value);
-    }
-  }
-
-  async rollPerception(actor, roll) {
-    Stealthy.log('Stealthy5e.rollPerception', { actor, roll });
-    if (!stealthy.bankingPerception) return;
-
-    let perception = { normal: roll.total, disadvantaged: roll.total };
-    if (!roll.hasDisadvantage && game.settings.get(Stealthy.MODULE_ID, 'perceptionDisadvantage')) {
-      const dice = roll.dice[0];
-      if (roll.hasAdvantage) {
-        const delta = dice.results[1].result - dice.results[0].result;
-        if (delta > 0) {
-          perception.disadvantaged -= delta;
-        }
-      }
-      else {
-        let disadvantageRoll = await new Roll(`1d20`).evaluate({ async: true });
-        const delta = dice.results[0].result - disadvantageRoll.total;
-        if (delta > 0) {
-          perception.disadvantaged -= delta;
-        }
-      }
-    }
-
-    if (!game.settings.get(Stealthy.MODULE_ID, 'ignorePassiveFloor')) {
-      const passivePrc = actor.system.skills[game.settings.get(Stealthy.MODULE_ID, 'perceptionKey')].passive;
-      perception.normal = Math.max(perception.normal, passivePrc);
-      perception.disadvantaged = Math.max(perception.disadvantaged, passivePrc - 5);
-    }
-
-    if (stealthy.perceptionToActor) {
-      await this.updateOrCreateSpotEffect(actor, { perception });
-    } else {
-      await this.bankRollOnToken(actor, 'perception', perception);
-    }
-
-    super.rollPerception();
-  }
-
-  async rollStealth(actor, roll) {
-    Stealthy.log('Stealthy5e.rollStealth', { actor, roll });
-
-    if (stealthy.stealthToActor) {
-      await this.updateOrCreateHiddenEffect(actor, { stealth: roll.total });
-    } else {
-      await this.bankRollOnToken(actor, 'stealth', roll.total);
-    }
-
-    super.rollStealth();
-  }
-
-  static GetPassivePerceptionWithDisadvantage(source) {
+  getPassivePerceptionWithDisadvantage(source) {
     // todo: don't apply -5 if already disadvantaged
-    return source.system.skills[game.settings.get(Stealthy.MODULE_ID, 'stealthKey')].passive - 5;
+    return (source.system?.skills?.[game.settings.get(Stealthy.MODULE_ID, 'stealthKey')]?.passive ?? -95) - 5;
   }
 
   adjustForDefaultConditions({ perceptionPair, source }) {
@@ -309,9 +203,111 @@ class Engine5e extends Engine {
     // dark = fail, dim = disadvantage, bright = normal
     if (lightBand <= 0) return -100;
     if (lightBand !== 1) return value;
-    if (active === undefined)
-      return Engine5e.GetPassivePerceptionWithDisadvantage(source);
-    return perceptionPair?.disadvantaged ?? value - 5;
+    return (active === undefined)
+      ? this.getPassivePerceptionWithDisadvantage(source)
+      : perceptionPair?.disadvantaged ?? value - 5;
+  }
+
+  getStealthFlag(token) {
+    let flag = super.getStealthFlag(token);
+    if (flag && flag.stealth === undefined)
+      flag.stealth = flag.token.actor.system?.skills?.[game.settings.get(Stealthy.MODULE_ID, 'stealthKey')]?.passive ?? -100;
+    return flag;
+  }
+
+  getPerceptionFlag(token) {
+    const flag = super.getPerceptionFlag(token);
+    if (flag) return flag;
+    const passive = token.actor.system?.skills?.[game.settings.get(Stealthy.MODULE_ID, 'perceptionKey')]?.passive ?? -100;
+    return {
+      token,
+      passive: true,
+      perception: {
+        normal: passive,
+        disadvantaged: passive - 5
+      }
+    };
+  }
+
+  getPerceptionValue(flag) {
+    return flag?.perception?.normal ?? flag?.perception;
+  }
+
+  async setPerceptionValue(flag, value) {
+    if (value === undefined)
+      await super.setPerceptionValue(flag, value);
+    else {
+      const pair = { normal: value, disadvantaged: value - 5 };
+      await super.setPerceptionValue(flag, pair);
+    }
+  }
+
+  async bankPerception(token, value) {
+    if (value?.normal === undefined) {
+      value = { normal: value, disadvantaged: value - 5 };
+    }
+    if (stealthy.perceptionToActor) {
+      await this.updateOrCreateSpotEffect(token.actor, { perception: value });
+    } else {
+      await this.bankRollOnToken(token, 'perception', value);
+    }
+  }
+
+  async rollStealth(actor, roll) {
+    Stealthy.log('Stealthy5e.rollStealth', { actor, roll });
+
+    if (stealthy.stealthToActor) {
+      await this.updateOrCreateHiddenEffect(actor, { stealth: roll.total });
+    } else {
+      await this.bankRollOnToken(actor, 'stealth', roll.total);
+    }
+
+    super.rollStealth();
+  }
+
+  async rollPerception(actor, roll) {
+    Stealthy.log('Stealthy5e.rollPerception', { actor, roll });
+    if (!stealthy.bankingPerception) return;
+
+    let perception = { normal: roll.total, disadvantaged: roll.total };
+    if (!roll.hasDisadvantage && game.settings.get(Stealthy.MODULE_ID, 'perceptionDisadvantage')) {
+      const dice = roll.dice[0];
+      if (roll.hasAdvantage) {
+        const delta = dice.results[1].result - dice.results[0].result;
+        if (delta > 0) {
+          perception.disadvantaged -= delta;
+        }
+      }
+      else {
+        let disadvantageRoll = await new Roll(`1d20`).evaluate({ async: true });
+        const delta = dice.results[0].result - disadvantageRoll.total;
+        if (delta > 0) {
+          perception.disadvantaged -= delta;
+        }
+      }
+    }
+
+    if (!game.settings.get(Stealthy.MODULE_ID, 'ignorePassiveFloor')) {
+      const passivePrc = actor.system?.skills?.[game.settings.get(Stealthy.MODULE_ID, 'perceptionKey')]?.passive ?? -100;
+      perception.normal = Math.max(perception.normal, passivePrc);
+      perception.disadvantaged = Math.max(perception.disadvantaged, passivePrc - 5);
+    }
+
+    if (stealthy.perceptionToActor) {
+      await this.updateOrCreateSpotEffect(actor, { perception });
+    } else {
+      await this.bankRollOnToken(actor, 'perception', perception);
+    }
+
+    super.rollPerception();
+  }
+
+  makeSpotEffectMaker(name) {
+    return (flag, source) => {
+      let effect = super.makeSpotEffectMaker(name)(flag, source);
+      if (game.combat) effect.duration = { turns: 1, seconds: 6 };
+      return effect;
+    };
   }
 
 }
