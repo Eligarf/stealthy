@@ -1,3 +1,6 @@
+# v4.0.6
+* Handle tokens without skills (like vehicles) 
+
 # v4.0.5
 * Fix wrong label on banked perception HUD button
 * dnd5e: better darkvision attribute detection
