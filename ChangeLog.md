@@ -1,3 +1,6 @@
+# v4.1.0
+* v12 compatability
+
 # v4.0.6
 * Handle tokens without skills (like vehicles) 
 

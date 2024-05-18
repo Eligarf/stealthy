@@ -8,10 +8,10 @@
       "flags": {}
     }
   ],
-  "version": "4.0.2",
+  "version": "4.1",
   "compatibility": {
     "minimum": "10.291",
-    "verified": "11.315"
+    "verified": "12.323"
   },
   "relationships": {
     "systems": [
