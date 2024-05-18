@@ -32,16 +32,9 @@ export default class Engine {
     });
   }
 
-  patchFoundry() {
-    let sightModes = [
-      'basicSight',
-      'seeAll',
-      'seeInvisibility',
-    ];
-    if (Math.floor(game.version) >= 12)
-      sightModes.push('lightPerception');
+  patchDetectionModes(sightModes) {
     for (const mode of sightModes) {
-      console.log(`Stealthy | patching ${mode}`);
+      Stealthy.log(`patching ${mode}`);
       libWrapper.register(
         Stealthy.MODULE_ID,
         `CONFIG.Canvas.detectionModes.${mode}._canDetect`,
@@ -59,6 +52,20 @@ export default class Engine {
         { perf_mode: libWrapper.PERF_FAST }
       );
     }
+  }
+
+  patchFoundry() {
+    Hooks.once('setup', () => {
+      let sightModes = [
+        'basicSight',
+        'seeAll',
+        'seeInvisibility',
+      ];
+      if (Math.floor(game.version) >= 12)
+        sightModes.push('lightPerception');
+      
+      this.patchDetectionModes(sightModes);
+    });
   }
 
   // deprecated

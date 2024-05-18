@@ -106,26 +106,8 @@ class Engine5e extends Engine {
       ];
       if (Math.floor(game.version) < 12)
         sightModes.push('lightPerception');
-
-      for (const mode of sightModes) {
-        Stealthy.log(`patching ${mode}`);
-        libWrapper.register(
-          Stealthy.MODULE_ID,
-          `CONFIG.Canvas.detectionModes.${mode}._canDetect`,
-          function (wrapped, visionSource, target) {
-            if (!(wrapped(visionSource, target))) return false;
-            const engine = stealthy.engine;
-            if (target instanceof DoorControl)
-              return engine.canSpotDoor(target, visionSource);
-            const tgtToken = target?.document;
-            if (tgtToken instanceof TokenDocument)
-              return engine.checkDispositionAndCanDetect(visionSource, tgtToken, mode);
-            return true;
-          },
-          libWrapper.MIXED,
-          { perf_mode: libWrapper.PERF_FAST }
-        );
-      }
+      
+      this.patchDetectionModes(sightModes);
     });
   }
 
