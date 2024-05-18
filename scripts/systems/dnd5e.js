@@ -98,12 +98,14 @@ class Engine5e extends Engine {
 
     // Pick the sight modes in vision-5e that we want Stealthy to affect
     Hooks.once('setup', () => {
-      const sightModes = [
+      let sightModes = [
         'devilsSight',
         'etherealSight',
         'hearing',
         'witchSight'
       ];
+      if (Math.floor(game.version) < 12)
+        sightModes.push('lightPerception');
 
       for (const mode of sightModes) {
         Stealthy.log(`patching ${mode}`);

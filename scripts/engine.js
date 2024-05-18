@@ -33,12 +33,13 @@ export default class Engine {
   }
 
   patchFoundry() {
-    const sightModes = [
+    let sightModes = [
       'basicSight',
-      'lightPerception',
       'seeAll',
       'seeInvisibility',
     ];
+    if (Math.floor(game.version) >= 12)
+      sightModes.push('lightPerception');
     for (const mode of sightModes) {
       console.log(`Stealthy | patching ${mode}`);
       libWrapper.register(
