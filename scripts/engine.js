@@ -33,25 +33,31 @@ export default class Engine {
   }
 
   patchFoundry() {
-    // Generic Detection mode patching
-    const mode = 'detectionMode';
-    console.log(...Stealthy.colorizeOutput(`patching ${mode}`));
-    libWrapper.register(
-      Stealthy.MODULE_ID,
-      'DetectionMode.prototype._canDetect',
-      function (wrapped, visionSource, target) {
-        if (!(wrapped(visionSource, target))) return false;
-        const engine = stealthy.engine;
-        if (target instanceof DoorControl)
-          return engine.canSpotDoor(target, visionSource);
-        const tgtToken = target?.document;
-        if (tgtToken instanceof TokenDocument)
-          return engine.checkDispositionAndCanDetect(visionSource, tgtToken, mode);
-        return true;
-      },
-      libWrapper.MIXED,
-      { perf_mode: libWrapper.PERF_FAST }
-    );
+    const sightModes = [
+      'basicSight',
+      'lightPerception',
+      'seeAll',
+      'seeInvisibility',
+    ];
+    for (const mode of sightModes) {
+      console.log(`Stealthy | patching ${mode}`);
+      libWrapper.register(
+        Stealthy.MODULE_ID,
+        `CONFIG.Canvas.detectionModes.${mode}._canDetect`,
+        function (wrapped, visionSource, target) {
+          if (!(wrapped(visionSource, target))) return false;
+          const engine = stealthy.engine;
+          if (target instanceof DoorControl)
+            return engine.canSpotDoor(target, visionSource);
+          const tgtToken = target?.document;
+          if (tgtToken instanceof TokenDocument)
+            return engine.checkDispositionAndCanDetect(visionSource, tgtToken, mode);
+          return true;
+        },
+        libWrapper.MIXED,
+        { perf_mode: libWrapper.PERF_FAST }
+      );
+    }
   }
 
   // deprecated

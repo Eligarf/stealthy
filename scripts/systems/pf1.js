@@ -34,38 +34,6 @@ export class EnginePF1 extends Engine {
     });
   }
 
-  patchFoundry() {
-    super.patchFoundry();
-
-    // Pick the sight modes in vision-5e that we want Stealthy to affect
-    // Hooks.once('setup', () => {
-    const sightModes = [
-      'basicSight',
-      'seeAll',
-      'seeInvisibility',
-    ];
-    for (const mode of sightModes) {
-      console.log(`patching ${mode}`);
-      libWrapper.register(
-        Stealthy.MODULE_ID,
-        `CONFIG.Canvas.detectionModes.${mode}._canDetect`,
-        function (wrapped, visionSource, target) {
-          if (!(wrapped(visionSource, target))) return false;
-          const engine = stealthy.engine;
-          if (target instanceof DoorControl)
-            return engine.canSpotDoor(target, visionSource);
-          const tgtToken = target?.document;
-          if (tgtToken instanceof TokenDocument)
-            return engine.checkDispositionAndCanDetect(visionSource, tgtToken, mode);
-          return true;
-        },
-        libWrapper.MIXED,
-        { perf_mode: libWrapper.PERF_FAST }
-      );
-    }
-    // });
-  }
-
   async setValueInEffect(flag, skill, value, sourceEffect) {
     const token = flag.token;
     let effect = duplicate(sourceEffect);

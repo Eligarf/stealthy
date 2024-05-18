@@ -99,15 +99,12 @@ class Engine5e extends Engine {
     // Pick the sight modes in vision-5e that we want Stealthy to affect
     Hooks.once('setup', () => {
       const sightModes = [
-        'basicSight',
         'devilsSight',
         'etherealSight',
         'hearing',
-        'lightPerception',
-        'seeAll',
-        'seeInvisibility',
-        'witchSight',
+        'witchSight'
       ];
+
       for (const mode of sightModes) {
         Stealthy.log(`patching ${mode}`);
         libWrapper.register(
@@ -150,7 +147,7 @@ class Engine5e extends Engine {
     const perceptionPair = perceptionFlag?.perception;
     const perceptionValue = (game.settings.get(Stealthy.MODULE_ID, 'perceptionDisadvantage'))
       ? this.adjustForLightingConditions({ perceptionPair, visionSource, source, tgtToken, detectionMode })
-      : this.adjustForDefaultConditions({ perceptionPair, visionSource, source, tgtToken, detectionMode })
+      : this.adjustForDefaultConditions({ perceptionPair, visionSource, source, tgtToken, detectionMode });
 
     Stealthy.logIfDebug(`${detectionMode} vs '${tgtToken.name}': ${perceptionValue} vs ${stealthValue}`, { stealthFlag, perceptionFlag });
     return perceptionValue > stealthValue;
