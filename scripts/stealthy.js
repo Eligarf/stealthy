@@ -25,10 +25,12 @@ export class Stealthy {
   }
 
   async bankPerception(token, value) {
+    Stealthy.log(`stealthy.bankPerception`, { token, value });
     await this.engine.bankPerception(token, value);
   }
 
   async bankStealth(token, value) {
+    Stealthy.log(`stealthy.bankStealth`, { token, value });
     await this.engine.bankStealth(token, value);
   }
 
