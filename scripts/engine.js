@@ -22,6 +22,14 @@ export default class Engine {
 
 
     this.warnedMissingCE = false;
+
+    this.defaultDetectionModes = [
+      'basicSight',
+      'lightPerception',
+      'seeAll',
+      'seeInvisibility',
+    ];
+
     Hooks.once('setup', () => {
       this.hiddenName = game.i18n.localize(game.settings.get(Stealthy.MODULE_ID, 'hiddenLabel'));
       this.spotName = game.i18n.localize(game.settings.get(Stealthy.MODULE_ID, 'spotLabel'));
@@ -32,7 +40,11 @@ export default class Engine {
     });
   }
 
-  patchDetectionModes(sightModes) {
+  patchFoundry() {
+    // Defaults are the allowed for the time being
+    const allowedModes = this.defaultDetectionModes;
+
+    const sightModes = allowedModes.filter((m) => m in CONFIG.Canvas.detectionModes);
     for (const mode of sightModes) {
       Stealthy.log(`patching ${mode}`);
       libWrapper.register(
@@ -52,20 +64,6 @@ export default class Engine {
         { perf_mode: libWrapper.PERF_FAST }
       );
     }
-  }
-
-  patchFoundry() {
-    Hooks.once('setup', () => {
-      let sightModes = [
-        'basicSight',
-        'seeAll',
-        'seeInvisibility',
-      ];
-      if (Math.floor(game.version) >= 12)
-        sightModes.push('lightPerception');
-      
-      this.patchDetectionModes(sightModes);
-    });
   }
 
   // deprecated

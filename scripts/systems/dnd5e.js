@@ -7,6 +7,15 @@ class Engine5e extends Engine {
   constructor() {
     super();
 
+    if (game.modules.get("vision-5e")?.active) {
+      this.defaultDetectionModes.push(
+        'devilsSight',
+        'etherealSight',
+        'hearing',
+        'witchSight'
+      );
+    }
+
     game.keybindings.register(Stealthy.MODULE_ID, "endTurn", {
       name: game.i18n.localize("stealthy.dnd5e.endTurn.name"),
       hint: game.i18n.localize("stealthy.dnd5e.endTurn.hint"),
@@ -87,27 +96,6 @@ class Engine5e extends Engine {
         .html(game.i18n.localize("stealthy.dnd5e.name"))
         .insertBefore($('[name="stealthy.perceptionDisadvantage"]')
           .parents('div.form-group:first'));
-    });
-  }
-
-  patchFoundry() {
-    super.patchFoundry();
-
-    // If vision-5e isn't active, just keep the default behavior
-    if (!game.modules.get("vision-5e")?.active) return;
-
-    // Pick the sight modes in vision-5e that we want Stealthy to affect
-    Hooks.once('setup', () => {
-      let sightModes = [
-        'devilsSight',
-        'etherealSight',
-        'hearing',
-        'witchSight'
-      ];
-      if (Math.floor(game.version) < 12)
-        sightModes.push('lightPerception');
-      
-      this.patchDetectionModes(sightModes);
     });
   }
 
