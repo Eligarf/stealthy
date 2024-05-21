@@ -125,11 +125,6 @@ class Engine5e extends Engine {
     return perceptionValue > stealthValue;
   }
 
-  getPassivePerceptionWithDisadvantage(source) {
-    // todo: don't apply -5 if already disadvantaged
-    return (source.system?.skills?.[game.settings.get(Stealthy.MODULE_ID, 'stealthKey')]?.passive ?? -95) - 5;
-  }
-
   adjustForDefaultConditions({ perceptionPair, source }) {
     const passivePrc = source?.system?.skills?.[game.settings.get(Stealthy.MODULE_ID, 'perceptionKey')]?.passive ?? -100;
     let perception = perceptionPair?.normal
@@ -172,9 +167,7 @@ class Engine5e extends Engine {
     // dark = fail, dim = disadvantage, bright = normal
     if (lightBand <= 0) return -100;
     if (lightBand !== 1) return value;
-    return (active === undefined)
-      ? this.getPassivePerceptionWithDisadvantage(source)
-      : perceptionPair?.disadvantaged ?? value - 5;
+    return perceptionPair.disadvantaged;
   }
 
   getStealthFlag(token) {
@@ -187,13 +180,15 @@ class Engine5e extends Engine {
   getPerceptionFlag(token) {
     const flag = super.getPerceptionFlag(token);
     if (flag) return flag;
-    const passive = token.actor.system?.skills?.[game.settings.get(Stealthy.MODULE_ID, 'perceptionKey')]?.passive ?? -100;
+    const prcKey = game.settings.get(Stealthy.MODULE_ID, 'perceptionKey');
+    const passive = token.actor.system?.skills?.[prcKey]?.passive ?? -100;
+    const disadvantagedPassive = (token.actor.flags?.['midi-qol']?.disadvantage?.skill?.[prcKey] > 0) ? passive : passive - 5;
     return {
       token,
       passive: true,
       perception: {
         normal: passive,
-        disadvantaged: passive - 5
+        disadvantaged: disadvantagedPassive
       }
     };
   }
@@ -259,7 +254,11 @@ class Engine5e extends Engine {
     if (!game.settings.get(Stealthy.MODULE_ID, 'ignorePassiveFloor')) {
       const passivePrc = actor.system?.skills?.[game.settings.get(Stealthy.MODULE_ID, 'perceptionKey')]?.passive ?? -100;
       perception.normal = Math.max(perception.normal, passivePrc);
-      perception.disadvantaged = Math.max(perception.disadvantaged, passivePrc - 5);
+      const prcKey = game.settings.get(Stealthy.MODULE_ID, 'perceptionKey');
+      perception.disadvantaged = Math.max(
+        perception.disadvantaged,
+        (actor.flags?.['midi-qol']?.disadvantage?.skill?.[prcKey] > 0) ? passivePrc : passivePrc - 5
+      );
     }
 
     if (stealthy.perceptionToActor) {
