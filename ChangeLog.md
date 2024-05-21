@@ -1,3 +1,6 @@
+# v4.0.8
+* look for midi-qol flag to determine if perception disadvantage is already present before adding a -5 penalty to passive perception in dim light
+
 # v4.0.7
 * v12 compatability
 
