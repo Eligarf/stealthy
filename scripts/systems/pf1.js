@@ -5,16 +5,31 @@ export class EnginePF1 extends Engine {
 
   constructor() {
     super();
+    game.settings.register(Stealthy.MODULE_ID, 'spotTake10', {
+      scope: 'world',
+      config: false,
+      type: Boolean,
+      default: false,
+    });
 
-    Hooks.once('setup', () => {
-      game.settings.register(Stealthy.MODULE_ID, 'spotTake10', {
-        name: game.i18n.localize("stealthy.pf1.spotTake10.name"),
-        hint: game.i18n.localize("stealthy.pf1.spotTake10.hint"),
-        scope: 'world',
-        config: true,
-        type: Boolean,
-        default: false,
-      });
+    game.settings.register(Stealthy.MODULE_ID, 'passiveSpotOffset', {
+      name: game.i18n.localize("stealthy.pf1.passiveSpotOffset.name"),
+      hint: game.i18n.localize("stealthy.pf1.passiveSpotOffset.hint"),
+      scope: 'world',
+      config: true,
+      type: Number,
+      default: -999,
+    });
+
+    Hooks.on('ready', () => {
+      const offset = game.settings.get(Stealthy.MODULE_ID, 'passiveSpotOffset');
+      if (offset === -999) {
+        game.settings.set(
+          Stealthy.MODULE_ID,
+          'passiveSpotOffset',
+          game.settings.get(Stealthy.MODULE_ID, 'spotTake10') ? 10 : -99
+        )
+      }
     });
 
     Hooks.on('pf1ActorRollSkill', async (actor, message, skill) => {
@@ -54,11 +69,11 @@ export class EnginePF1 extends Engine {
   getPerceptionFlag(token) {
     const flag = super.getPerceptionFlag(token);
     if (flag) return flag;
-    if (!game.settings.get(Stealthy.MODULE_ID, 'spotTake10')) return undefined;
+    const offset = game.settings.get(Stealthy.MODULE_ID, 'passiveSpotOffset');
     return {
       token,
       passive: true,
-      perception: 10 + token.actor.system?.skills?.per?.mod ?? -110
+      perception: offset + (token.actor.system?.skills?.per?.mod ?? 0)
     };
   }
 

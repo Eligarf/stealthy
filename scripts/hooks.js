@@ -6,7 +6,7 @@ function migrate(moduleVersion, oldVersion) {
   return moduleVersion;
 }
 
-Hooks.once('setup', () => {
+Hooks.once('init', () => {
   const module = game.modules.get(Stealthy.MODULE_ID);
   const moduleVersion = module.version;
 
@@ -21,7 +21,6 @@ Hooks.once('setup', () => {
       stealthy.stealthToActor = value;
     }
   });
-  stealthy.stealthToActor = game.settings.get(Stealthy.MODULE_ID, 'stealthToActor');
 
   game.settings.register(Stealthy.MODULE_ID, 'perceptionToActor', {
     name: game.i18n.localize("stealthy.perceptionToActor.name"),
@@ -34,7 +33,6 @@ Hooks.once('setup', () => {
       stealthy.perceptionToActor = value;
     }
   });
-  stealthy.perceptionToActor = game.settings.get(Stealthy.MODULE_ID, 'perceptionToActor');
 
   game.settings.register(Stealthy.MODULE_ID, 'friendlyStealth', {
     name: game.i18n.localize("stealthy.friendlyStealth.name"),
@@ -177,12 +175,6 @@ Hooks.once('setup', () => {
       }
     }
   });
-  const schemaVersion = game.settings.get(Stealthy.MODULE_ID, 'schema');
-  if (schemaVersion !== moduleVersion) {
-    Hooks.once('ready', () => {
-      game.settings.set(Stealthy.MODULE_ID, 'schema', migrate(moduleVersion, schemaVersion));
-    });
-  }
 
   game.settings.register(Stealthy.MODULE_ID, 'activeSpot', {
     scope: 'world',
@@ -190,9 +182,27 @@ Hooks.once('setup', () => {
     type: Boolean,
     default: true,
   });
-  stealthy.bankingPerception = game.settings.get(Stealthy.MODULE_ID, 'activeSpot');
 
   Stealthy.log(`Initialized ${moduleVersion}`);
+});
+
+Hooks.once('setup', () => {
+  const module = game.modules.get(Stealthy.MODULE_ID);
+  const moduleVersion = module.version;
+
+  stealthy.stealthToActor = game.settings.get(Stealthy.MODULE_ID, 'stealthToActor');
+  stealthy.perceptionToActor = game.settings.get(Stealthy.MODULE_ID, 'perceptionToActor');
+
+  const schemaVersion = game.settings.get(Stealthy.MODULE_ID, 'schema');
+  if (schemaVersion !== moduleVersion) {
+    Hooks.once('ready', () => {
+      game.settings.set(Stealthy.MODULE_ID, 'schema', migrate(moduleVersion, schemaVersion));
+    });
+  }
+
+  stealthy.bankingPerception = game.settings.get(Stealthy.MODULE_ID, 'activeSpot');
+
+  Stealthy.log(`Setup ${moduleVersion}`);
 });
 
 const LIGHT_ICONS = {

@@ -1,8 +1,9 @@
-# v4.0.8
-* look for midi-qol flag to determine if perception disadvantage is already present before adding a -5 penalty to passive perception in dim light
+# v4.1.0
+* dnd5e: look for midi-qol flag to determine if perception disadvantage is already present before adding a -5 penalty to passive perception in dim light
+* pf1: allow GMs to specify a value other than 10 for take-10 passive spot option 
 
 # v4.0.7
-* v12 compatability
+* v12 compatibility
 
 # v4.0.6
 * Handle tokens without skills (like vehicles) 

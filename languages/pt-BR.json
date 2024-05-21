@@ -112,9 +112,9 @@
     },
     "pf1": {
       "name": "Pathfinder",
-      "spotTake10": {
-        "name": "Percepção pegue-10",
-        "hint": "Se nenhum efeito Percebendo estiver ativo, assuma o resultado de Percepção - 10 para o teste de visibilidade. Se desativado, os tokens Escondidos não serão vistos sem um efeito Percebendo ativo."
+      "passiveSpotOffset": {
+        "name": "Assumed roll for passive spotting",
+        "hint": "If no banked perception roll is available, assume this value for the d20 in the visibility test. Typically, -99 to auto-fail or 10 for a take-10 result."
       }
     },
     "pf2e": {
