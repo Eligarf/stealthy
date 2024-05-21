@@ -21,7 +21,7 @@ export class EnginePF1 extends Engine {
       default: -999,
     });
 
-    Hooks.on('ready', () => {
+    Hooks.once('ready', () => {
       const offset = game.settings.get(Stealthy.MODULE_ID, 'passiveSpotOffset');
       if (offset === -999) {
         game.settings.set(
