@@ -112,9 +112,9 @@
     },
     "pf1": {
       "name": "Pathfinder",
-      "spotTake10": {
-        "name": "Perception take-10",
-        "hint": "If no banked perception roll is available, assume the Perception take-10 result for the visibility test. If disabled, Hidden tokens will not be seen without a banked perception roll."
+      "passiveSpotOffset": {
+        "name": "Assumed roll for passive spotting",
+        "hint": "If no banked perception roll is available, assume this value for the d20 in the visibility test. Typically, -99 to auto-fail or 10 for a take-10 result."
       }
     },
     "pf2e": {

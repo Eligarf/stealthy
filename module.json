@@ -8,10 +8,10 @@
       "flags": {}
     }
   ],
-  "version": "autoreplaced",
+  "version": "4.1",
   "compatibility": {
     "minimum": "10.291",
-    "verified": "11.315"
+    "verified": "12.323"
   },
   "relationships": {
     "systems": [
@@ -83,11 +83,11 @@
     }
   ],
   "socket": true,
-  "url": "autoreplaced",
-  "manifest": "autoreplaced",
-  "download": "autoreplaced",
+  "url": "https://github.com/Eligarf/stealthy",
+  "manifest": "replaced",
+  "download": "replaced",
   "changelog": "ChangeLog.md",
-  "bugs": "autoreplaced",
+  "bugs": "https://github.com/Eligarf/stealthy/issues",
   "readme": "README.md",
   "license": "LICENSE"
 }

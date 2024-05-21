@@ -5,16 +5,31 @@ export class EnginePF1 extends Engine {
 
   constructor() {
     super();
+    game.settings.register(Stealthy.MODULE_ID, 'spotTake10', {
+      scope: 'world',
+      config: false,
+      type: Boolean,
+      default: false,
+    });
 
-    Hooks.once('setup', () => {
-      game.settings.register(Stealthy.MODULE_ID, 'spotTake10', {
-        name: game.i18n.localize("stealthy.pf1.spotTake10.name"),
-        hint: game.i18n.localize("stealthy.pf1.spotTake10.hint"),
-        scope: 'world',
-        config: true,
-        type: Boolean,
-        default: false,
-      });
+    game.settings.register(Stealthy.MODULE_ID, 'passiveSpotOffset', {
+      name: game.i18n.localize("stealthy.pf1.passiveSpotOffset.name"),
+      hint: game.i18n.localize("stealthy.pf1.passiveSpotOffset.hint"),
+      scope: 'world',
+      config: true,
+      type: Number,
+      default: -999,
+    });
+
+    Hooks.once('ready', () => {
+      const offset = game.settings.get(Stealthy.MODULE_ID, 'passiveSpotOffset');
+      if (offset === -999) {
+        game.settings.set(
+          Stealthy.MODULE_ID,
+          'passiveSpotOffset',
+          game.settings.get(Stealthy.MODULE_ID, 'spotTake10') ? 10 : -99
+        )
+      }
     });
 
     Hooks.on('pf1ActorRollSkill', async (actor, message, skill) => {
@@ -29,45 +44,56 @@ export class EnginePF1 extends Engine {
     Hooks.on('renderSettingsConfig', (app, html, data) => {
       $('<div>').addClass('form-group group-header')
         .html(game.i18n.localize("stealthy.pf1.name"))
-        .insertBefore($('[name="stealthy.spotTake10"]')
+        .insertBefore($('[name="stealthy.passiveSpotOffset"]')
           .parents('div.form-group:first'));
     });
   }
 
-  patchFoundry() {
-    super.patchFoundry();
+  async setValueInEffect(flag, skill, value, sourceEffect) {
+    const token = flag.token;
+    let effect = duplicate(sourceEffect);
+    if (!('stealthy' in effect.flags))
+      effect.flags.stealthy = {};
+    effect.flags.stealthy[skill] = value;
+    const actor = token.actor;
+    await actor.updateEmbeddedDocuments('Item', [effect]);
+  }
 
-    // Pick the sight modes in vision-5e that we want Stealthy to affect
-    // Hooks.once('setup', () => {
-    const sightModes = [
-      'basicSight',
-      'seeAll',
-      'seeInvisibility',
-    ];
-    for (const mode of sightModes) {
-      console.log(`patching ${mode}`);
-      libWrapper.register(
-        Stealthy.MODULE_ID,
-        `CONFIG.Canvas.detectionModes.${mode}._canDetect`,
-        function (wrapped, visionSource, target) {
-          do {
-            const engine = stealthy.engine;
-            if (target instanceof DoorControl) {
-              if (!engine.canSpotDoor(target, visionSource)) return false;
-              break;
-            }
-            const tgtToken = target?.document;
-            if (tgtToken instanceof TokenDocument) {
-              if (engine.isHidden(visionSource, tgtToken, mode)) return false;
-            }
-          } while (false);
-          return wrapped(visionSource, target);
-        },
-        libWrapper.MIXED,
-        { perf_mode: libWrapper.PERF_FAST }
-      );
-    }
-    // });
+  getStealthFlag(token) {
+    let flag = super.getStealthFlag(token);
+    if (flag && flag.stealth === undefined)
+      flag.stealth = 10 + token.actor.system?.skills?.ste?.mod ?? -100;
+    return flag;
+  }
+
+  getPerceptionFlag(token) {
+    const flag = super.getPerceptionFlag(token);
+    if (flag) return flag;
+    const offset = game.settings.get(Stealthy.MODULE_ID, 'passiveSpotOffset');
+    return {
+      token,
+      passive: true,
+      perception: offset + (token.actor.system?.skills?.per?.mod ?? 0)
+    };
+  }
+
+  async rollStealth(actor, message) {
+    Stealthy.log('rollStealth', { actor, message });
+
+    const token = canvas.tokens.get(message.speaker.token);
+    await this.bankStealth(token, message.rolls[0].total);
+
+    super.rollStealth();
+  }
+
+  async rollPerception(actor, message) {
+    Stealthy.log('rollPerception', { actor, message });
+    if (!stealthy.bankingPerception) return;
+
+    const token = canvas.tokens.get(message.speaker.token);
+    await this.bankPerception(token, message.rolls[0].total);
+
+    super.rollPerception();
   }
 
   findHiddenEffect(actor) {
@@ -78,17 +104,6 @@ export class EnginePF1 extends Engine {
   findSpotEffect(actor) {
     const v10 = Math.floor(game.version) < 11;
     return actor?.items.find((i) => i.system.active && (v10 ? i.label : i.name) === 'Spot');
-  }
-
-  canDetectHidden(visionSource, tgtToken, detectionMode) {
-    const stealthFlag = this.getStealthFlag(tgtToken);
-    if (!stealthFlag) return true;
-
-    const stealthValue = this.getStealthValue(stealthFlag);
-    const perceptionFlag = this.getPerceptionFlag(visionSource.object);
-    const perceptionValue = this.getPerceptionValue(perceptionFlag);
-
-    return !(perceptionValue === undefined || perceptionValue <= stealthValue);
   }
 
   makeHiddenEffectMaker(name) {
@@ -109,7 +124,7 @@ export class EnginePF1 extends Engine {
   async updateOrCreateHiddenEffect(actor, flag) {
     let hidden = this.findHiddenEffect(actor);
     const v10 = Math.floor(game.version) < 11;
-    if (!hidden) hidden = actor?.items.find((i) => (v10 ? i.label : i.name) === 'Hidden');
+    hidden ??= actor?.items.find((i) => (v10 ? i.label : i.name) === 'Hidden');
     if (!hidden) {
       const effect = {
         "name": "Hidden",
@@ -135,29 +150,12 @@ export class EnginePF1 extends Engine {
     stealthy.socket.executeForEveryone('RefreshPerception');
   }
 
-  getStealthFlag(token) {
-    let flag = super.getStealthFlag(token);
-    if (flag && flag.stealth === undefined)
-      flag.stealth = 10 + token.actor.system.skills.ste.mod;
-    return flag;
-  }
-
-  async setValueInEffect(flag, skill, value, sourceEffect) {
-    const token = flag.token;
-    let effect = duplicate(sourceEffect);
-    if (!('stealthy' in effect.flags))
-      effect.flags.stealthy = {};
-    effect.flags.stealthy[skill] = value;
-    const actor = token.actor;
-    await actor.updateEmbeddedDocuments('Item', [effect]);
-  }
-
   async updateOrCreateSpotEffect(actor, flag) {
     let spot = this.findSpotEffect(actor);
 
     // PF1 buffs can be disabled, if so, look for one already on the actor
     const v10 = Math.floor(game.version) < 11;
-    if (!spot) spot = actor?.items.find((i) => (v10 ? i.label : i.name) === 'Spot');
+    spot ??= actor?.items.find((i) => (v10 ? i.label : i.name) === 'Spot');
     if (!spot) {
       const effect = {
         "name": "Spot",
@@ -187,36 +185,6 @@ export class EnginePF1 extends Engine {
       await actor.updateEmbeddedDocuments('Item', [update]);
     }
     canvas.perception.update({ initializeVision: true }, true);
-  }
-
-  getPerceptionFlag(token) {
-    const flag = super.getPerceptionFlag(token);
-    if (flag) return flag;
-    if (!game.settings.get(Stealthy.MODULE_ID, 'spotTake10')) return undefined;
-    return {
-      token,
-      passive: true,
-      perception: 10 + token.actor.system.skills.per.mod
-    };
-  }
-
-  async rollPerception(actor, message) {
-    Stealthy.log('rollPerception', { actor, message });
-    if (!stealthy.bankingPerception) return;
-
-    const token = canvas.tokens.get(message.speaker.token);
-    await this.bankPerception(token, message.rolls[0].total);
-
-    super.rollPerception();
-  }
-
-  async rollStealth(actor, message) {
-    Stealthy.log('rollStealth', { actor, message });
-
-    const token = canvas.tokens.get(message.speaker.token);
-    await this.bankStealth(token, message.rolls[0].total);
-
-    super.rollStealth();
   }
 }
 

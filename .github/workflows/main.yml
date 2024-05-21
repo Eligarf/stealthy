@@ -8,9 +8,14 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
+
+    # shrink the files
+    - name: replace js and css files with minified ones
+      uses: nizarmah/auto-minify@v3
       with:
-        submodules: 'true'
+        overwrite: true
+        js_engine: 'uglify-js'
 
     # get part of the tag after the `v`
     - name: Extract tag version number
@@ -40,7 +45,7 @@ jobs:
       with:
         allowUpdates: true # Set this to false if you want to prevent updating existing releases
         name: ${{ github.event.release.name }}
-        draft: ${{ github.event.release.unpublished }}
+        draft: ${{ github.event.release.draft }}
         prerelease: ${{ github.event.release.prerelease }}
         token: ${{ secrets.GITHUB_TOKEN }}
         artifacts: './module.json, ./module.zip'

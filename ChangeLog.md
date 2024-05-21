@@ -1,3 +1,24 @@
+# v4.1.0
+* dnd5e: look for midi-qol flag to determine if perception disadvantage is already present before adding a -5 penalty to passive perception in dim light
+* pf1: allow GMs to specify a value other than 10 for take-10 passive spot option 
+
+# v4.0.7
+* v12 compatibility
+
+# v4.0.6
+* Handle tokens without skills (like vehicles) 
+
+# v4.0.5
+* Fix wrong label on banked perception HUD button
+* dnd5e: better darkvision attribute detection
+
+# v4.0.4
+* Fixed misnamed internal function for Perspective. This fixes pf1 and dnd4e implementations as well.
+
+# v4.0.3
+* Update pt-BR.json (thanks Kharmans)
+* Add minify step to package building
+
 # v4.0.2
 * dnd5e: If using vision-5e, Hearing doesn't get disadvantage against targets hiding in dim light
 * dnd5e: devilsSight gets disadvantage against targets hiding in dim light but not against ones in dark.

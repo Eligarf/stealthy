@@ -5,8 +5,8 @@ export class Stealthy {
   constructor(engine) {
     this.engine = engine;
     this.socket = null;
-    this.engine.patchFoundry();
     Hooks.once('setup', () => {
+      this.engine.patchFoundry();
       this.socket = socketlib.registerModule(Stealthy.MODULE_ID);
       this.socket.register('TogglePerceptionBanking', this.togglePerceptionBanking);
       this.socket.register('GetPerceptionBanking', this.getPerceptionBanking);
@@ -25,10 +25,12 @@ export class Stealthy {
   }
 
   async bankPerception(token, value) {
+    Stealthy.log(`stealthy.bankPerception`, { token, value });
     await this.engine.bankPerception(token, value);
   }
 
   async bankStealth(token, value) {
+    Stealthy.log(`stealthy.bankStealth`, { token, value });
     await this.engine.bankStealth(token, value);
   }
 

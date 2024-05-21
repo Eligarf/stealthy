@@ -2,7 +2,7 @@
   "stealthy": {
     "hidden": {
       "name": "Escondido",
-      "description": "Banked stealth roll",
+      "description": "Acúmulo de rolagem de Furtividade.",
       "source": "Origem Escondida",
       "preloc": {
         "key": "Chave de localização para rótulo Escondido",
@@ -13,44 +13,44 @@
     },
     "spot": {
       "name": "Percebendo",
-      "description": "Banked perception roll",
+      "description": "Acúmulo de rolagem de Percepção.",
       "source": "Origem Percebendo",
       "preloc": {
-        "key": "Chave de localização para rótulo Percebido"
+        "key": "Chave de localização para rótulo Percebendo"
       },
       "icon": "Ícone Percebendo",
       "iconhint": "Ícone padrão para o efeito Percebendo"
     },
-    "bankPerception": "Bank perception rolls",
+    "bankPerception": "Acúmulo de rolagens de Percepção",
     "title": "Stealthy",
     "spotHiddenDoors": {
       "name": "Detecção automática de portas escondidas",
       "hint": "Tokens podem identificar portas ocultas se seu teste de Percepção superar o valor furtivo da porta."
     },
-    "playerHud": {
-      "name": "Players can see banked rolls",
-      "hint": "Players can see banked rolls on the token HUD but can't change them"
-    },
-    "exposure": {
-      "name": "Show light exposure",
-      "hint": "Shows the selected token's light exposure on the Token HUD",
-      "bright": "in Bright light",
-      "dim": "in Dim light",
-      "dark": "in Dark"
-    },
-    "stealthToActor": {
-      "name": "Bank stealth rolls to actor",
-      "hint": "Bank stealth rolls in an actor effect/item rather than the token."
-    },
-    "perceptionToActor": {
-      "name": "Bank perception rolls to actor",
-      "hint": "Bank perception rolls in an actor effect/item rather than the token."
-    },
     "friendlyStealth": {
-      "name": "Como tratar tokens amigáveis ​​sob Furtividade",
+      "name": "Como tratar tokens amigáveis sob Furtividade",
       "allow": "Sempre testar Percepção",
       "inCombat": "Testar Percepção apenas em combate",
       "ignore": "Ignorar testes de Percepção"
+    },
+    "playerHud": {
+      "name": "Jogadores Veem Acúmulos",
+      "hint": "Os jogadores podem ver os acúmulos de rolagens na HUD do token, mas não podem alterá-los."
+    },
+    "exposure": {
+      "name": "Mostrar Exposição à Luz",
+      "hint": "Mostrar a exposição à luz dos tokens selecionados, na HUD do token.",
+      "bright": "Em Luz Plena",
+      "dim": "Em Penumbra",
+      "dark": "Em Escuridão"
+    },
+    "stealthToActor": {
+      "name": "Acumular Furtividade no Ator",
+      "hint": "Acumula as rolagens de Furtividade no efeito/item de um ator, ao invés do próprio ator."
+    },
+    "perceptionToActor": {
+      "name": "Acumular Percepção no Ator",
+      "hint": "Acumula as rolagens de Furtividade no efeito/item de um ator, ao invés do próprio ator."
     },
     "source": {
       "hint": "Onde encontrar o efeito",
@@ -59,12 +59,12 @@
         "beforeLabel": "Não foi possível encontrar o efeito",
         "afterLabel": "no CE, usando o padrão do Stealthy"
       },
-      "ae": "Stealthy (icon and token effect)",
-      "min": "Stealthy (icon only)"
+      "ae": "Stealthy",
+      "min": "Stealthy - apenas um ícone"
     },
     "schema": {
-      "name": "Schema Version",
-      "hint": "Set this to a previous version to force a data migration from the specified version to the current version"
+      "name": "Versão do Esquema",
+      "hint": "Defina isto para uma versão anterior para forçar uma migração de dados da versão especificada para a versão atual."
     },
     "logLevel": {
       "name": "Nível de Registro",
@@ -88,8 +88,8 @@
         "hint": "Encerra o turno se você é dono do atual combatente."
       },
       "perceptionDisadvantage": {
-        "name": "Perception disadvantage in Dim light",
-        "hint": "Use scene lighting to determine if perception disadvantage applies for tokens with stealth. Uses center X,Y of the token, nothing fancy"
+        "name": "Desvantagem em Percepção na Penumbra",
+        "hint": "Usa a iluminação da cena para determinar se a desvantagem de Percepção se aplica aos tokens furtivos. Usa o centro X,Y do token, nada sofisticado."
       },
       "ignorePassiveFloor": {
         "name": "Ignore o valor mínimo de Percepção Passiva para verificações ativas",
@@ -102,19 +102,19 @@
         "ignore": "Ignorar Visão Umbral"
       },
       "stealthKey": {
-        "name": "Stealth skill key",
-        "hint": "Must be a key found in actor.system.skills, default is 'ste'. Used to redirect rolls from a custom skill into the stealth channel, all tooltips/etc will continue to use localize from 'stealth'"
+        "name": "Chave da Perícia Furtividade",
+        "hint": "Deve ser uma chave encontrada em actor.system.skills, o padrão é 'ste'. Usado para redirecionar jogadas de uma habilidade personalizada para o canal furtivo, todas as dicas de ferramentas/etc continuarão a usar a localização de 'stealth'."
       },
       "perceptionKey": {
-        "name": "Perception skill key",
-        "hint": "Must be a key found in actor.system.skills, default is 'prc'. See Stealth skill key hint but substitute perception"
+        "name": "Chave da Perícia Percepção",
+        "hint": "Deve ser uma chave encontrada em actor.system.skills, o padrão é 'prc'. Veja a dica principal da habilidade Furtividade, mas substitua por Percepção."
       }
     },
     "pf1": {
       "name": "Pathfinder",
-      "spotTake10": {
-        "name": "Percepção pegue-10",
-        "hint": "If no banked perception roll is available, assume the Perception take-10 result for the visibility test. If disabled, Hidden tokens will not be seen without a banked perception roll."
+      "passiveSpotOffset": {
+        "name": "Assumed roll for passive spotting",
+        "hint": "If no banked perception roll is available, assume this value for the d20 in the visibility test. Typically, -99 to auto-fail or 10 for a take-10 result."
       }
     },
     "pf2e": {
