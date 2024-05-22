@@ -113,8 +113,8 @@
     "pf1": {
       "name": "Pathfinder",
       "passiveSpotOffset": {
-        "name": "Assumed roll for passive spotting",
-        "hint": "If no banked perception roll is available, assume this value for the d20 in the visibility test. Typically, -99 to auto-fail or 10 for a take-10 result."
+        "name": "Rolagem Assumida para Detecção Passiva",
+        "hint": "Se nenhum acúmulo de rolagem de Percepção estiver disponível, assuma este valor para o d20 no teste de visibilidade. Tipicamente, -99 para falhar automaática ou 10 para um resultado pegue-10."
       }
     },
     "pf2e": {
