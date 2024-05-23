@@ -53,11 +53,11 @@
       "hint": "Acumula as rolagens de Furtividade no efeito/item de um ator, ao invés do próprio ator."
     },
     "detectionModesMenu": {
-      "name": "Detection Modes",
-      "label": "Configure Detection Modes",
-      "hint": "Enable which detection modes stealth will apply to",
-      "title": "Setting Stealthable Detection Modes",
-      "warning": "Reload is required to apply changes to selected detection modes"
+      "name": "Modos de Detectção",
+      "label": "Configurar Modos de Detecção",
+      "hint": "Habilite quais modos de detecção furtivos serão aplicados.",
+      "title": "Configurando Modos de Detecção Furtivos",
+      "warning": "É necessário atualizar a página para aplicar alterações aos modos de detecção selecionados"
     },
     "source": {
       "hint": "Onde encontrar o efeito",
