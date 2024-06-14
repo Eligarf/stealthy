@@ -72,7 +72,7 @@
         "afterLabel": "no CLT, usando o padrão do Stealthy"
       },
       "ae": "Stealthy",
-      "min": "Stealthy (no token effect)"
+      "min": "Stealthy (sem efeito no token)"
     },
     "schema": {
       "name": "Versão do Esquema",
@@ -81,8 +81,8 @@
     "logLevel": {
       "name": "Nível de Registro",
       "none": "Sem log",
-      "debug": "Deputação",
-      "log": "Com log"
+      "debug": "Nível de depuração",
+      "log": "Nível de log"
     },
     "config": {
       "general": "Opções Gerais",
