@@ -96,23 +96,23 @@ export class EnginePF1 extends Engine {
     super.rollPerception();
   }
 
-  findHiddenEffect(actor) {
+  findStealthEffect(actor) {
     const beforeV11 = Math.floor(game.version) < 11;
     return actor?.items.find((i) => i.system.active && (beforeV11 ? i.label : i.name) === 'Hidden');
   }
 
-  findSpotEffect(actor) {
+  findPerceptionEffect(actor) {
     const beforeV11 = Math.floor(game.version) < 11;
     return actor?.items.find((i) => i.system.active && (beforeV11 ? i.label : i.name) === 'Spot');
   }
 
-  makeHiddenEffectMaker(name) {
-    Stealthy.log('PF1.makeHiddenEffectMaker not used in PF1');
+  makeStealthEffectMaker(name) {
+    Stealthy.log('PF1.makeStealthEffectMaker not used in PF1');
     return (flag, source) => null;
   }
 
-  makeSpotEffectMaker(name) {
-    Stealthy.log('PF1.makeSpotEffectMaker not used in PF1');
+  makePerceptionEffectMaker(name) {
+    Stealthy.log('PF1.makePerceptionEffectMaker not used in PF1');
     return (flag, source) => null;
   }
 
@@ -121,8 +121,8 @@ export class EnginePF1 extends Engine {
     return null;
   }
 
-  async updateOrCreateHiddenEffect(actor, flag) {
-    let hidden = this.findHiddenEffect(actor);
+  async updateOrCreateStealthEffect(actor, flag) {
+    let hidden = this.findStealthEffect(actor);
     const beforeV11 = Math.floor(game.version) < 11;
     hidden ??= actor?.items.find((i) => (beforeV11 ? i.label : i.name) === 'Hidden');
     if (!hidden) {
@@ -150,8 +150,8 @@ export class EnginePF1 extends Engine {
     stealthy.socket.executeForEveryone('RefreshPerception');
   }
 
-  async updateOrCreateSpotEffect(actor, flag) {
-    let spot = this.findSpotEffect(actor);
+  async updateOrCreatePerceptionEffect(actor, flag) {
+    let spot = this.findPerceptionEffect(actor);
 
     // PF1 buffs can be disabled, if so, look for one already on the actor
     const beforeV11 = Math.floor(game.version) < 11;

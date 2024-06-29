@@ -166,7 +166,7 @@ export default class Engine {
   getStealthFlag(token) {
     let flags = undefined;
     const actor = token?.actor;
-    const effect = this.findHiddenEffect(actor);
+    const effect = this.findStealthEffect(actor);
     if (effect) {
       flags = effect?.flags?.stealthy;
     }
@@ -182,7 +182,7 @@ export default class Engine {
   getPerceptionFlag(token) {
     let flags = undefined;
     const actor = token?.actor;
-    const effect = this.findSpotEffect(actor);
+    const effect = this.findPerceptionEffect(actor);
     if (effect) {
       flags = effect?.flags?.stealthy;
     }
@@ -215,7 +215,7 @@ export default class Engine {
 
   async bankStealth(token, value) {
     if (stealthy.stealthToActor) {
-      await this.updateOrCreateHiddenEffect(token.actor, { stealth: value });
+      await this.updateOrCreateStealthEffect(token.actor, { stealth: value });
     } else {
       await this.bankRollOnToken(token, 'stealth', value);
     }
@@ -223,7 +223,7 @@ export default class Engine {
 
   async bankPerception(token, value) {
     if (stealthy.perceptionToActor) {
-      await this.updateOrCreateSpotEffect(token.actor, { perception: value });
+      await this.updateOrCreatePerceptionEffect(token.actor, { perception: value });
     } else {
       await this.bankRollOnToken(token, 'perception', value);
     }
@@ -237,17 +237,17 @@ export default class Engine {
     stealthy.refreshPerception();
   }
 
-  findHiddenEffect(actor) {
+  findStealthEffect(actor) {
     const beforeV11 = Math.floor(game.version) < 11;
     return actor?.effects.find((e) => !e.disabled && this.hiddenName === (beforeV11 ? e.label : e.name));
   }
 
-  findSpotEffect(actor) {
+  findPerceptionEffect(actor) {
     const beforeV11 = Math.floor(game.version) < 11;
     return actor?.effects.find((e) => !e.disabled && this.spotName === (beforeV11 ? e.label : e.name));
   }
 
-  makeHiddenEffectMaker(name) {
+  makeStealthEffectMaker(name) {
     return (flag, source) => {
       let effect = {
         icon: game.settings.get(Stealthy.MODULE_ID, 'hiddenIcon'),
@@ -273,7 +273,7 @@ export default class Engine {
     };
   }
 
-  makeSpotEffectMaker(name) {
+  makePerceptionEffectMaker(name) {
     return (flag, source) => {
       let effect = {
         icon: game.settings.get(Stealthy.MODULE_ID, 'spotIcon'),
@@ -336,24 +336,24 @@ export default class Engine {
     await actor.updateEmbeddedDocuments('ActiveEffect', [effect]);
   }
 
-  async updateOrCreateHiddenEffect(actor, flag) {
+  async updateOrCreateStealthEffect(actor, flag) {
     await this.updateOrCreateEffect({
       name: this.hiddenName,
       actor,
       flag,
       source: game.settings.get(Stealthy.MODULE_ID, 'hiddenSource'),
-      makeEffect: this.makeHiddenEffectMaker(this.hiddenName)
+      makeEffect: this.makeStealthEffectMaker(this.hiddenName)
     });
     stealthy.socket.executeForEveryone('RefreshPerception');
   }
 
-  async updateOrCreateSpotEffect(actor, flag) {
+  async updateOrCreatePerceptionEffect(actor, flag) {
     await this.updateOrCreateEffect({
       name: this.spotName,
       actor,
       flag,
       source: game.settings.get(Stealthy.MODULE_ID, 'spotSource'),
-      makeEffect: this.makeSpotEffectMaker(this.spotName)
+      makeEffect: this.makePerceptionEffectMaker(this.spotName)
     });
     stealthy.refreshPerception();
   }

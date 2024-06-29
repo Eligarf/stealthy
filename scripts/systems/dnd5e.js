@@ -209,7 +209,7 @@ class Engine5e extends Engine {
       value = { normal: value, disadvantaged: value - 5 };
     }
     if (stealthy.perceptionToActor) {
-      await this.updateOrCreateSpotEffect(token.actor, { perception: value });
+      await this.updateOrCreatePerceptionEffect(token.actor, { perception: value });
     } else {
       await this.bankRollOnToken(token, 'perception', value);
     }
@@ -219,7 +219,7 @@ class Engine5e extends Engine {
     Stealthy.log('Stealthy5e.rollStealth', { actor, roll });
 
     if (stealthy.stealthToActor) {
-      await this.updateOrCreateHiddenEffect(actor, { stealth: roll.total });
+      await this.updateOrCreateStealthEffect(actor, { stealth: roll.total });
     } else {
       await this.bankRollOnToken(actor, 'stealth', roll.total);
     }
@@ -260,7 +260,7 @@ class Engine5e extends Engine {
     }
 
     if (stealthy.perceptionToActor) {
-      await this.updateOrCreateSpotEffect(actor, { perception });
+      await this.updateOrCreatePerceptionEffect(actor, { perception });
     } else {
       await this.bankRollOnToken(actor, 'perception', perception);
     }
@@ -268,9 +268,9 @@ class Engine5e extends Engine {
     super.rollPerception();
   }
 
-  makeSpotEffectMaker(name) {
+  makePerceptionEffectMaker(name) {
     return (flag, source) => {
-      let effect = super.makeSpotEffectMaker(name)(flag, source);
+      let effect = super.makePerceptionEffectMaker(name)(flag, source);
       if (game.combat) effect.duration = { turns: 1, seconds: 6 };
       return effect;
     };
