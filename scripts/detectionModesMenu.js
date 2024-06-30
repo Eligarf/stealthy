@@ -26,7 +26,7 @@ export class DetectionModesApplicationClass extends FormApplication {
   getData() {
     const context = super.getData();
     const entries = Object.entries(this.#detectionModes)
-      .filter(([k,v]) => k in CONFIG.Canvas.detectionModes)
+      .filter(([k,v]) => k in CONFIG.Canvas.detectionModes && k !== 'undefined')
       .map(([k, v]) => [k, {
         label: CONFIG.Canvas.detectionModes[k].label,
         enabled: v
