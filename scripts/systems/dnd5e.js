@@ -113,11 +113,16 @@ class Engine5e extends Engine {
     });
   }
 
-  getSettingsDefaults(version) {
-    let defaults = super.getSettingsDefaults(version);
-    defaults.hiddenLabel = 'EFFECT.DND5E.StatusHiding';
-    defaults.hiddenIcon = 'systems/dnd5e/icons/svg/statuses/hiding.svg';
-    return defaults;
+  getSettingsParameters(version) {
+    let settings = super.getSettingsParameters(version);
+    settings.hiddenLabel.default = 'EFFECT.DND5E.StatusHiding';
+    settings.hiddenIcon.default = 'systems/dnd5e/icons/svg/statuses/hiding.svg';
+    const hidingAvailable = CONFIG?.DND5E.statusEffects?.hiding.name;
+    if (hidingAvailable) {
+      settings.hiddenSource.choices['status'] = 'stealthy.dnd5e.hidingStatus.name';
+      settings.hiddenSource.default = 'status';
+    }
+    return settings;
   }
 
   static LIGHT_LABELS = ['dark', 'dim', 'bright', 'bright'];

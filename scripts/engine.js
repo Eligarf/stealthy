@@ -45,31 +45,10 @@ export default class Engine {
   init() {
     const module = game.modules.get(Stealthy.MODULE_ID);
     const moduleVersion = module.version;
-    const defaults = this.getSettingsDefaults(moduleVersion);
+    const settings = this.getSettingsParameters(moduleVersion);
 
-    game.settings.register(Stealthy.MODULE_ID, 'stealthToActor', {
-      name: "stealthy.stealthToActor.name",
-      hint: "stealthy.stealthToActor.hint",
-      scope: 'world',
-      config: true,
-      type: Boolean,
-      default: defaults.stealthToActor,
-      onChange: value => {
-        stealthy.stealthToActor = value;
-      }
-    });
-
-    game.settings.register(Stealthy.MODULE_ID, 'perceptionToActor', {
-      name: "stealthy.perceptionToActor.name",
-      hint: "stealthy.perceptionToActor.hint",
-      scope: 'world',
-      config: true,
-      type: Boolean,
-      default: defaults.perceptionToActor,
-      onChange: value => {
-        stealthy.perceptionToActor = value;
-      }
-    });
+    game.settings.register(Stealthy.MODULE_ID, 'stealthToActor', settings.stealthToActor);
+    game.settings.register(Stealthy.MODULE_ID, 'perceptionToActor', settings.perceptionToActor);
 
     game.settings.registerMenu(Stealthy.MODULE_ID, "detectionModesMenu", {
       name: "stealthy.detectionModesMenu.name",
@@ -80,165 +59,20 @@ export default class Engine {
       restricted: true,
     });
 
-
-    game.settings.register(Stealthy.MODULE_ID, 'allowedDetectionModes', {
-      scope: 'world',
-      config: false,
-      type: Object,
-      default: defaults.allowedDetectionModes,
-    });
-
-    game.settings.register(Stealthy.MODULE_ID, 'friendlyStealth', {
-      name: "stealthy.friendlyStealth.name",
-      scope: 'world',
-      config: true,
-      type: String,
-      choices: {
-        'allow': "stealthy.friendlyStealth.allow",
-        'inCombat': "stealthy.friendlyStealth.inCombat",
-        'ignore': "stealthy.friendlyStealth.ignore"
-      },
-      default: defaults.friendlyStealth
-    });
-
-    game.settings.register(Stealthy.MODULE_ID, 'playerHud', {
-      name: "stealthy.playerHud.name",
-      hint: "stealthy.playerHud.hint",
-      scope: 'world',
-      config: true,
-      type: Boolean,
-      default: defaults.playerHud,
-    });
-
-    game.settings.register(Stealthy.MODULE_ID, 'exposure', {
-      name: "stealthy.exposure.name",
-      hint: "stealthy.exposure.hint",
-      scope: 'client',
-      config: true,
-      type: Boolean,
-      default: defaults.exposure,
-    });
-
-    game.settings.register(Stealthy.MODULE_ID, 'spotSecretDoors', {
-      name: "stealthy.spotHiddenDoors.name",
-      hint: "stealthy.spotHiddenDoors.hint",
-      scope: 'world',
-      requiresReload: true,
-      config: true,
-      type: Boolean,
-      default: defaults.spotSecretDoors,
-    });
-
-    let sources = {
-      'none': "stealthy.source.min",
-      'ae': "stealthy.source.ae",
-    };
-    if (game.dfreds?.effectInterface) {
-      sources['ce'] = "stealthy.source.ce.name";
-    }
-    if (game?.clt) {
-      sources['clt'] = "stealthy.source.clt.name";
-    }
-
-    game.settings.register(Stealthy.MODULE_ID, 'hiddenSource', {
-      name: "stealthy.hidden.source",
-      hint: "stealthy.source.hint",
-      scope: 'world',
-      config: true,
-      type: String,
-      choices: sources,
-      default: defaults.hiddenSource
-    });
-
-    game.settings.register(Stealthy.MODULE_ID, 'hiddenIcon', {
-      name: "stealthy.hidden.icon",
-      hint: "stealthy.hidden.iconhint",
-      scope: 'world',
-      requiresReload: true,
-      config: true,
-      type: String,
-      filePicker: true,
-      default: defaults.hiddenIcon
-    });
-
-    game.settings.register(Stealthy.MODULE_ID, 'spotSource', {
-      name: "stealthy.spot.source",
-      hint: "stealthy.source.hint",
-      scope: 'world',
-      config: true,
-      type: String,
-      choices: sources,
-      default: defaults.spotSource
-    });
-
-    game.settings.register(Stealthy.MODULE_ID, 'spotIcon', {
-      name: "stealthy.spot.icon",
-      hint: "stealthy.spot.iconhint",
-      scope: 'world',
-      requiresReload: true,
-      config: true,
-      type: String,
-      filePicker: true,
-      default: defaults.spotIcon
-    });
-
-    game.settings.register(Stealthy.MODULE_ID, 'hiddenLabel', {
-      name: "stealthy.hidden.preloc.key",
-      hint: "stealthy.hidden.preloc.hint",
-      scope: 'world',
-      config: true,
-      type: String,
-      default: defaults.hiddenLabel,
-      onChange: value => {
-        stealthy.engine.hiddenName = value;
-      }
-    });
-
-    game.settings.register(Stealthy.MODULE_ID, 'spotLabel', {
-      name: "stealthy.spot.preloc.key",
-      scope: 'world',
-      config: true,
-      type: String,
-      default: defaults.spotLabel,
-      onChange: value => {
-        stealthy.engine.spotName = value;
-      }
-    });
-
-    game.settings.register(Stealthy.MODULE_ID, 'logLevel', {
-      name: "stealthy.logLevel.name",
-      scope: 'client',
-      config: true,
-      type: String,
-      choices: {
-        'none': "stealthy.logLevel.none",
-        'debug': "stealthy.logLevel.debug",
-        'log': "stealthy.logLevel.log"
-      },
-      default: defaults.logLevel
-    });
-
-    game.settings.register(Stealthy.MODULE_ID, 'schema', {
-      name: `${Stealthy.MODULE_ID}.schema.name`,
-      hint: `${Stealthy.MODULE_ID}.schema.hint`,
-      scope: 'world',
-      config: true,
-      type: String,
-      default: defaults.schema,
-      onChange: value => {
-        const newValue = migrate(moduleVersion, value);
-        if (value != newValue) {
-          game.settings.set(MODULE_ID, 'schema', newValue);
-        }
-      }
-    });
-
-    game.settings.register(Stealthy.MODULE_ID, 'activeSpot', {
-      scope: 'world',
-      config: false,
-      type: Boolean,
-      default: defaults.activeSpot,
-    });
+    game.settings.register(Stealthy.MODULE_ID, 'allowedDetectionModes', settings.allowedDetectionModes);
+    game.settings.register(Stealthy.MODULE_ID, 'friendlyStealth', settings.friendlyStealth);
+    game.settings.register(Stealthy.MODULE_ID, 'playerHud', settings.playerHud);
+    game.settings.register(Stealthy.MODULE_ID, 'exposure', settings.exposure);
+    game.settings.register(Stealthy.MODULE_ID, 'spotSecretDoors', settings.spotSecretDoors);
+    game.settings.register(Stealthy.MODULE_ID, 'hiddenSource', settings.hiddenSource);
+    game.settings.register(Stealthy.MODULE_ID, 'hiddenIcon', settings.hiddenIcon);
+    game.settings.register(Stealthy.MODULE_ID, 'spotSource', settings.spotSource);
+    game.settings.register(Stealthy.MODULE_ID, 'spotIcon', settings.spotIcon);
+    game.settings.register(Stealthy.MODULE_ID, 'hiddenLabel', settings.hiddenLabel);
+    game.settings.register(Stealthy.MODULE_ID, 'spotLabel', settings.spotLabel);
+    game.settings.register(Stealthy.MODULE_ID, 'logLevel', settings.logLevel);
+    game.settings.register(Stealthy.MODULE_ID, 'schema', settings.schema);
+    game.settings.register(Stealthy.MODULE_ID, 'activeSpot', settings.activeSpot);
 
     Stealthy.log(`${moduleVersion}: init`);
   }
@@ -255,24 +89,175 @@ export default class Engine {
   ready() {
   }
 
-  getSettingsDefaults(version) {
+  getSettingsParameters(version) {
+    let sources = {
+      'none': "stealthy.source.min",
+      'ae': "stealthy.source.ae",
+    };
+    if (game.dfreds?.effectInterface) {
+      sources['ce'] = "stealthy.source.ce.name";
+    }
+    if (game?.clt) {
+      sources['clt'] = "stealthy.source.clt.name";
+    }
+
     return {
-      stealthToActor: true,
-      perceptionToActor: true,
-      allowedDetectionModes: {},
-      friendlyStealth: 'inCombat',
-      playerHud: false,
-      exposure: false,
-      spotSecretDoors: false,
-      hiddenSource: 'ae',
-      hiddenIcon: 'icons/magic/perception/shadow-stealth-eyes-purple.webp',
-      spotSource: 'ae',
-      spotIcon: 'icons/commodities/biological/eye-blue.webp',
-      hiddenLabel: 'stealthy.hidden.name',
-      spotLabel: 'stealthy.spot.name',
-      logLevel: 'none',
-      schema: version,
-      activeSpot: true,
+      stealthToActor: {
+        name: "stealthy.stealthToActor.name",
+        hint: "stealthy.stealthToActor.hint",
+        scope: 'world',
+        config: true,
+        type: Boolean,
+        default: true,
+        onChange: value => {
+          stealthy.stealthToActor = value;
+        }
+      },
+      perceptionToActor: {
+        name: "stealthy.perceptionToActor.name",
+        hint: "stealthy.perceptionToActor.hint",
+        scope: 'world',
+        config: true,
+        type: Boolean,
+        default: true,
+        onChange: value => {
+          stealthy.perceptionToActor = value;
+        }
+      },
+      allowedDetectionModes: {
+        scope: 'world',
+        config: false,
+        type: Object,
+        default: {},
+      },
+      friendlyStealth: {
+        name: "stealthy.friendlyStealth.name",
+        scope: 'world',
+        config: true,
+        type: String,
+        choices: {
+          'allow': "stealthy.friendlyStealth.allow",
+          'inCombat': "stealthy.friendlyStealth.inCombat",
+          'ignore': "stealthy.friendlyStealth.ignore"
+        },
+        default: 'inCombat'
+      },
+      playerHud: {
+        name: "stealthy.playerHud.name",
+        hint: "stealthy.playerHud.hint",
+        scope: 'world',
+        config: true,
+        type: Boolean,
+        default: false,
+      },
+      exposure: {
+        name: "stealthy.exposure.name",
+        hint: "stealthy.exposure.hint",
+        scope: 'client',
+        config: true,
+        type: Boolean,
+        default: false,
+      },
+      spotSecretDoors: {
+        name: "stealthy.spotHiddenDoors.name",
+        hint: "stealthy.spotHiddenDoors.hint",
+        scope: 'world',
+        requiresReload: true,
+        config: true,
+        type: Boolean,
+        default: false,
+      },
+      hiddenSource: {
+        name: "stealthy.hidden.source",
+        hint: "stealthy.source.hint",
+        scope: 'world',
+        config: true,
+        type: String,
+        choices: sources,
+        default: 'ae'
+      },
+      hiddenIcon: {
+        name: "stealthy.hidden.icon",
+        hint: "stealthy.hidden.iconhint",
+        scope: 'world',
+        requiresReload: true,
+        config: true,
+        type: String,
+        filePicker: true,
+        default: 'icons/magic/perception/shadow-stealth-eyes-purple.webp'
+      },
+      spotSource: {
+        name: "stealthy.spot.source",
+        hint: "stealthy.source.hint",
+        scope: 'world',
+        config: true,
+        type: String,
+        choices: sources,
+        default: 'ae'
+      },
+      spotIcon: {
+        name: "stealthy.spot.icon",
+        hint: "stealthy.spot.iconhint",
+        scope: 'world',
+        requiresReload: true,
+        config: true,
+        type: String,
+        filePicker: true,
+        default: 'icons/commodities/biological/eye-blue.webp'
+      },
+      hiddenLabel: {
+        name: "stealthy.hidden.preloc.key",
+        hint: "stealthy.hidden.preloc.hint",
+        scope: 'world',
+        config: true,
+        type: String,
+        default: 'stealthy.hidden.name',
+        onChange: value => {
+          stealthy.engine.hiddenName = value;
+        }
+      },
+      spotLabel: {
+        name: "stealthy.spot.preloc.key",
+        scope: 'world',
+        config: true,
+        type: String,
+        default: 'stealthy.spot.name',
+        onChange: value => {
+          stealthy.engine.spotName = value;
+        }
+      },
+      logLevel: {
+        name: "stealthy.logLevel.name",
+        scope: 'client',
+        config: true,
+        type: String,
+        choices: {
+          'none': "stealthy.logLevel.none",
+          'debug': "stealthy.logLevel.debug",
+          'log': "stealthy.logLevel.log"
+        },
+        default: 'none'
+      },
+      schema: {
+        name: `${Stealthy.MODULE_ID}.schema.name`,
+        hint: `${Stealthy.MODULE_ID}.schema.hint`,
+        scope: 'world',
+        config: true,
+        type: String,
+        default: version,
+        onChange: value => {
+          const newValue = migrate(moduleVersion, value);
+          if (value != newValue) {
+            game.settings.set(MODULE_ID, 'schema', newValue);
+          }
+        }
+      },
+      activeSpot: {
+        scope: 'world',
+        config: false,
+        type: Boolean,
+        default: true,
+      },
     }
   }
 

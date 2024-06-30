@@ -99,6 +99,9 @@
         "name": "End Turn",
         "hint": "End turn if you are owner of the current combatant"
       },
+      "hidingStatus": {
+        "name": "Use 'Hiding' Status Effect"
+      },
       "perceptionDisadvantage": {
         "name": "Perception disadvantage in Dim light",
         "hint": "Use scene lighting to determine if perception disadvantage applies for tokens with stealth. Uses center X,Y of the token, nothing fancy"

@@ -99,6 +99,9 @@
         "name": "Fin du tour",
         "hint": "Fin du tour si vous êtes propriétaire du combattant actuel"
       },
+      "hidingStatus": {
+        "name": "Use 'Hiding' Status Effect"
+      },
       "perceptionDisadvantage": {
         "name": "Perception disadvantage in Dim light",
         "hint": "Use scene lighting to determine if perception disadvantage applies for tokens with stealth. Uses center X,Y of the token, nothing fancy"

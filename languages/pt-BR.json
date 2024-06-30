@@ -99,6 +99,9 @@
         "name": "Encerrar Turno",
         "hint": "Encerra o turno se você é dono do atual combatente."
       },
+      "hidingStatus": {
+        "name": "Use 'Hiding' Status Effect"
+      },
       "perceptionDisadvantage": {
         "name": "Desvantagem em Percepção na Penumbra",
         "hint": "Usa a iluminação da cena para determinar se a desvantagem de Percepção se aplica aos tokens furtivos. Usa o centro X,Y do token, nada sofisticado."
