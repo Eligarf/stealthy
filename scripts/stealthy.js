@@ -5,13 +5,7 @@ export class Stealthy {
   constructor(engine) {
     this.engine = engine;
     this.socket = null;
-    Hooks.once('setup', () => {
-      this.engine.patchFoundry();
-      this.socket = socketlib.registerModule(Stealthy.MODULE_ID);
-      this.socket.register('TogglePerceptionBanking', this.togglePerceptionBanking);
-      this.socket.register('GetPerceptionBanking', this.getPerceptionBanking);
-      this.socket.register('RefreshPerception', this.refreshPerception);
-    });
+    
     const beforeV12 = Math.floor(game.version) < 12;
     if (beforeV12) {
       this.refreshOptions = {
@@ -27,6 +21,18 @@ export class Stealthy {
         refreshOcclusion: true,
       };
     }
+
+    Hooks.once('setup', () => {
+      this.setup();
+    });
+  }
+
+  setup() {
+    this.engine.patchFoundry();
+    this.socket = socketlib.registerModule(Stealthy.MODULE_ID);
+    this.socket.register('TogglePerceptionBanking', this.togglePerceptionBanking);
+    this.socket.register('GetPerceptionBanking', this.getPerceptionBanking);
+    this.socket.register('RefreshPerception', this.refreshPerception);
   }
 
   getBankedPerception(token) {

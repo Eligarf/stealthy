@@ -11,7 +11,6 @@ class Engine5e extends Engine {
   init() {
     super.init();
 
-    Stealthy.log('Engine5e.init');
     if (game.modules.get("vision-5e")?.active) {
       this.defaultDetectionModes.push(
         'devilsSight',
@@ -84,22 +83,19 @@ class Engine5e extends Engine {
       },
       default: 'inCombat'
     });
-
-    const hidingAvailable = CONFIG?.DND5E.statusEffects?.hiding.name;
-    if (hidingAvailable) {
-      Hooks.once('setup', () => {
-        this.hidingName = game.i18n.localize(hidingAvailable);
-        Stealthy.log(`hidingName='${this.hidingName}'`);
-      });
-    }
-
-
   }
 
   setup() {
     super.setup();
 
-    Stealthy.log('Engine5e.setup');
+    // actor.toggleStatusEffect("hidden", {active: true});
+
+    const hidingAvailable = CONFIG?.DND5E.statusEffects?.hiding.name;
+    if (hidingAvailable) {
+      this.hidingName = game.i18n.localize(hidingAvailable);
+      Stealthy.log(`hidingName='${this.hidingName}'`);
+    }
+
     Hooks.on('dnd5e.rollSkill', async (actor, roll, skill) => {
       if (skill === game.settings.get(Stealthy.MODULE_ID, 'stealthKey')) {
         await this.rollStealth(actor, roll);
@@ -115,6 +111,13 @@ class Engine5e extends Engine {
         .insertBefore($('[name="stealthy.perceptionDisadvantage"]')
           .parents('div.form-group:first'));
     });
+  }
+
+  getSettingsDefaults(version) {
+    let defaults = super.getSettingsDefaults(version);
+    defaults.hiddenLabel = 'EFFECT.DND5E.StatusHiding';
+    defaults.hiddenIcon = 'systems/dnd5e/icons/svg/statuses/hiding.svg';
+    return defaults;
   }
 
   static LIGHT_LABELS = ['dark', 'dim', 'bright', 'bright'];
@@ -199,8 +202,8 @@ class Engine5e extends Engine {
     const flag = super.getPerceptionFlag(token);
     if (flag) return flag;
     const prcKey = game.settings.get(Stealthy.MODULE_ID, 'perceptionKey');
-    const passive = token.actor.system?.skills?.[prcKey]?.passive ?? -100;
-    const disadvantagedPassive = (token.actor.flags?.['midi-qol']?.disadvantage?.skill?.[prcKey] > 0) ? passive : passive - 5;
+    const passive = token.actor?.system?.skills?.[prcKey]?.passive ?? -100;
+    const disadvantagedPassive = (token.actor?.flags?.['midi-qol']?.disadvantage?.skill?.[prcKey] > 0) ? passive : passive - 5;
     return {
       token,
       passive: true,

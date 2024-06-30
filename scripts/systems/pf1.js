@@ -10,7 +10,6 @@ export class EnginePF1 extends Engine {
   init() {
     super.init();
 
-    console.log('stealthy | EnginePF1.init');
     game.settings.register(Stealthy.MODULE_ID, 'spotTake10', {
       scope: 'world',
       config: false,
@@ -47,7 +46,6 @@ export class EnginePF1 extends Engine {
   ready() {
     super.init();
 
-    Stealthy.log('EnginePF1.ready');
     const offset = game.settings.get(Stealthy.MODULE_ID, 'passiveSpotOffset');
     if (offset === -999) {
       game.settings.set(

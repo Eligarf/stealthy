@@ -1,3 +1,6 @@
+# v5.0.0
+* dnd5e: who knew adding support for *Hiding* without busting folks who use *Hidden* would be so complicated...
+
 # v4.3.2
 * Added a small binoculars icon over the banked perception value in the token HUD
 * Fix module.json warning

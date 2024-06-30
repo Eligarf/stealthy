@@ -10,7 +10,6 @@ class Engine4e extends Engine {
   setup() {
     super.setup();
     
-    console.log('stealthy | Engine4e.init');
     const usesStealth = `uses ${game.i18n.localize('DND4E.SkillStl')}.`;
     const usesPerception = `uses ${game.i18n.localize('DND4E.SkillPrc')}.`;
     Stealthy.log('Localized Chat Tags', { usesStealth, usesPerception });
