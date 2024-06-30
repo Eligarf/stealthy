@@ -32,13 +32,30 @@ export default class Engine {
     ];
 
     Hooks.once('setup', () => {
-      this.hiddenName = game.i18n.localize(game.settings.get(Stealthy.MODULE_ID, 'hiddenLabel'));
-      this.spotName = game.i18n.localize(game.settings.get(Stealthy.MODULE_ID, 'spotLabel'));
-      Stealthy.log(`hiddenName='${this.hiddenName}', spotName='${this.spotName}'`);
-      if (game.settings.get(Stealthy.MODULE_ID, 'spotSecretDoors')) {
-        Doors.initialize();
-      }
+      this.setup();
     });
+
+    Hooks.once('ready', () => {
+      this.ready();
+    });
+  }
+
+  init() {
+    Stealthy.log('Engine.init');
+  }
+
+  setup() {
+    Stealthy.log('Engine.setup');
+    this.hiddenName = game.i18n.localize(game.settings.get(Stealthy.MODULE_ID, 'hiddenLabel'));
+    this.spotName = game.i18n.localize(game.settings.get(Stealthy.MODULE_ID, 'spotLabel'));
+    Stealthy.log(`hiddenName='${this.hiddenName}', spotName='${this.spotName}'`);
+    if (game.settings.get(Stealthy.MODULE_ID, 'spotSecretDoors')) {
+      Doors.setup();
+    }
+  }
+
+  ready() {
+    Stealthy.log('Engine.ready');
   }
 
   mixInDefaults(settings) {
@@ -255,7 +272,7 @@ export default class Engine {
         flags: {
           stealthy: flag,
         },
-        statuses: ['hidden'],
+        statuses: [name.toLowerCase()],
         changes: [],
       };
       effect[(Math.floor(game.version) < 11) ? 'label' : 'name'] = name;
@@ -294,31 +311,35 @@ export default class Engine {
     let effect = actor.effects.find((e) => name === (beforeV11 ? e.label : e.name));
 
     if (!effect) {
-      // See if we can source from outside
-      if (source === 'ce') {
-        if (game.dfreds?.effectInterface?.findEffectByName(name)) {
-          await game.dfreds.effectInterface.addEffect({ effectName: name, uuid: actor.uuid });
-          effect = actor.effects.find((e) => name === (beforeV11 ? e.label : e.name));
+      switch (source) {
+        case 'ce': {
+          if (game.dfreds?.effectInterface?.findEffectByName(name)) {
+            await game.dfreds.effectInterface.addEffect({ effectName: name, uuid: actor.uuid });
+            effect = actor.effects.find((e) => name === (beforeV11 ? e.label : e.name));
+          }
+          if (!effect && !this.warnedMissingCE) {
+            this.warnedMissingCE = true;
+            if (game.user.isGM)
+              ui.notifications.warn(
+                `${game.i18n.localize('stealthy.source.ce.beforeLabel')} '${name}' ${game.i18n.localize('stealthy.source.ce.afterLabel')}`);
+            console.error(`stealthy | Convenient Effects couldn't find the '${name}' effect so Stealthy will use the default one. Add your customized effect to CE or select a different effect source in Game Settings`);
+          }
+          break;
         }
-        if (!effect && !this.warnedMissingCE) {
-          this.warnedMissingCE = true;
-          if (game.user.isGM)
-            ui.notifications.warn(
-              `${game.i18n.localize('stealthy.source.ce.beforeLabel')} '${name}' ${game.i18n.localize('stealthy.source.ce.afterLabel')}`);
-          console.error(`stealthy | Convenient Effects couldn't find the '${name}' effect so Stealthy will use the default one. Add your customized effect to CE or select a different effect source in Game Settings`);
-        }
-      }
-      else if (source === 'clt') {
-        if (game.clt?.getCondition(name)) {
-          await game.clt.applyCondition(name, actor);
-          effect = actor.effects.find(e => name === (beforeV11 ? e.label : e.name));
-        }
-        if (!effect && !this.warnedMissingCLT) {
-          this.warnedMissingCLT = true;
-          if (game.user.isGM)
-            ui.notifications.warn(
-              `${game.i18n.localize('stealthy.source.clt.beforeLabel')} '${name}' ${game.i18n.localize('stealthy.source.clt.afterLabel')}`);
-          console.error(`stealthy | Condition Lab & Triggler couldn't find the '${name}' effect so Stealthy will use the default one. Add your customized effect to CLT or select a different effect source in Game Settings`);
+
+        case 'clt': {
+          if (game.clt?.getCondition(name)) {
+            await game.clt.applyCondition(name, actor);
+            effect = actor.effects.find(e => name === (beforeV11 ? e.label : e.name));
+          }
+          if (!effect && !this.warnedMissingCLT) {
+            this.warnedMissingCLT = true;
+            if (game.user.isGM)
+              ui.notifications.warn(
+                `${game.i18n.localize('stealthy.source.clt.beforeLabel')} '${name}' ${game.i18n.localize('stealthy.source.clt.afterLabel')}`);
+            console.error(`stealthy | Condition Lab & Triggler couldn't find the '${name}' effect so Stealthy will use the default one. Add your customized effect to CLT or select a different effect source in Game Settings`);
+          }
+          break;
         }
       }
 
@@ -410,7 +431,7 @@ export default class Engine {
     const distance = (beforeV12)
       ? canvas.grid.measureDistance(visionSource.object.center, doorControl.center)
       : canvas.grid.measurePath([visionSource.object.center, doorControl.center]).distance;
-    
+
     if (distance > maxRange) return false;
 
     // Now just compare the perception and the door's stealth

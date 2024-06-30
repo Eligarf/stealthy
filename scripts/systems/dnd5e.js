@@ -6,7 +6,12 @@ class Engine5e extends Engine {
 
   constructor() {
     super();
+  }
 
+  init() {
+    super.init();
+
+    Stealthy.log('Engine5e.init');
     if (game.modules.get("vision-5e")?.active) {
       this.defaultDetectionModes.push(
         'devilsSight',
@@ -80,6 +85,21 @@ class Engine5e extends Engine {
       default: 'inCombat'
     });
 
+    const hidingAvailable = CONFIG?.DND5E.statusEffects?.hiding.name;
+    if (hidingAvailable) {
+      Hooks.once('setup', () => {
+        this.hidingName = game.i18n.localize(hidingAvailable);
+        Stealthy.log(`hidingName='${this.hidingName}'`);
+      });
+    }
+
+
+  }
+
+  setup() {
+    super.setup();
+
+    Stealthy.log('Engine5e.setup');
     Hooks.on('dnd5e.rollSkill', async (actor, roll, skill) => {
       if (skill === game.settings.get(Stealthy.MODULE_ID, 'stealthKey')) {
         await this.rollStealth(actor, roll);
@@ -227,6 +247,40 @@ class Engine5e extends Engine {
     super.rollStealth();
   }
 
+  findStealthEffect(actor) {
+    if (this.hidingName) {
+      const hiding = actor?.effects.find((e) => !e.disabled && this.hidingName === e.name);
+      if (hiding) return hiding;
+    }
+    return super.findStealthEffect(actor);
+  }
+
+  makeStealthEffectMaker(name) {
+    return (flag, source) => {
+      let effect = {
+        icon: game.settings.get(Stealthy.MODULE_ID, 'hiddenIcon'),
+        description: game.i18n.localize("stealthy.hidden.description"),
+        flags: {
+          stealthy: flag,
+        },
+        statuses: [name.toLowerCase()],
+        changes: [],
+      };
+      effect[(Math.floor(game.version) < 11) ? 'label' : 'name'] = name;
+
+      if (source === 'ae') {
+        if (typeof ATLUpdate !== 'undefined') {
+          effect.changes.push({
+            key: 'ATL.alpha',
+            mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+            value: '0.75'
+          });
+        }
+      }
+      return effect;
+    };
+  }
+
   async rollPerception(actor, roll) {
     Stealthy.log('Stealthy5e.rollPerception', { actor, roll });
     if (!stealthy.bankingPerception) return;
@@ -283,6 +337,7 @@ Hooks.once('init', () => {
     const systemEngine = new Engine5e();
     if (systemEngine) {
       window[Stealthy.MODULE_ID] = new Stealthy(systemEngine);
+      systemEngine.init();
     }
   }
 });

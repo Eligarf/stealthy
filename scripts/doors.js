@@ -2,7 +2,7 @@ import { Stealthy } from "./stealthy.js";
 
 export default class Doors {
 
-  static initialize() {
+  static setup() {
     libWrapper.register(
       Stealthy.MODULE_ID,
       "WallConfig.prototype._updateObject",

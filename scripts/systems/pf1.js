@@ -5,6 +5,12 @@ export class EnginePF1 extends Engine {
 
   constructor() {
     super();
+  }
+
+  init() {
+    super.init();
+
+    console.log('stealthy | EnginePF1.init');
     game.settings.register(Stealthy.MODULE_ID, 'spotTake10', {
       scope: 'world',
       config: false,
@@ -19,17 +25,6 @@ export class EnginePF1 extends Engine {
       config: true,
       type: Number,
       default: -999,
-    });
-
-    Hooks.once('ready', () => {
-      const offset = game.settings.get(Stealthy.MODULE_ID, 'passiveSpotOffset');
-      if (offset === -999) {
-        game.settings.set(
-          Stealthy.MODULE_ID,
-          'passiveSpotOffset',
-          game.settings.get(Stealthy.MODULE_ID, 'spotTake10') ? 10 : -99
-        )
-      }
     });
 
     Hooks.on('pf1ActorRollSkill', async (actor, message, skill) => {
@@ -47,6 +42,20 @@ export class EnginePF1 extends Engine {
         .insertBefore($('[name="stealthy.passiveSpotOffset"]')
           .parents('div.form-group:first'));
     });
+  }
+
+  ready() {
+    super.init();
+
+    Stealthy.log('EnginePF1.ready');
+    const offset = game.settings.get(Stealthy.MODULE_ID, 'passiveSpotOffset');
+    if (offset === -999) {
+      game.settings.set(
+        Stealthy.MODULE_ID,
+        'passiveSpotOffset',
+        game.settings.get(Stealthy.MODULE_ID, 'spotTake10') ? 10 : -99
+      );
+    }
   }
 
   async setValueInEffect(flag, skill, value, sourceEffect) {
@@ -193,6 +202,7 @@ Hooks.once('init', () => {
     const systemEngine = new EnginePF1();
     if (systemEngine) {
       window[Stealthy.MODULE_ID] = new Stealthy(systemEngine);
+      systemEngine.init();
     }
   }
 });
