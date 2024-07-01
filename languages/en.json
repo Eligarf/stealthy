@@ -100,7 +100,8 @@
         "hint": "End turn if you are owner of the current combatant"
       },
       "hidingStatus": {
-        "name": "Use 'Hiding' Status Effect"
+        "name": "Use 'Hiding' Status Effect",
+        "hint": "This string will be sent through i18n.localize(). Changing these may affect overall automation of Stealthy's effects. If you want 'hiding', use 'EFFECT.DND5E.StatusHiding'"
       },
       "perceptionDisadvantage": {
         "name": "Perception disadvantage in Dim light",

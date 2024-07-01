@@ -100,7 +100,8 @@
         "hint": "Encerra o turno se você é dono do atual combatente."
       },
       "hidingStatus": {
-        "name": "Use 'Hiding' Status Effect"
+        "name": "Use 'Hiding' Status Effect",
+        "hint": "Esta string será enviada através de i18n.localize(). Mudar isso pode afetar a automação geral dos efeitos do Stealthy.. If you want 'hiding', use 'EFFECT.DND5E.StatusHiding'"
       },
       "perceptionDisadvantage": {
         "name": "Desvantagem em Percepção na Penumbra",

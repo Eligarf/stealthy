@@ -116,6 +116,7 @@ class Engine5e extends Engine {
   getSettingsParameters(version) {
     let settings = super.getSettingsParameters(version);
     settings.hiddenLabel.default = 'EFFECT.DND5E.StatusHiding';
+    settings.hiddenLabel.hint = 'stealthy.dnd5e.hidingStatus.hint';
     settings.hiddenIcon.default = 'systems/dnd5e/icons/svg/statuses/hiding.svg';
     const hidingAvailable = CONFIG?.DND5E.statusEffects?.hiding.name;
     if (hidingAvailable) {
@@ -256,11 +257,12 @@ class Engine5e extends Engine {
   }
 
   findStealthEffect(actor) {
+    let effect = super.findStealthEffect(actor);
+    if (effect) return effect;
     if (this.hidingName) {
-      const hiding = actor?.effects.find((e) => !e.disabled && this.hidingName === e.name);
-      if (hiding) return hiding;
+      effect = actor?.effects.find((e) => !e.disabled && this.hidingName === e.name);
     }
-    return super.findStealthEffect(actor);
+    return effect;
   }
 
   makeStealthEffectMaker(name) {

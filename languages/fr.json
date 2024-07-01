@@ -6,7 +6,7 @@
       "source": "Source d'effets cachés",
       "preloc": {
         "key": "Clé de localisation pour l'étiquette masquée",
-        "hint": "Cette chaîne sera envoyée via i18n.localize(). "
+        "hint": "Cette chaîne sera envoyée via i18n.localize(). Changing these may affect overall automation of Stealthy's effects."
       },
       "icon": "Icône cachée",
       "iconhint": "Icône par défaut pour l'effet masqué"
@@ -100,7 +100,8 @@
         "hint": "Fin du tour si vous êtes propriétaire du combattant actuel"
       },
       "hidingStatus": {
-        "name": "Use 'Hiding' Status Effect"
+        "name": "Use 'Hiding' Status Effect",
+        "hint": "Cette chaîne sera envoyée via i18n.localize(). Changing these may affect overall automation of Stealthy's effects. If you want 'hiding', use 'EFFECT.DND5E.StatusHiding'"
       },
       "perceptionDisadvantage": {
         "name": "Perception disadvantage in Dim light",
