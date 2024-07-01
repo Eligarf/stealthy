@@ -592,20 +592,27 @@ export default class Engine {
 
     const beforeV12 = Math.floor(game.version) < 12;
     const hasGlobal = (beforeV12) ? scene.globalLight : scene.environment.globalLight.enabled;
-    Stealthy.log('hasGlobal', hasGlobal);
     if (hasGlobal) return 'bright';
 
     const center = token.center;
+    const zScale = scene.dimensions.size / scene.dimensions.distance;
+
+    function distSquared(a, b, az, bz) {
+      const xDiff = a.x - b.x;
+      const yDiff = a.y - b.y;
+      const zDiff = zScale * (az - bz);
+      return xDiff * xDiff + yDiff * yDiff + zDiff * zDiff;
+    }
 
     let lights = scene.lights
       .map(light => light._object?.source)
       .concat(scene.tokens.filter(t => t.object?.light?.active).map(t => t.object.light))
-      .filter(light => light?.shape?.contains(center.x, center.y));
-
+      .filter(light => light?.shape?.contains(center.x, center.y))
+      .filter(light => distSquared(center, light, token.document.elevation, light.elevation) < light.data.dim * light.data.dim);
 
     if (!lights.length) return 'dark';
 
-    const bright = lights.find(light => (center.x - light.x) ** 2 + (center.y - light.y) ** 2 < light.data.bright ** 2);
+    const bright = lights.find(light => distSquared(center, light, token.document.elevation, light.elevation) < light.data.bright * light.data.bright);
     return (bright) ? 'bright' : 'dim';
   }
 
