@@ -88,12 +88,10 @@ class Engine5e extends Engine {
   setup() {
     super.setup();
 
-    // actor.toggleStatusEffect("hidden", {active: true});
-
+    const hiddenSource = game.settings.get(Stealthy.MODULE_ID, 'hiddenSource');
     const hidingAvailable = CONFIG?.DND5E.statusEffects?.hiding.name;
-    if (hidingAvailable) {
-      this.hidingName = game.i18n.localize(hidingAvailable);
-      Stealthy.log(`hidingName='${this.hidingName}'`);
+    if (hiddenSource === 'hiding' && hidingAvailable) {
+      this.hiding = game.i18n.localize(hidingAvailable);
     }
 
     Hooks.on('dnd5e.rollSkill', async (actor, roll, skill) => {
@@ -116,12 +114,12 @@ class Engine5e extends Engine {
   getSettingsParameters(version) {
     let settings = super.getSettingsParameters(version);
     settings.hiddenLabel.default = 'EFFECT.DND5E.StatusHiding';
-    settings.hiddenLabel.hint = 'stealthy.dnd5e.hidingStatus.hint';
+    settings.hiddenLabel.hint = 'stealthy.dnd5e.hiding.hint';
     settings.hiddenIcon.default = 'systems/dnd5e/icons/svg/statuses/hiding.svg';
     const hidingAvailable = CONFIG?.DND5E.statusEffects?.hiding.name;
     if (hidingAvailable) {
-      settings.hiddenSource.choices['status'] = 'stealthy.dnd5e.hidingStatus.name';
-      settings.hiddenSource.default = 'status';
+      settings.hiddenSource.choices['hiding'] = 'stealthy.dnd5e.hiding.choice';
+      settings.hiddenSource.default = 'hiding';
     }
     return settings;
   }
@@ -257,38 +255,26 @@ class Engine5e extends Engine {
   }
 
   findStealthEffect(actor) {
-    let effect = super.findStealthEffect(actor);
-    if (effect) return effect;
-    if (this.hidingName) {
-      effect = actor?.effects.find((e) => !e.disabled && this.hidingName === e.name);
+    if (this.hiding) {
+      return actor?.effects.find((e) => !e.disabled && this.hiding === e.name);
     }
-    return effect;
+    return super.findStealthEffect(actor);
   }
 
-  makeStealthEffectMaker(name) {
-    return (flag, source) => {
-      let effect = {
-        icon: game.settings.get(Stealthy.MODULE_ID, 'hiddenIcon'),
-        description: game.i18n.localize("stealthy.hidden.description"),
-        flags: {
-          stealthy: flag,
-        },
-        statuses: [name.toLowerCase()],
-        changes: [],
-      };
-      effect[(Math.floor(game.version) < 11) ? 'label' : 'name'] = name;
+  async updateOrCreateStealthEffect(actor, flag) {
+    if (!this.hiding) {
+      return await super.updateOrCreateStealthEffect(actor, flag);
+    }
 
-      if (source === 'ae') {
-        if (typeof ATLUpdate !== 'undefined') {
-          effect.changes.push({
-            key: 'ATL.alpha',
-            mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
-            value: '0.75'
-          });
-        }
-      }
-      return effect;
-    };
+    await actor.toggleStatusEffect('hiding', {active: true});
+    const beforeV11 = Math.floor(game.version) < 11;
+    let effect = actor.effects.find((e) => this.hiding === (beforeV11 ? e.label : e.name));
+    Stealthy.log('hiding', effect);
+    effect = foundry.utils.duplicate(effect);
+    effect.flags.stealthy = flag;
+    effect.disabled = false;
+    await actor.updateEmbeddedDocuments('ActiveEffect', [effect]);
+    stealthy.socket.executeForEveryone('RefreshPerception');
   }
 
   async rollPerception(actor, roll) {
