@@ -78,8 +78,9 @@ Stealthy will not automatically remove a banked stealth roll - the dnd5e [Skulke
 * [lib-wrapper](https://foundryvtt.com/packages/lib-wrapper)
 * [socketlib](https://github.com/manuelVo/foundryvtt-socketlib)
 ## Optional modules
+Stealthy will adapt to the presence of any of the following modules should they be active
 * [Active Token Effects](https://foundryvtt.com/packages/ATL)
 * [Condition Lab & Triggler](https://foundryvtt.com/packages/condition-lab-triggler)
 * [DFreds Convenient Effects](https://foundryvtt.com/packages/dfreds-convenient-effects)
+* [Midi QOL](https://foundryvtt.com/packages/midi-qol)
 * [Vision5e](https://foundryvtt.com/packages/vision-5e)
-* [Visual Active Effects](https://foundryvtt.com/packages/visual-active-effects)
