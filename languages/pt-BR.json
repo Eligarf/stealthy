@@ -60,7 +60,7 @@
       "warning": "É necessário atualizar a página para aplicar alterações aos modos de detecção selecionados"
     },
     "source": {
-      "hint": "Onde encontrar o efeito",
+      "hint": "Which source to use for the Active Effect stored on the actor",
       "ce": {
         "name": "Convenient Effects",
         "beforeLabel": "Não foi possível encontrar o efeito",
@@ -86,6 +86,7 @@
     },
     "config": {
       "general": "Opções Gerais",
+      "effects": "Active Effect Options",
       "debug": "Opções de Depuração",
       "advanced": "Opções Avançadas"
     },
@@ -101,7 +102,8 @@
       },
       "hiding": {
         "choice": "Use 'Hiding' Status Effect",
-        "hint": "Esta string será enviada através de i18n.localize(). Mudar isso pode afetar a automação geral dos efeitos do Stealthy.. If you want 'hiding', use 'EFFECT.DND5E.StatusHiding'"
+        "hint": "Esta string será enviada através de i18n.localize(). Mudar isso pode afetar a automação geral dos efeitos do Stealthy.. If you want 'hiding', use 'EFFECT.DND5E.StatusHiding'",
+        "iconhint": "Ícone padrão para o efeito Escondido (ignored if using Status Effect)"
       },
       "perceptionDisadvantage": {
         "name": "Desvantagem em Percepção na Penumbra",

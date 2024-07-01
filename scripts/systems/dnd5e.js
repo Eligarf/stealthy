@@ -120,6 +120,7 @@ class Engine5e extends Engine {
     if (hidingAvailable) {
       settings.hiddenSource.choices['hiding'] = 'stealthy.dnd5e.hiding.choice';
       settings.hiddenSource.default = 'hiding';
+      settings.hiddenIcon.hint = 'stealthy.dnd5e.hiding.iconhint';
     }
     return settings;
   }

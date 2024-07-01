@@ -60,7 +60,7 @@
       "warning": "Reload is required to apply changes to selected detection modes"
     },
     "source": {
-      "hint": "Où trouver l'effet",
+      "hint": "Which source to use for the Active Effect stored on the actor",
       "ce": {
         "name": "Convinient effects",
         "beforeLabel": "Impossible de trouver l'effet",
@@ -86,6 +86,7 @@
     },
     "config": {
       "general": "Options générales",
+      "effects": "Active Effect Options",
       "debug": "Options de debug",
       "advanced": "Options avancées"
     },
@@ -101,7 +102,8 @@
       },
       "hiding": {
         "choice": "Use 'Hiding' Status Effect",
-        "hint": "Cette chaîne sera envoyée via i18n.localize(). Changing these may affect overall automation of Stealthy's effects. If you want 'hiding', use 'EFFECT.DND5E.StatusHiding'"
+        "hint": "Cette chaîne sera envoyée via i18n.localize(). Changing these may affect overall automation of Stealthy's effects. If you want 'hiding', use 'EFFECT.DND5E.StatusHiding'",
+        "iconhint": "Icône par défaut pour l'effet Détection (ignored if using Status Effect)"
       },
       "perceptionDisadvantage": {
         "name": "Perception disadvantage in Dim light",

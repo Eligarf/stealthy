@@ -110,6 +110,7 @@ Hooks.on('getSceneControlButtons', (controls) => {
 Hooks.on('renderSettingsConfig', (app, html, data) => {
   const sections = [
     { label: "general", before: "stealthToActor" },
+    { label: "effects", before: "hiddenSource"},
     { label: "advanced", before: "hiddenLabel" },
     { label: "debug", before: "logLevel" },
   ];
