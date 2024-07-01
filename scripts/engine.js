@@ -47,9 +47,6 @@ export default class Engine {
     const moduleVersion = module.version;
     const settings = this.getSettingsParameters(moduleVersion);
 
-    game.settings.register(Stealthy.MODULE_ID, 'stealthToActor', settings.stealthToActor);
-    game.settings.register(Stealthy.MODULE_ID, 'perceptionToActor', settings.perceptionToActor);
-
     game.settings.registerMenu(Stealthy.MODULE_ID, "detectionModesMenu", {
       name: "stealthy.detectionModesMenu.name",
       label: "stealthy.detectionModesMenu.label",
@@ -64,12 +61,17 @@ export default class Engine {
     game.settings.register(Stealthy.MODULE_ID, 'playerHud', settings.playerHud);
     game.settings.register(Stealthy.MODULE_ID, 'exposure', settings.exposure);
     game.settings.register(Stealthy.MODULE_ID, 'spotSecretDoors', settings.spotSecretDoors);
+
+    game.settings.register(Stealthy.MODULE_ID, 'stealthToActor', settings.stealthToActor);
+    game.settings.register(Stealthy.MODULE_ID, 'perceptionToActor', settings.perceptionToActor);
     game.settings.register(Stealthy.MODULE_ID, 'hiddenSource', settings.hiddenSource);
     game.settings.register(Stealthy.MODULE_ID, 'hiddenIcon', settings.hiddenIcon);
     game.settings.register(Stealthy.MODULE_ID, 'spotSource', settings.spotSource);
     game.settings.register(Stealthy.MODULE_ID, 'spotIcon', settings.spotIcon);
+
     game.settings.register(Stealthy.MODULE_ID, 'hiddenLabel', settings.hiddenLabel);
     game.settings.register(Stealthy.MODULE_ID, 'spotLabel', settings.spotLabel);
+    
     game.settings.register(Stealthy.MODULE_ID, 'logLevel', settings.logLevel);
     game.settings.register(Stealthy.MODULE_ID, 'schema', settings.schema);
     game.settings.register(Stealthy.MODULE_ID, 'activeSpot', settings.activeSpot);
