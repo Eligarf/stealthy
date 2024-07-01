@@ -1,7 +1,8 @@
-# v5.0.0
-* Refactor a cleaner way to hook up to init/setup/ready hooks
-* Allow games systems to specialize game settings defaults.
+# v4.4.0
+* dnd5e: *Hiding* Status Effect can be used to bank stealth results
 * dnd5e: Handle vision-5e's "undefined" detection mode
+* Allow games systems to specialize game settings defaults.
+* Fix lighting calculations for v12
 
 # v4.3.2
 * Added a small binoculars icon over the banked perception value in the token HUD

@@ -71,7 +71,7 @@ export default class Engine {
 
     game.settings.register(Stealthy.MODULE_ID, 'hiddenLabel', settings.hiddenLabel);
     game.settings.register(Stealthy.MODULE_ID, 'spotLabel', settings.spotLabel);
-    
+
     game.settings.register(Stealthy.MODULE_ID, 'logLevel', settings.logLevel);
     game.settings.register(Stealthy.MODULE_ID, 'schema', settings.schema);
     game.settings.register(Stealthy.MODULE_ID, 'activeSpot', settings.activeSpot);
@@ -260,7 +260,7 @@ export default class Engine {
         type: Boolean,
         default: true,
       },
-    }
+    };
   }
 
   mixInDefaults(settings) {
@@ -590,35 +590,23 @@ export default class Engine {
     const scene = token.scene;
     if (scene !== canvas.scene || !scene.tokenVision) return undefined;
 
-    let exposure = 'dark';
+    const beforeV12 = Math.floor(game.version) < 12;
+    const hasGlobal = (beforeV12) ? scene.globalLight : scene.environment.globalLight.enabled;
+    Stealthy.log('hasGlobal', hasGlobal);
+    if (hasGlobal) return 'bright';
+
     const center = token.center;
 
-    for (const light of canvas.effects.lightSources) {
-      if (!light.active) continue;
+    let lights = scene.lights
+      .map(light => light._object?.source)
+      .concat(scene.tokens.filter(t => t.object?.light?.active).map(t => t.object.light))
+      .filter(light => light?.shape?.contains(center.x, center.y));
 
-      const bright = light.data.bright;
-      const dim = light.data.dim;
 
-      if (light.object === token) {
-        if (bright) return 'bright';
-        if (dim) exposure = 'dim';
-        continue;
-      }
+    if (!lights.length) return 'dark';
 
-      if (!light.shape.contains(center.x, center.y)) continue;
-
-      if (light.ratio === 1) return 'bright';
-      if (light.ratio === 0) {
-        exposure = 'dim';
-        continue;
-      }
-
-      const distance = new Ray(light, center).distance;
-      if (distance <= bright) return 'bright';
-      exposure = 'dim';
-    }
-
-    return exposure;
+    const bright = lights.find(light => (center.x - light.x) ** 2 + (center.y - light.y) ** 2 < light.data.bright ** 2);
+    return (bright) ? 'bright' : 'dim';
   }
 
   canSpotDoor(doorControl, visionSource) {
