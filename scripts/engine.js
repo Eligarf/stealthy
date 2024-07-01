@@ -596,25 +596,29 @@ export default class Engine {
     if (hasGlobal) return 'bright';
 
     const center = token.center;
-    const zScale = scene.dimensions.size / scene.dimensions.distance;
-
-    function distSquared(a, b, az, bz) {
-      const xDiff = a.x - b.x;
-      const yDiff = a.y - b.y;
-      return xDiff * xDiff + yDiff * yDiff;
-      // const zDiff = zScale * (az - bz);
-      // return xDiff * xDiff + yDiff * yDiff + zDiff * zDiff;
-    }
+    const scale = scene.dimensions.size / scene.dimensions.distance;
+    
+    // function distSquared(a, b, az, bz) {
+    //   const xDiff = a.x - b.x;
+    //   const yDiff = a.y - b.y;
+    //   const zDiff = scale * (az - bz);
+    //   return xDiff * xDiff + yDiff * yDiff + zDiff * zDiff;
+    // }
 
     let lights = scene.lights
       .map(light => light._object?.source)
       .concat(scene.tokens.filter(t => t.object?.light?.active).map(t => t.object.light))
       .filter(light => light?.shape?.contains(center.x, center.y));
-      // .filter(light => distSquared(center, light, token.document.elevation, light.elevation) < light.data.dim * light.data.dim);
+    // .filter(light => distSquared(center, light, token.document.elevation, light.elevation) < light.data.dim * light.data.dim);
 
     if (!lights.length) return 'dark';
 
-    const bright = lights.find(light => distSquared(center, light, token.document.elevation, light.elevation) < light.data.bright * light.data.bright);
+    const bright = lights.find(light =>
+      scale * ((beforeV12)
+        ? canvas.grid.measureDistance(center, light)
+        : canvas.grid.measurePath([center, light]).distance)
+      < light.data.bright
+    );
     return (bright) ? 'bright' : 'dim';
   }
 
