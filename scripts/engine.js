@@ -286,6 +286,7 @@ export default class Engine {
 
     for (const mode in allowedModes) {
       if (!allowedModes[mode]) continue;
+      if (mode === 'undefined') continue;
       if (!(mode in CONFIG.Canvas.detectionModes)) continue;
 
       Stealthy.log(`patching ${mode}`);
