@@ -600,15 +600,16 @@ export default class Engine {
     function distSquared(a, b, az, bz) {
       const xDiff = a.x - b.x;
       const yDiff = a.y - b.y;
-      const zDiff = zScale * (az - bz);
-      return xDiff * xDiff + yDiff * yDiff + zDiff * zDiff;
+      return xDiff * xDiff + yDiff * yDiff;
+      // const zDiff = zScale * (az - bz);
+      // return xDiff * xDiff + yDiff * yDiff + zDiff * zDiff;
     }
 
     let lights = scene.lights
       .map(light => light._object?.source)
       .concat(scene.tokens.filter(t => t.object?.light?.active).map(t => t.object.light))
-      .filter(light => light?.shape?.contains(center.x, center.y))
-      .filter(light => distSquared(center, light, token.document.elevation, light.elevation) < light.data.dim * light.data.dim);
+      .filter(light => light?.shape?.contains(center.x, center.y));
+      // .filter(light => distSquared(center, light, token.document.elevation, light.elevation) < light.data.dim * light.data.dim);
 
     if (!lights.length) return 'dark';
 
