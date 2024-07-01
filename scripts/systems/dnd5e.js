@@ -113,11 +113,11 @@ class Engine5e extends Engine {
 
   getSettingsParameters(version) {
     let settings = super.getSettingsParameters(version);
-    settings.hiddenLabel.default = 'EFFECT.DND5E.StatusHiding';
-    settings.hiddenLabel.hint = 'stealthy.dnd5e.hiding.hint';
-    settings.hiddenIcon.default = 'systems/dnd5e/icons/svg/statuses/hiding.svg';
     const hidingAvailable = CONFIG?.DND5E.statusEffects?.hiding.name;
     if (hidingAvailable) {
+      settings.hiddenLabel.default = 'EFFECT.DND5E.StatusHiding';
+      settings.hiddenLabel.hint = 'stealthy.dnd5e.hiding.hint';
+      settings.hiddenIcon.default = 'systems/dnd5e/icons/svg/statuses/hiding.svg';
       settings.hiddenSource.choices['hiding'] = 'stealthy.dnd5e.hiding.choice';
       settings.hiddenSource.default = 'hiding';
       settings.hiddenIcon.hint = 'stealthy.dnd5e.hiding.iconhint';
