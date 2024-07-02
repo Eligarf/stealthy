@@ -60,7 +60,7 @@
       "warning": "É necessário atualizar a página para aplicar alterações aos modos de detecção selecionados"
     },
     "source": {
-      "hint": "Which source to use for the Active Effect stored on the actor",
+      "hint": "Qual fonte usar para o Efeito Ativo armazenado no ator",
       "ce": {
         "name": "Convenient Effects",
         "beforeLabel": "Não foi possível encontrar o efeito",
@@ -86,7 +86,7 @@
     },
     "config": {
       "general": "Opções Gerais",
-      "effects": "Active Effect Options",
+      "effects": "Opções de Efeito Ativo",
       "debug": "Opções de Depuração",
       "advanced": "Opções Avançadas"
     },
@@ -101,8 +101,8 @@
         "hint": "Encerra o turno se você é dono do atual combatente."
       },
       "hiding": {
-        "choice": "Use 'Hiding' Status Effect",
-        "iconhint": "Ícone padrão para o efeito Escondido (ignored if using Status Effect)"
+        "choice": "Usar Efeito de Status 'Escondendo'",
+        "iconhint": "Ícone padrão para o efeito Escondido (ignorar se estiver usando o Efeito de Status)"
       },
       "perceptionDisadvantage": {
         "name": "Desvantagem em Percepção na Penumbra",
