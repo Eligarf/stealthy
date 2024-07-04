@@ -45,8 +45,8 @@
       "dark": "Em Escuridão"
     },
     "gIDimThreshold": {
-      "name": "Global Illumination dim light threshold",
-      "hint": "On scenes with GI enabled, bright light exposure is assumed unless the darkness level exceeds the scene's GI threshold multiplied by this factor, yielding dim light. Use 1.0 to transition directly from bright to dark."
+      "name": "Limite de Iluminação Global de Penumbra",
+      "hint": "Em cenas com Iluminação Global ativada, se assume a exposição à luz plena, a menos que o nível de escuridão exceda o limite de Iluminação Global da cena, multiplicado por este fator, produzindo penumbra. Use 1.0 para fazer a transição direta do claro para escuro."
     },
     "stealthToActor": {
       "name": "Acumular Furtividade no Ator",
