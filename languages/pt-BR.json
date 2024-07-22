@@ -61,8 +61,8 @@
       "label": "Configurar Modos de Detecção",
       "hint": "Habilite quais modos de detecção furtivos serão aplicados.",
       "warning": "É necessário atualizar a página para aplicar alterações aos modos de detecção selecionados",
-      "enable": "Is mode enabled",
-      "light": "Is mode affected by dim vs bright lighting"
+      "enable": "O modo está ativado",
+      "light": "O modo é afetado por penembra vs luz plena"
     },
     "source": {
       "hint": "Qual fonte usar para o Efeito Ativo armazenado no ator",
