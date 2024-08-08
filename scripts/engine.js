@@ -453,6 +453,10 @@ export default class Engine {
       }
       await canvas.scene.updateEmbeddedDocuments("Token", [update]);
     }
+
+    else {
+      Stealthy.log('**** TRYING TO SET ACTOR VALUE WITHOUT EFFECT ****');
+    }
   }
 
   async bankRollOnToken(tokenOrActor, skill, value) {
@@ -518,19 +522,21 @@ export default class Engine {
   }
 
   async bankStealth(token, value) {
-    if (stealthy.stealthToActor) {
-      await this.updateOrCreateStealthEffect(token.actor, { stealth: value });
-    } else {
+    while (!stealthy.stealthToActor) {
+      if (this.findStealthEffect(actor)) break;
       await this.bankRollOnToken(token, 'stealth', value);
+      return;
     }
+    await this.updateOrCreateStealthEffect(token.actor, { stealth: value });
   }
 
   async bankPerception(token, value) {
-    if (stealthy.perceptionToActor) {
-      await this.updateOrCreatePerceptionEffect(token.actor, { perception: value });
-    } else {
+    while (!stealthy.perceptionToActor) {
+      if (this.findPerceptionEffect(actor)) break;
       await this.bankRollOnToken(token, 'perception', value);
+      return;
     }
+    await this.updateOrCreatePerceptionEffect(token.actor, { perception: value });
   }
 
   rollStealth() {
