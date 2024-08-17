@@ -76,6 +76,11 @@
         "beforeLabel": "Não foi possível encontrar o efeito",
         "afterLabel": "no CLT, usando o padrão do Stealthy"
       },
+      "cpr": {
+        "name": "Chris's Premades",
+        "beforeLabel": "Não foi possível encontrar o efeito",
+        "afterLabel": "no CPR, usando o padrão do Stealthy"
+      },
       "ae": "Stealthy",
       "min": "Stealthy (sem efeito no token)"
     },

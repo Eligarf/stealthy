@@ -6,6 +6,8 @@ class Engine5e extends Engine {
 
   constructor() {
     super();
+
+    this.warnedMissingCPR = false;
   }
 
   init() {
@@ -122,6 +124,11 @@ class Engine5e extends Engine {
 
   getSettingsParameters(version) {
     let settings = super.getSettingsParameters(version);
+    let cpr = chrisPremades?.utils?.effectUtils?.getSidebarEffectData;
+    if (cpr) {
+      settings.hiddenSource.choices.cpr = "stealthy.source.cpr.name";
+      settings.spotSource.choices.cpr = "stealthy.source.cpr.name";
+    }
 
     const hidingAvailable = CONFIG?.DND5E.statusEffects?.hiding.name;
     if (hidingAvailable) {
@@ -130,7 +137,7 @@ class Engine5e extends Engine {
       settings.hiddenIcon.hint = 'stealthy.dnd5e.hiding.iconhint';
       const beforeV12 = Math.floor(game.version) < 12;
       if (!beforeV12) {
-        settings.hiddenSource.choices['hiding'] = 'stealthy.dnd5e.hiding.choice';
+        settings.hiddenSource.choices.hiding = 'stealthy.dnd5e.hiding.choice';
         settings.hiddenSource.default = 'hiding';
         settings.hiddenSource.requiresReload = true;
       }
@@ -273,6 +280,25 @@ class Engine5e extends Engine {
       return actor?.effects.find((e) => !e.disabled && this.hiding === e.name);
     }
     return super.findStealthEffect(actor);
+  }
+
+  async createSourcedEffect({ name, actor, source, makeEffect }) {
+    if (source !== 'cpr')
+      return super.createSourcedEffect({ name, actor, source, makeEffect });
+    const beforeV11 = Math.floor(game.version) < 11;
+    let effect = chrisPremades.utils.effectUtils.getSidebarEffectData(name);
+    if (effect) {
+      await actor.createEmbeddedDocuments('ActiveEffect', [effect]);
+      effect = actor.effects.find((e) => name === (beforeV11 ? e.label : e.name));
+    }
+    else if (!this.warnedMissingCPR) {
+      this.warnedMissingCPR = true;
+      if (game.user.isGM)
+        ui.notifications.warn(
+          `${game.i18n.localize('stealthy.source.cpr.beforeLabel')} '${name}' ${game.i18n.localize('stealthy.source.cpr.afterLabel')}`);
+      console.error(`stealthy | Chris's Premades couldn't find the '${name}' effect so Stealthy will use the default one. Add your customized effect to CPR or select a different effect source in Game Settings`);
+    }
+    return effect;
   }
 
   async updateOrCreateStealthEffect(actor, flag) {

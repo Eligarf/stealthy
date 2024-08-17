@@ -76,6 +76,11 @@
         "beforeLabel": "Couldn't find effect",
         "afterLabel": "in CLT, using Stealthy's default instead"
       },
+      "cpr": {
+        "name": "Chris's Premades",
+        "beforeLabel": "Couldn't find effect",
+        "afterLabel": "in CPR, using Stealthy's default instead"
+      },
       "ae": "Stealthy",
       "min": "Stealthy (no token effect)"
     },

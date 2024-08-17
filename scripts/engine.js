@@ -603,42 +603,50 @@ export default class Engine {
     };
   }
 
+  async createSourcedEffect({ name, actor, source, makeEffect }) {
+    const beforeV11 = Math.floor(game.version) < 11;
+    let effect = null;
+    switch (source) {
+      case 'ce': {
+        if (game.dfreds?.effectInterface?.findEffectByName(name)) {
+          await game.dfreds.effectInterface.addEffect({ effectName: name, uuid: actor.uuid });
+          effect = actor.effects.find((e) => name === (beforeV11 ? e.label : e.name));
+        }
+        if (!effect && !this.warnedMissingCE) {
+          this.warnedMissingCE = true;
+          if (game.user.isGM)
+            ui.notifications.warn(
+              `${game.i18n.localize('stealthy.source.ce.beforeLabel')} '${name}' ${game.i18n.localize('stealthy.source.ce.afterLabel')}`);
+          console.error(`stealthy | Convenient Effects couldn't find the '${name}' effect so Stealthy will use the default one. Add your customized effect to CE or select a different effect source in Game Settings`);
+        }
+        break;
+      }
+
+      case 'clt': {
+        if (game.clt?.getCondition(name)) {
+          await game.clt.applyCondition(name, actor);
+          effect = actor.effects.find(e => name === (beforeV11 ? e.label : e.name));
+        }
+        if (!effect && !this.warnedMissingCLT) {
+          this.warnedMissingCLT = true;
+          if (game.user.isGM)
+            ui.notifications.warn(
+              `${game.i18n.localize('stealthy.source.clt.beforeLabel')} '${name}' ${game.i18n.localize('stealthy.source.clt.afterLabel')}`);
+          console.error(`stealthy | Condition Lab & Triggler couldn't find the '${name}' effect so Stealthy will use the default one. Add your customized effect to CLT or select a different effect source in Game Settings`);
+        }
+        break;
+
+      }
+    }
+    return effect;
+  }
+
   async updateOrCreateEffect({ name, actor, flag, source, makeEffect, tweakEffect }) {
     const beforeV11 = Math.floor(game.version) < 11;
     let effect = actor.effects.find((e) => name === (beforeV11 ? e.label : e.name));
 
     if (!effect) {
-      switch (source) {
-        case 'ce': {
-          if (game.dfreds?.effectInterface?.findEffectByName(name)) {
-            await game.dfreds.effectInterface.addEffect({ effectName: name, uuid: actor.uuid });
-            effect = actor.effects.find((e) => name === (beforeV11 ? e.label : e.name));
-          }
-          if (!effect && !this.warnedMissingCE) {
-            this.warnedMissingCE = true;
-            if (game.user.isGM)
-              ui.notifications.warn(
-                `${game.i18n.localize('stealthy.source.ce.beforeLabel')} '${name}' ${game.i18n.localize('stealthy.source.ce.afterLabel')}`);
-            console.error(`stealthy | Convenient Effects couldn't find the '${name}' effect so Stealthy will use the default one. Add your customized effect to CE or select a different effect source in Game Settings`);
-          }
-          break;
-        }
-
-        case 'clt': {
-          if (game.clt?.getCondition(name)) {
-            await game.clt.applyCondition(name, actor);
-            effect = actor.effects.find(e => name === (beforeV11 ? e.label : e.name));
-          }
-          if (!effect && !this.warnedMissingCLT) {
-            this.warnedMissingCLT = true;
-            if (game.user.isGM)
-              ui.notifications.warn(
-                `${game.i18n.localize('stealthy.source.clt.beforeLabel')} '${name}' ${game.i18n.localize('stealthy.source.clt.afterLabel')}`);
-            console.error(`stealthy | Condition Lab & Triggler couldn't find the '${name}' effect so Stealthy will use the default one. Add your customized effect to CLT or select a different effect source in Game Settings`);
-          }
-          break;
-        }
-      }
+      effect = await this.createSourcedEffect({ name, actor,source, makeEffect });
 
       // If we haven't found an ouside source, create the default one
       if (!effect) {
