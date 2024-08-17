@@ -286,7 +286,7 @@ class Engine5e extends Engine {
     if (source !== 'cpr')
       return super.createSourcedEffect({ name, actor, source, makeEffect });
     const beforeV11 = Math.floor(game.version) < 11;
-    let effect = chrisPremades.utils.effectUtils.getSidebarEffectData(name);
+    let effect = chrisPremades?.utils?.effectUtils?.getSidebarEffectData(name);
     if (effect) {
       await actor.createEmbeddedDocuments('ActiveEffect', [effect]);
       effect = actor.effects.find((e) => name === (beforeV11 ? e.label : e.name));
