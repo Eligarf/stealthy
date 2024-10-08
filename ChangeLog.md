@@ -1,3 +1,7 @@
+# v4.9.1
+* Apply alias to Hidden, not Spot (whoops!!)
+* When testing for hidden/spot effects, first check for Stealthy's flags before resorting to names.
+
 # v4.9.0
 * Add a setting to specify additional words to recognize as 'hidden'. Useful in mixed language sessions.
 

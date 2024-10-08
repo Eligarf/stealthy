@@ -564,12 +564,16 @@ export default class Engine {
 
   findStealthEffect(actor) {
     const beforeV11 = Math.floor(game.version) < 11;
-    return actor?.effects.find((e) => !e.disabled && this.hiddenName === (beforeV11 ? e.label : e.name));
+    return actor?.effects.find((e) => !e.disabled && (
+      e?.flags?.stealthy?.stealth || this.hiddenAliases.includes(beforeV11 ? e.label : e.name)
+    ));
   }
 
   findPerceptionEffect(actor) {
     const beforeV11 = Math.floor(game.version) < 11;
-    return actor?.effects.find((e) => !e.disabled && this.hiddenAliases.includes(beforeV11 ? e.label : e.name));
+    return actor?.effects.find((e) => !e.disabled && (
+      e?.flags?.stealthy?.perception || this.spotName === (beforeV11 ? e.label : e.name)
+    ));
   }
 
   makeStealthEffectMaker(name) {
