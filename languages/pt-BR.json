@@ -10,8 +10,8 @@
       },
       "icon": "Ícone Escondido",
       "iconhint": "Ícone padrão para o efeito Escondido",
-      "aliases": "Other names to recognize as hidden",
-      "aliasesHint": "Separate names with semicolons. This is useful in mixed-language situations"
+      "aliases": "Outros nomes para reconhecer como Escondido",
+      "aliasesHint": "Separe os nomes com ponto e vírgula. Isso é útil em situações de idiomas mistos"
     },
     "spot": {
       "name": "Percebendo",
