@@ -51,8 +51,8 @@
       "hint": "Em cenas com Iluminação Global ativada, se assume a exposição à luz plena, a menos que o nível de escuridão exceda o limite de Iluminação Global da cena, multiplicado por este fator, produzindo penumbra. Use 1.0 para fazer a transição direta do claro para escuro."
     },
     "clearAfterCombat": {
-      "name": "Clear stealth effects after combat",
-      "hint": "Removes Stealthy's spot/hidden effects from only the combatants"
+      "name": "Limpar Efeitos Furtivos Após Combate",
+      "hint": "Remove, dos combatentes, os efeitos Escondido/Percebendo do Stealthy."
     },
     "stealthToActor": {
       "name": "Acumular Furtividade no Ator",
