@@ -15,10 +15,8 @@ export class DetectionModesApplicationClass extends HandlebarsApplicationMixin(A
     tag: 'form',
     form: {
       handler: DetectionModesApplicationClass.#onSubmit,
-      popOut: true,
-      closeOnSubmit: true,
-      submitOnClose: false,
       submitOnChange: false,
+      closeOnSubmit: true,
     },
     window: {
       icon: "fas fa-gear",
@@ -60,7 +58,7 @@ export class DetectionModesApplicationClass extends HandlebarsApplicationMixin(A
       if (!(mode in modes)) modes[mode] = {};
       modes[mode][property] = value;
     }
- 
+
     if (JSON.stringify(object) !== JSON.stringify(original)) {
       ui.notifications.warn(game.i18n.localize("stealthy.detectionModesMenu.warning"));
       Stealthy.log('new setting', modes);
