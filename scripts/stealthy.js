@@ -6,22 +6,13 @@ export class Stealthy {
   constructor(engine) {
     this.engine = engine;
     this.socket = null;
-    
-    const beforeV12 = Math.floor(game.version) < 12;
-    if (beforeV12) {
-      this.refreshOptions = {
-        refreshLighting: true,
-        refreshVision: true,
-        refreshSounds: true,
-      };
-    } else {
-      this.refreshOptions = {
-        refreshLighting: true,
-        refreshVision: true,
-        refreshSounds: true,
-        refreshOcclusion: true,
-      };
-    }
+
+    this.refreshOptions = {
+      refreshLighting: true,
+      refreshVision: true,
+      refreshSounds: true,
+      refreshOcclusion: true,
+    };
 
     Hooks.once('setup', () => {
       this.setup();
@@ -71,12 +62,11 @@ export class Stealthy {
     if (toggled || !game.user.isGM)
       return;
 
-    const beforeV11 = Math.floor(game.version) < 11;
     const name = game.i18n.localize('stealthy.spot.name');
     let updates = [];
     for (let token of canvas.tokens.placeables) {
       const actor = token.actor;
-      const spot = actor.effects.find((e) => name === (beforeV11 ? e.label : e.name));
+      const spot = actor.effects.find((e) => name === e.name);
       if (spot) {
         actor.deleteEmbeddedDocuments('ActiveEffect', [spot.id]);
       }

@@ -2,6 +2,8 @@ import { Stealthy } from "./stealthy.js";
 import Doors from "./doors.js";
 import { DetectionModesApplicationClass } from "./detectionModesMenu.js";
 
+// const beforeV12 = Math.floor(game.version) < 12;
+
 // return true if 'installed' (considered as a JRE version string) is
 // greater than or equal to 'required' (again, a JRE version string).
 function versionAtLeast(version, target) {
@@ -641,22 +643,22 @@ export default class Engine {
   }
 
   findStealthEffect(actor) {
-    const beforeV11 = Math.floor(game.version) < 11;
     return actor?.effects.find((e) => !e.disabled && (
-      e?.flags?.stealthy?.stealth || this.hiddenAliases.includes(beforeV11 ? e.label : e.name)
+      e?.flags?.stealthy?.stealth || this.hiddenAliases.includes(e.name)
     ));
   }
 
   findPerceptionEffect(actor) {
-    const beforeV11 = Math.floor(game.version) < 11;
     return actor?.effects.find((e) => !e.disabled && (
-      e?.flags?.stealthy?.perception || this.spotName === (beforeV11 ? e.label : e.name)
+      e?.flags?.stealthy?.perception || this.spotName === e.name
     ));
   }
 
   makeStealthEffectMaker(name) {
     return (flag, source) => {
       let effect = {
+        name: name,
+        img: game.settings.get(Stealthy.MODULE_ID, 'hiddenIcon'),
         description: game.i18n.localize("stealthy.hidden.description"),
         flags: {
           stealthy: flag,
@@ -664,10 +666,6 @@ export default class Engine {
         statuses: [name.toLowerCase()],
         changes: [],
       };
-      const beforeV11 = Math.floor(game.version) < 11;
-      effect[beforeV11 ? 'label' : 'name'] = name;
-      const beforeV12 = Math.floor(game.version) < 12;
-      effect[beforeV12 ? 'icon' : 'img'] = game.settings.get(Stealthy.MODULE_ID, 'hiddenIcon');
 
       if (source === 'ae') {
         if (typeof ATLUpdate !== 'undefined') {
@@ -685,29 +683,26 @@ export default class Engine {
   makePerceptionEffectMaker(name) {
     return (flag, source) => {
       let effect = {
+        name: name,
+        img: game.settings.get(Stealthy.MODULE_ID, 'spotIcon'),
         description: game.i18n.localize("stealthy.spot.description"),
         flags: {
           stealthy: flag,
         },
         statuses: ['spot'],
       };
-      const beforeV11 = Math.floor(game.version) < 11;
-      effect[beforeV11 ? 'label' : 'name'] = name;
-      const beforeV12 = Math.floor(game.version) < 12;
-      effect[beforeV12 ? 'icon' : 'img'] = game.settings.get(Stealthy.MODULE_ID, 'spotIcon');
 
       return effect;
     };
   }
 
   async createSourcedEffect({ name, actor, source, makeEffect }) {
-    const beforeV11 = Math.floor(game.version) < 11;
     let effect = null;
     switch (source) {
       case 'ce': {
         if (game.dfreds?.effectInterface?.findEffectByName(name)) {
           await game.dfreds.effectInterface.addEffect({ effectName: name, uuid: actor.uuid });
-          effect = actor.effects.find((e) => name === (beforeV11 ? e.label : e.name));
+          effect = actor.effects.find((e) => name === e.name);
         }
         if (!effect && !this.warnedMissingCE) {
           this.warnedMissingCE = true;
@@ -722,7 +717,7 @@ export default class Engine {
       case 'clt': {
         if (game.clt?.getCondition(name)) {
           await game.clt.applyCondition(name, actor);
-          effect = actor.effects.find(e => name === (beforeV11 ? e.label : e.name));
+          effect = actor.effects.find(e => name === e.name);
         }
         if (!effect && !this.warnedMissingCLT) {
           this.warnedMissingCLT = true;
@@ -739,8 +734,7 @@ export default class Engine {
   }
 
   async updateOrCreateEffect({ name, actor, flag, source, makeEffect, tweakEffect }) {
-    const beforeV11 = Math.floor(game.version) < 11;
-    let effect = actor.effects.find((e) => name === (beforeV11 ? e.label : e.name));
+    let effect = actor.effects.find((e) => name === e.name);
 
     if (!effect) {
       effect = await this.createSourcedEffect({ name, actor, source, makeEffect });
@@ -790,26 +784,16 @@ export default class Engine {
     const scene = token.scene;
     if (scene !== canvas.scene || !scene.tokenVision) return undefined;
 
-    const beforeV12 = Math.floor(game.version) < 12;
-
     // If GI is on, check to see if we think it is dim or bright.
     let exposure = 'dark';
     const center = token.center;
-    if (beforeV12) {
-      const darkness = scene.darkness;
-      if (scene.globalLight && darkness <= scene.globalLightThreshold) {
+
+    const gl = scene.environment.globalLight;
+    if (gl.enabled) {
+      const darkness = canvas.effects.getDarknessLevel(center, token.document.elevation);
+      if (darkness <= gl.darkness.max) {
         const factor = game.settings.get(Stealthy.MODULE_ID, 'gIDimThreshold');
-        exposure = (darkness <= factor * scene.globalLightThreshold) ? 'bright' : 'dim';
-      }
-    }
-    else {
-      const gl = scene.environment.globalLight;
-      if (gl.enabled) {
-        const darkness = canvas.effects.getDarknessLevel(center, token.document.elevation);
-        if (darkness <= gl.darkness.max) {
-          const factor = game.settings.get(Stealthy.MODULE_ID, 'gIDimThreshold');
-          exposure = (darkness <= factor * gl.darkness.max) ? 'bright' : 'dim';
-        }
+        exposure = (darkness <= factor * gl.darkness.max) ? 'bright' : 'dim';
       }
     }
 
@@ -817,9 +801,9 @@ export default class Engine {
     // can short-circuit other checks if we are in bright GI
     if (exposure !== 'dark') {
       const lights = scene.lights
-        .map(light => beforeV12 ? light._object?.source : light._object?.lightSource)
+        .map(light => light._object?.lightSource)
         .concat(scene.tokens.filter(t => t.object?.light?.active).map(t => t.object.light))
-        .filter(light => (beforeV12) ? light.isDarkness : light instanceof foundry.canvas.sources.PointDarknessSource)
+        .filter(light => light instanceof foundry.canvas.sources.PointDarknessSource)
         .filter(light => light?.shape?.contains(center.x, center.y));
       if (lights.length) return 'dark';
       if (exposure === 'bright') return exposure;
@@ -835,19 +819,16 @@ export default class Engine {
 
     // Return the GI exposure if we aren't in any lights
     const lights = scene.lights
-      .map(light => beforeV12 ? light._object?.source : light._object?.lightSource)
+      .map(light => light._object?.lightSource)
       .concat(scene.tokens.filter(t => t.object?.light?.active).map(t => t.object.light))
-      .filter(light => !((beforeV12) ? light.isDarkness : light instanceof foundry.canvas.sources.PointDarknessSource))
+      .filter(light => !(light instanceof foundry.canvas.sources.PointDarknessSource))
       .filter(light => light?.shape?.contains(center.x, center.y));
     // .filter(light => distSquared(center, light, token.document.elevation, light.elevation) < light.data.dim * light.data.dim);
     if (!lights.length) return exposure;
 
     // Look for a light that shines brightly enough, otherwise we are dimly lit
     const bright = lights.find(light =>
-      scale * ((beforeV12)
-        ? canvas.grid.measureDistance(center, light)
-        : canvas.grid.measurePath([center, light]).distance)
-      < light.data.bright
+      scale * (canvas.grid.measurePath([center, light]).distance) < light.data.bright
     );
     return (bright) ? 'bright' : 'dim';
   }
@@ -863,10 +844,7 @@ export default class Engine {
 
     // Hidden doors can only be spotted if they are in range
     const maxRange = stealthyFlags?.maxRange ?? Infinity;
-    const beforeV12 = Math.floor(game.version) < 12;
-    const distance = (beforeV12)
-      ? canvas.grid.measureDistance(visionSource.object.center, doorControl.center)
-      : canvas.grid.measurePath([visionSource.object.center, doorControl.center]).distance;
+    const distance = canvas.grid.measurePath([visionSource.object.center, doorControl.center]).distance;
 
     if (distance > maxRange) return false;
 

@@ -1,3 +1,7 @@
+# v5.1.0
+* Updated CPR name (thanks Kharmans)
+* Removed remaining pre-v12 code
+
 # v5.0.0
 * Requires Foundry v12
 * Switch to ApplicationV2

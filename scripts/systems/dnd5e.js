@@ -91,12 +91,10 @@ class Engine5e extends Engine {
     super.setup();
 
     const hiddenSource = game.settings.get(Stealthy.MODULE_ID, 'hiddenSource');
-    const beforeV12 = Math.floor(game.version) < 12;
-    if (!beforeV12) {
-      const hidingAvailable = CONFIG?.DND5E.statusEffects?.hiding.name;
-      if (hiddenSource === 'hiding' && hidingAvailable) {
-        this.hiding = game.i18n.localize(hidingAvailable);
-      }
+
+    const hidingAvailable = CONFIG?.DND5E.statusEffects?.hiding.name;
+    if (hiddenSource === 'hiding' && hidingAvailable) {
+      this.hiding = game.i18n.localize(hidingAvailable);
     }
 
     Hooks.on('dnd5e.rollSkill', async (actor, roll, skill) => {
@@ -138,12 +136,9 @@ class Engine5e extends Engine {
       settings.hiddenLabel.default = 'EFFECT.DND5E.StatusHiding';
       settings.hiddenIcon.default = 'systems/dnd5e/icons/svg/statuses/hiding.svg';
       settings.hiddenIcon.hint = 'stealthy.dnd5e.hiding.iconhint';
-      const beforeV12 = Math.floor(game.version) < 12;
-      if (!beforeV12) {
-        settings.hiddenSource.choices.hiding = 'stealthy.dnd5e.hiding.choice';
-        settings.hiddenSource.default = 'hiding';
-        settings.hiddenSource.requiresReload = true;
-      }
+      settings.hiddenSource.choices.hiding = 'stealthy.dnd5e.hiding.choice';
+      settings.hiddenSource.default = 'hiding';
+      settings.hiddenSource.requiresReload = true;
     }
     return settings;
   }
@@ -288,14 +283,13 @@ class Engine5e extends Engine {
   async createSourcedEffect({ name, actor, source, makeEffect }) {
     if (source !== 'cpr')
       return super.createSourcedEffect({ name, actor, source, makeEffect });
-    const beforeV11 = Math.floor(game.version) < 11;
     let effect = undefined;
     if (typeof chrisPremades !== typeof undefined) {
       effect = chrisPremades?.utils?.effectUtils?.getSidebarEffectData(name);
     }
     if (effect) {
       await actor.createEmbeddedDocuments('ActiveEffect', [effect]);
-      effect = actor.effects.find((e) => name === (beforeV11 ? e.label : e.name));
+      effect = actor.effects.find((e) => name === e.name);
     }
     else if (!this.warnedMissingCPR) {
       this.warnedMissingCPR = true;
@@ -313,8 +307,7 @@ class Engine5e extends Engine {
     }
 
     await actor.toggleStatusEffect('hiding', { active: true });
-    const beforeV11 = Math.floor(game.version) < 11;
-    let effect = actor.effects.find((e) => this.hiding === (beforeV11 ? e.label : e.name));
+    let effect = actor.effects.find((e) => this.hiding === e.name);
     effect = foundry.utils.duplicate(effect);
     effect.flags.stealthy = flag;
     effect.disabled = false;
