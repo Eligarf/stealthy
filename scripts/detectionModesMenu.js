@@ -1,6 +1,8 @@
 import { Stealthy } from "./stealthy.js";
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
+const MODULE_ID = 'stealthy';
+
 export class DetectionModesApplicationClass extends HandlebarsApplicationMixin(ApplicationV2) {
   constructor(object, options = {}) {
     super(object, options);
@@ -11,7 +13,7 @@ export class DetectionModesApplicationClass extends HandlebarsApplicationMixin(A
   }
 
   static DEFAULT_OPTIONS = {
-    id: 'stealthy-allowed-detection-modes',
+    id: `${MODULE_ID}-allowed-detection-modes`,
     tag: 'form',
     form: {
       handler: DetectionModesApplicationClass.#onSubmit,
@@ -20,7 +22,7 @@ export class DetectionModesApplicationClass extends HandlebarsApplicationMixin(A
     },
     window: {
       icon: "fas fa-gear",
-      title: "stealthy.detectionModesMenu.label",
+      title: `${MODULE_ID}.detectionModesMenu.label`,
     }
   };
 
@@ -30,7 +32,7 @@ export class DetectionModesApplicationClass extends HandlebarsApplicationMixin(A
 
   static PARTS = {
     form: {
-      template: "modules/stealthy/templates/detectionModes.hbs",
+      template: `modules/${MODULE_ID}/templates/detectionModes.hbs`,
     }
   };
 
@@ -60,7 +62,7 @@ export class DetectionModesApplicationClass extends HandlebarsApplicationMixin(A
     }
 
     if (JSON.stringify(object) !== JSON.stringify(original)) {
-      ui.notifications.warn(game.i18n.localize("stealthy.detectionModesMenu.warning"));
+      ui.notifications.warn(game.i18n.localize(`${Stealthy.MODULE_ID}.detectionModesMenu.warning`));
       Stealthy.log('new setting', modes);
       game.settings.set(Stealthy.MODULE_ID, Stealthy.ALLOWED_DETECTION_MODES, modes);
     }
