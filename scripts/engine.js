@@ -2,8 +2,6 @@ import { Stealthy } from "./stealthy.js";
 import Doors from "./doors.js";
 import { DetectionModesApplicationClass } from "./detectionModesMenu.js";
 
-// const beforeV12 = Math.floor(game.version) < 12;
-
 // return true if 'installed' (considered as a JRE version string) is
 // greater than or equal to 'required' (again, a JRE version string).
 function versionAtLeast(version, target) {
