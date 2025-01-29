@@ -1,61 +1,77 @@
 <div action="#">
-  <div class="allowed-detection-modes">
-    <table>
-      {{#if lightBased}}
-      <thead>
-        <tr>
-          <th><i class="fa-solid fa-toggle-off"></i></th>
-          <th><i class="fa-regular fa-lightbulb"></i></th>
-          <th>{{localize 'stealthy.detectionModesMenu.name'}}</th>
-        </tr>
-      </thead>
-      <tbody>
-        {{#each detectionModes}}
-        <tr>
-          <td>
-            <span data-tooltip="<div>{{localize 'stealthy.detectionModesMenu.enable'}}</div>">
-              <input type="checkbox" name="{{@key}}-enabled" id="stealthy-{{@key}}-enabled" {{checked enabled}}>
-            </span>
-          </td>
-          <td>
-            <span data-tooltip="<div>{{localize 'stealthy.detectionModesMenu.light'}}</div>">
-              <input type="checkbox" name="{{@key}}-lightBased" id="stealthy-{{@key}}-lightBased" {{checked
-                lightBased}}>
-            </span>
-          </td>
-          <td>
-            <label for="{{@key}}">{{localize label}}</label>
-          </td>
-        </tr>
-        {{/each}}
-      </tbody>
-      {{else}}
-      <thead>
-        <tr>
-          <th><i class="fa-solid fa-toggle-off"></i></th>
-          <th>{{localize 'stealthy.detectionModesMenu.name'}}</th>
-        </tr>
-      </thead>
-      <tbody>
-        {{#each detectionModes}}
-        <tr>
-          <td>
-            <span data-tooltip="<div>{{localize 'stealthy.detectionModesMenu.enable'}}</div>">
-              <input type="checkbox" name="{{@key}}-enabled" id="stealthy-{{@key}}-enabled" {{checked enabled}}>
-            </span>
-          </td>
-          <td>
-            <label for="{{@key}}">{{localize label}}</label>
-          </td>
-        </tr>
-        {{/each}}
-      </tbody>
-      {{/if}}
-    </table>
-  </div>
-
-  <footer class="sheet-footer flexrow">
-    <button type="submit" name="submit"><i class="fas fa-save"></i> {{localize 'SETTINGS.Save'}}</button>
-    {{!-- <button type="button" name="reset"><i class="fas fa-undo"></i> {{localize 'SETTINGS.Reset'}}</button> --}}
-  </footer>
+    <div class="allowed-detection-modes">
+        <table>
+            {{#if lightBased}}
+                <thead>
+                    <tr>
+                        <th>
+                            <i class="fa-solid fa-toggle-off"></i>
+                        </th>
+                        <th>
+                            <i class="fa-regular fa-lightbulb"></i>
+                        </th>
+                        <th>{{ localize 'stealthy.detectionModesMenu.name' }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each detectionModes}}
+                        <tr>
+                            <td>
+                                <span data-tooltip="<div>{{ localize 'stealthy.detectionModesMenu.enable' }}</div>">
+                                    <input type="checkbox"
+                                           name="{{@key}}-enabled"
+                                           id="stealthy-{{@key}}-enabled"
+                                           {{ checked enabled }}>
+                                </span>
+                            </td>
+                            <td>
+                                <span data-tooltip="<div>{{ localize 'stealthy.detectionModesMenu.light' }}</div>">
+                                    <input type="checkbox" name="{{@key}}-lightBased" id="stealthy-{{@key}}-lightBased" {{checked
+                                        lightBased}}>
+                                    </span>
+                                </td>
+                                <td>
+                                    <label for="{{@key}}">{{ localize label }}</label>
+                                </td>
+                            </tr>
+                        {{/each}}
+                    </tbody>
+                {{ else }}
+                    <thead>
+                        <tr>
+                            <th>
+                                <i class="fa-solid fa-toggle-off"></i>
+                            </th>
+                            <th>{{ localize 'stealthy.detectionModesMenu.name' }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each detectionModes}}
+                            <tr>
+                                <td>
+                                    <span data-tooltip="<div>{{ localize 'stealthy.detectionModesMenu.enable' }}</div>">
+                                        <input type="checkbox"
+                                               name="{{@key}}-enabled"
+                                               id="stealthy-{{@key}}-enabled"
+                                               {{ checked enabled }}>
+                                    </span>
+                                </td>
+                                <td>
+                                    <label for="{{@key}}">{{ localize label }}</label>
+                                </td>
+                            </tr>
+                        {{/each}}
+                    </tbody>
+                {{/if}}
+            </table>
+        </div>
+        <footer class="sheet-footer flexrow">
+            <button type="submit" name="submit">
+                <i class="fas fa-save"></i> {{ localize 'SETTINGS.Save' }}
+            </button>
+            {{!-- <button type="button" name="reset"><i class="fas fa-undo"></i> {{ localize 'SETTINGS.Reset' }}
+        </button>
+        --}}
+    </footer>
 </div>
+

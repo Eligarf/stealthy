@@ -1,24 +1,22 @@
-import { Stealthy } from '../stealthy.js';
-import Engine from '../engine.js';
+import { Stealthy } from "../stealthy.js";
+import Engine from "../engine.js";
 
 class Engine4e extends Engine {
-
   constructor() {
     super();
   }
 
   setup() {
     super.setup();
-    
-    const usesStealth = `uses ${game.i18n.localize('DND4E.SkillStl')}.`;
-    const usesPerception = `uses ${game.i18n.localize('DND4E.SkillPrc')}.`;
-    Stealthy.log('Localized Chat Tags', { usesStealth, usesPerception });
 
-    Hooks.on('createChatMessage', async (message, options, id) => {
+    const usesStealth = `uses ${game.i18n.localize("DND4E.SkillStl")}.`;
+    const usesPerception = `uses ${game.i18n.localize("DND4E.SkillPrc")}.`;
+    Stealthy.log("Localized Chat Tags", { usesStealth, usesPerception });
+
+    Hooks.on("createChatMessage", async (message, options, id) => {
       if (message.flavor.endsWith(usesStealth)) {
         await this.rollStealth(message, options, id);
-      }
-      else if (message.flavor.endsWith(usesPerception)) {
+      } else if (message.flavor.endsWith(usesPerception)) {
         await this.rollPerception(message, options, id);
       }
     });
@@ -37,12 +35,12 @@ class Engine4e extends Engine {
     return {
       token,
       passive: true,
-      perception: 10 + (token.actor.system?.skills?.prc?.total ?? -110)
+      perception: 10 + (token.actor.system?.skills?.prc?.total ?? -110),
     };
   }
 
   async rollStealth(message, options, id) {
-    Stealthy.log('rollStealth', { message, options, id });
+    Stealthy.log("rollStealth", { message, options, id });
 
     const token = canvas.tokens.get(message.speaker.token);
     await this.bankStealth(token, message.rolls[0].total);
@@ -51,7 +49,7 @@ class Engine4e extends Engine {
   }
 
   async rollPerception(message, options, id) {
-    Stealthy.log('rollPerception', { message, options, id });
+    Stealthy.log("rollPerception", { message, options, id });
     if (!stealthy.bankingPerception) return;
 
     const token = canvas.tokens.get(message.speaker.token);
@@ -61,8 +59,8 @@ class Engine4e extends Engine {
   }
 }
 
-Hooks.once('init', () => {
-  if (game.system.id === 'dnd4e') {
+Hooks.once("init", () => {
+  if (game.system.id === "dnd4e") {
     const systemEngine = new Engine4e();
     if (systemEngine) {
       window[Stealthy.MODULE_ID] = new Stealthy(systemEngine);

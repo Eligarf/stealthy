@@ -1,18 +1,22 @@
 import { Stealthy } from "./stealthy.js";
 
 export default class Doors {
-
   static setup() {
     libWrapper.register(
       Stealthy.MODULE_ID,
       "WallConfig.prototype._updateObject",
       async function (wrapped, event, formData) {
         let result = await wrapped(event, formData);
-        Stealthy.log('WallConfig.prototype._updateObject', { me: this, event, formData, result });
+        Stealthy.log("WallConfig.prototype._updateObject", {
+          me: this,
+          event,
+          formData,
+          result,
+        });
         result = Doors.UpdateHiddenDoor(this, formData);
         return result;
       },
-      libWrapper.WRAPPER
+      libWrapper.WRAPPER,
     );
 
     // Inject custom settings into the wall config diallog
@@ -37,30 +41,31 @@ export default class Doors {
     if (ids.length == 0) {
       ids = [wallConfig.object.id];
     }
-    const updateDataset = ids.map(id => { return { _id: id, ...updateData }; });
+    const updateDataset = ids.map((id) => {
+      return { _id: id, ...updateData };
+    });
     return await canvas.scene.updateEmbeddedDocuments("Wall", updateDataset);
   }
 
   static RenderHiddenDoor(wallConfig, html, css) {
-    Stealthy.log('RenderHiddenDoor', { wallConfig, html, css });
+    Stealthy.log("RenderHiddenDoor", { wallConfig, html, css });
     if (css.document.door == 1) {
       html.find(`.door-options`).after(`
         <fieldset>
           <legend><i class="fa-solid fa-piggy-bank"></i> Stealthy</legend>
           <div class="form-group">
             <label>${game.i18n.localize("stealthy.door.stealth")}</label>
-            <input type="number" name="stealth" value="${css.data.flags?.stealthy?.stealth ?? ''}">
+            <input type="number" name="stealth" value="${css.data.flags?.stealthy?.stealth ?? ""}">
           </div>
           <div class="form-group">
             <label">${game.i18n.localize("stealthy.door.maxRange")}</label>
-            <input type="number" name="maxRange" value="${css.data.flags?.stealthy?.maxRange ?? ''}">
+            <input type="number" name="maxRange" value="${css.data.flags?.stealthy?.maxRange ?? ""}">
           </div>
-        </fieldset>`
-      );
+        </fieldset>`);
 
       // Force config window to resize
       wallConfig.setPosition({ height: "auto" });
     }
   }
-
 }
+
