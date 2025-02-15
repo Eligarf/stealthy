@@ -68,4 +68,3 @@ export default class Doors {
     }
   }
 }
-
