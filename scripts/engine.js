@@ -958,4 +958,4 @@ export default class Engine {
     );
     return bright ? "bright" : "dim";
   }
-
+}
