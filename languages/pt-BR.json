@@ -25,10 +25,6 @@
     },
     "bankPerception": "Acúmulo de rolagens de Percepção",
     "title": "Stealthy",
-    "spotHiddenDoors": {
-      "name": "Detecção Automática de Portas Escondidas",
-      "hint": "Tokens podem identificar portas ocultas se seu teste de Percepção superar o valor furtivo da porta."
-    },
     "friendlyStealth": {
       "name": "Como Tratar Tokens Amigáveis Furtivivos",
       "allow": "Sempre testar Percepção",
@@ -105,10 +101,6 @@
       "effects": "Opções de Efeito Ativo",
       "debug": "Opções de Depuração",
       "advanced": "Opções Avançadas"
-    },
-    "door": {
-      "stealth": "Valor Escondido",
-      "maxRange": "Distância de detecção"
     },
     "dnd5e": {
       "name": "Dnd5e",

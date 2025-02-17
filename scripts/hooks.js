@@ -1,12 +1,21 @@
 import { Stealthy } from "./stealthy.js";
 
-Hooks.once('setup', () => {
+Hooks.once("setup", () => {
   const module = game.modules.get(Stealthy.MODULE_ID);
   const moduleVersion = module.version;
 
-  stealthy.stealthToActor = game.settings.get(Stealthy.MODULE_ID, 'stealthToActor');
-  stealthy.perceptionToActor = game.settings.get(Stealthy.MODULE_ID, 'perceptionToActor');
-  stealthy.bankingPerception = game.settings.get(Stealthy.MODULE_ID, 'activeSpot');
+  stealthy.stealthToActor = game.settings.get(
+    Stealthy.MODULE_ID,
+    "stealthToActor",
+  );
+  stealthy.perceptionToActor = game.settings.get(
+    Stealthy.MODULE_ID,
+    "perceptionToActor",
+  );
+  stealthy.bankingPerception = game.settings.get(
+    Stealthy.MODULE_ID,
+    "activeSpot",
+  );
 
   Stealthy.log(`${moduleVersion}: setup`);
 });
@@ -14,7 +23,7 @@ Hooks.once('setup', () => {
 const LIGHT_ICONS = {
   bright: '<i class="fa-solid fa-circle"></i>',
   dim: '<i class="fa-solid fa-circle-half-stroke"></i>',
-  dark: '<i class="fa-regular fa-circle"></i>'
+  dark: '<i class="fa-regular fa-circle"></i>',
 };
 
 function appendExposure(html, engine, token) {
@@ -22,18 +31,26 @@ function appendExposure(html, engine, token) {
   if (exposure === undefined) return;
   const icon = LIGHT_ICONS[exposure];
   const title = game.i18n.localize(`stealthy.exposure.${exposure}`);
-  html.find(".right").append($(`<div class="control-icon" title="${title}">${icon}</div>`));
+  html
+    .find(".right")
+    .append($(`<div class="control-icon" title="${title}">${icon}</div>`));
 }
 
-Hooks.on('renderTokenHUD', (tokenHUD, html, app) => {
+Hooks.on("renderTokenHUD", (tokenHUD, html, app) => {
   const engine = stealthy.engine;
   const token = tokenHUD.object;
+  const beforeV13 = Math.floor(game.version) < 13;
+  if (!beforeV13) html = $(html);
 
-  if (game.settings.get(Stealthy.MODULE_ID, 'exposure'))
+  if (game.settings.get(Stealthy.MODULE_ID, "exposure"))
     appendExposure(html, engine, token);
 
-  if (!(game.user.isGM == true) && !game.settings.get(Stealthy.MODULE_ID, 'playerHud')) return;
-  const editMode = game.user.isGM ? '' : 'disabled ';
+  if (
+    !(game.user.isGM == true) &&
+    !game.settings.get(Stealthy.MODULE_ID, "playerHud")
+  )
+    return;
+  const editMode = game.user.isGM ? "" : "disabled ";
 
   let stealthFlag = engine.getStealthFlag(token);
   if (stealthFlag) {
@@ -47,9 +64,10 @@ Hooks.on('renderTokenHUD', (tokenHUD, html, app) => {
     if (game.user.isGM == true) {
       inputBox.change(async (inputbox) => {
         if (token === undefined) return;
-        const newValue = (!inputbox.target.value.length && !stealthy.stealthToActor)
-          ? undefined
-          : Number(inputbox.target.value);
+        const newValue =
+          !inputbox.target.value.length && !stealthy.stealthToActor
+            ? undefined
+            : Number(inputbox.target.value);
         await engine.setStealthValue(stealthFlag, newValue);
       });
     }
@@ -68,32 +86,39 @@ Hooks.on('renderTokenHUD', (tokenHUD, html, app) => {
     if (game.user.isGM == true) {
       inputBox.change(async (inputbox) => {
         if (token === undefined) return;
-        const newValue = (!inputbox.target.value.length && !stealthy.perceptionToActor)
-          ? undefined
-          : Number(inputbox.target.value);
+        const newValue =
+          !inputbox.target.value.length && !stealthy.perceptionToActor
+            ? undefined
+            : Number(inputbox.target.value);
         await engine.setPerceptionValue(perceptionFlag, newValue);
       });
     }
   }
 });
 
-Hooks.on('getSceneControlButtons', (controls) => {
+Hooks.on("getSceneControlButtons", (controls) => {
   if (!game.user.isGM) return;
-  let tokenControls = controls.find(x => x.name === 'token');
-  tokenControls.tools.push({
-    icon: 'fa-solid fa-piggy-bank',
-    name: 'stealthy-perception-toggle',
+  const tool = {
+    icon: "fa-solid fa-piggy-bank",
+    name: "stealthy-perception-toggle",
     title: game.i18n.localize("stealthy.bankPerception"),
     toggle: true,
     active: stealthy.bankingPerception,
     onClick: async (toggled) => {
-      await game.settings.set(Stealthy.MODULE_ID, 'activeSpot', toggled);
-      stealthy.socket.executeForEveryone('TogglePerceptionBanking', toggled);
-    }
-  });
+      await game.settings.set(Stealthy.MODULE_ID, "activeSpot", toggled);
+      stealthy.socket.executeForEveryone("TogglePerceptionBanking", toggled);
+    },
+  };
+  const beforeV13 = Math.floor(game.version) < 13;
+  if (beforeV13) {
+    let tokenControls = controls.find((x) => x.name === "token");
+    tokenControls.tools.push(tool);
+  } else {
+    controls.tokens.tools.stealthy = tool;
+  }
 });
 
-Hooks.on('renderSettingsConfig', (app, html, data) => {
+Hooks.on("renderSettingsConfig", (app, html, data) => {
   const sections = [
     { label: "general", before: "friendlyStealth" },
     { label: "effects", before: "stealthToActor" },
@@ -101,27 +126,37 @@ Hooks.on('renderSettingsConfig', (app, html, data) => {
     { label: "debug", before: "logLevel" },
   ];
   for (const section of sections) {
-    $('<div>')
-      .addClass('form-group group-header')
+    $("<div>")
+      .addClass("form-group group-header")
       .html(game.i18n.localize(`stealthy.config.${section.label}`))
-      .insertBefore($(`[name="stealthy.${section.before}"]`)
-        .parents('div.form-group:first'));
+      .insertBefore(
+        $(`[name="stealthy.${section.before}"]`).parents(
+          "div.form-group:first",
+        ),
+      );
   }
 });
 
-Hooks.once('ready', async () => {
+Hooks.once("ready", async () => {
   if (!game.user.isGM) {
-    stealthy.bankingPerception = await stealthy.socket.executeAsGM('GetPerceptionBanking');
+    stealthy.bankingPerception = await stealthy.socket.executeAsGM(
+      "GetPerceptionBanking",
+    );
     return;
   }
 
-  if (!game.modules.get('lib-wrapper')?.active) {
-    ui.notifications.error("Stealthy requires the 'libWrapper' module. Please install and activate it.");
+  if (!game.modules.get("lib-wrapper")?.active) {
+    ui.notifications.error(
+      "Stealthy requires the 'libWrapper' module. Please install and activate it.",
+    );
   }
 });
 
-Hooks.on('deleteCombat', async (combat, ...args) => {
-  const clearAfterCombat = game.settings.get(Stealthy.MODULE_ID, 'clearAfterCombat');
+Hooks.on("deleteCombat", async (combat, ...args) => {
+  const clearAfterCombat = game.settings.get(
+    Stealthy.MODULE_ID,
+    "clearAfterCombat",
+  );
   if (!clearAfterCombat) return;
   for (const combatant of combat.combatants.contents) {
     const token = combatant?.token;

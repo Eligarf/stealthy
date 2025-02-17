@@ -13,8 +13,8 @@
   "version": "5.0",
   "compatibility": {
     "minimum": "12",
-    "maximum": "12",
-    "verified": "12"
+    "maximum": "13",
+    "verified": "13"
   },
   "relationships": {
     "systems": [
@@ -29,7 +29,7 @@
         "id": "dnd5e",
         "type": "system",
         "compatibility": {
-          "verified": "4.0"
+          "verified": "4.3"
         }
       },
       {
@@ -62,9 +62,7 @@
     "scripts/systems/dnd5e.js",
     "scripts/systems/pf1.js"
   ],
-  "styles": [
-    "styles/stealthy.css"
-  ],
+  "styles": ["styles/stealthy.css"],
   "languages": [
     {
       "lang": "en",
