@@ -25,10 +25,6 @@
     },
     "bankPerception": "Bank perception rolls",
     "title": "Stealthy",
-    "spotHiddenDoors": {
-      "name": "Automatic hidden door detection",
-      "hint": "Tokens can spot hidden doors if their perception check beats the door's stealth value"
-    },
     "friendlyStealth": {
       "name": "How to treat friendly tokens under stealth",
       "allow": "Always test Perception",
@@ -105,10 +101,6 @@
       "effects": "Active Effect Options",
       "debug": "Debug Options",
       "advanced": "Advanced Options"
-    },
-    "door": {
-      "stealth": "Stealth value",
-      "maxRange": "Detection distance"
     },
     "dnd5e": {
       "name": "Dnd5e",

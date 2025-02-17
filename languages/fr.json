@@ -25,10 +25,6 @@
     },
     "bankPerception": "Bank perception rolls",
     "title": "Furtif",
-    "spotHiddenDoors": {
-      "name": "Détection automatique de porte cachée",
-      "hint": "Les tokens peuvent repérer les portes cachées si leur test de perception dépasse la valeur de furtivité de la porte"
-    },
     "friendlyStealth": {
       "name": "Comment traiter les token amis en toute discrétion",
       "allow": "Toujours tester la perception",
@@ -105,10 +101,6 @@
       "effects": "Active Effect Options",
       "debug": "Options de debug",
       "advanced": "Options avancées"
-    },
-    "door": {
-      "stealth": "Valeur furtive",
-      "maxRange": "Distance de détection"
     },
     "dnd5e": {
       "name": "Dnd5e",

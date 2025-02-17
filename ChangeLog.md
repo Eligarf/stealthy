@@ -1,7 +1,9 @@
 # v5.1.0
 
-- Updated CPR name (thanks Kharmans)
+- BREAKING CHANGE! Stealthy's Hidden Door feature is removed. Use the Perceptive module for this feature.
 - Removed remaining pre-v12 code
+- Updated CPR name (thanks Kharmans)
+- Added Foundry V13 compatibility
 
 # v5.0.0
 
@@ -453,4 +455,3 @@
 # v1.0.0
 
 - Initial implementation
-

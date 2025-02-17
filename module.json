@@ -13,7 +13,7 @@
   "version": "5.0",
   "compatibility": {
     "minimum": "12",
-    "maximum": "12",
+    "maximum": "13",
     "verified": "12"
   },
   "relationships": {
@@ -29,7 +29,7 @@
         "id": "dnd5e",
         "type": "system",
         "compatibility": {
-          "verified": "4.0"
+          "verified": "4.3"
         }
       },
       {
@@ -98,4 +98,3 @@
   "readme": "replaced",
   "license": "replaced"
 }
-

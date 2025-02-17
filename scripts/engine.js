@@ -1,5 +1,4 @@
 import { Stealthy } from "./stealthy.js";
-import Doors from "./doors.js";
 import { DetectionModesApplicationClass } from "./detectionModesMenu.js";
 
 // return true if 'installed' (considered as a JRE version string) is
@@ -78,6 +77,7 @@ export default class Engine {
     const module = game.modules.get(Stealthy.MODULE_ID);
     const moduleVersion = module.version;
     const settings = this.getSettingsParameters(moduleVersion);
+    const beforeV13 = Math.floor(game.version) < 13;
 
     game.settings.registerMenu(Stealthy.MODULE_ID, "detectionModesMenu", {
       name: "stealthy.detectionModesMenu.name",
@@ -104,11 +104,6 @@ export default class Engine {
       Stealthy.MODULE_ID,
       "gIDimThreshold",
       settings.gIDimThreshold,
-    );
-    game.settings.register(
-      Stealthy.MODULE_ID,
-      "spotSecretDoors",
-      settings.spotSecretDoors,
     );
     game.settings.register(
       Stealthy.MODULE_ID,
@@ -188,9 +183,6 @@ export default class Engine {
       `hiddenName='${this.hiddenName}', spotName='${this.spotName}'`,
     );
     Stealthy.log(`hiddenAliases = `, this.hiddenAliases);
-    if (game.settings.get(Stealthy.MODULE_ID, "spotSecretDoors")) {
-      Doors.setup();
-    }
   }
 
   buildDetectModePermission(mode, enabled) {
@@ -252,6 +244,7 @@ export default class Engine {
       );
     }
 
+    const beforeV13 = Math.floor(game.version) < 13;
     for (const [mode, setting] of Object.entries(allowedModes)) {
       if (!setting.enabled) continue;
       if (mode === "undefined" || !(mode in CONFIG.Canvas.detectionModes))
@@ -264,8 +257,6 @@ export default class Engine {
         function (wrapped, visionSource, target) {
           if (!wrapped(visionSource, target)) return false;
           const engine = stealthy.engine;
-          if (target instanceof DoorControl)
-            return engine.canSpotDoor(target, visionSource);
           const tgtToken = target?.document;
           if (tgtToken instanceof TokenDocument)
             return engine.checkDispositionAndCanDetect(
@@ -367,15 +358,6 @@ export default class Engine {
           max: 1,
           step: 0.05,
         },
-      },
-      spotSecretDoors: {
-        name: "stealthy.spotHiddenDoors.name",
-        hint: "stealthy.spotHiddenDoors.hint",
-        scope: "world",
-        requiresReload: true,
-        config: true,
-        type: Boolean,
-        default: false,
       },
       hiddenAliases: {
         name: "stealthy.hidden.aliases",
@@ -593,7 +575,11 @@ export default class Engine {
     if (effect) {
       flags = effect?.flags?.stealthy;
     } else {
-      const tokenDoc = token instanceof Token ? token.document : token;
+      const beforeV13 = Math.floor(game.version) < 13;
+      const isToken = beforeV13
+        ? token instanceof Token
+        : token instanceof foundry.canvas.placeables.Token;
+      const tokenDoc = isToken ? token.document : token;
       flags = tokenDoc.flags?.stealthy;
       if (!flags || !("stealth" in flags)) return undefined;
     }
@@ -608,7 +594,11 @@ export default class Engine {
     if (effect) {
       flags = effect?.flags?.stealthy;
     } else {
-      const tokenDoc = token instanceof Token ? token.document : token;
+      const beforeV13 = Math.floor(game.version) < 13;
+      const isToken = beforeV13
+        ? token instanceof Token
+        : token instanceof foundry.canvas.placeables.Token;
+      const tokenDoc = isToken ? token.document : token;
       flags = tokenDoc.flags?.stealthy;
       if (!flags || !("perception" in flags)) return undefined;
     }
@@ -888,7 +878,12 @@ export default class Engine {
   }
 
   getLightExposure(token) {
-    token = token instanceof Token ? token : token.object;
+    const beforeV13 = Math.floor(game.version) < 13;
+    const isToken = beforeV13
+      ? token instanceof Token
+      : token instanceof foundry.canvas.placeables.Token;
+    const tokenDoc = isToken ? token.document : token;
+    token = isToken ? token : token.object;
 
     const scene = token.scene;
     if (scene !== canvas.scene || !scene.tokenVision) return undefined;
@@ -899,10 +894,13 @@ export default class Engine {
 
     const gl = scene.environment.globalLight;
     if (gl.enabled) {
-      const darkness = canvas.effects.getDarknessLevel(
-        center,
-        token.document.elevation,
-      );
+      const darkness = beforeV13
+        ? canvas.effects.getDarknessLevel(center, token.document.elevation)
+        : canvas.effects.getDarknessLevel({
+            x: center.x,
+            y: center.y,
+            elevation: token.document.elevation,
+          });
       if (darkness <= gl.darkness.max) {
         const factor = game.settings.get(Stealthy.MODULE_ID, "gIDimThreshold");
         exposure = darkness <= factor * gl.darkness.max ? "bright" : "dim";
@@ -961,28 +959,3 @@ export default class Engine {
     return bright ? "bright" : "dim";
   }
 
-  canSpotDoor(doorControl, visionSource) {
-    // Open doors are visible
-    const door = doorControl.wall.document;
-    if (door.ds == 1) return true;
-
-    // Unhidden doors are visible
-    const stealthyFlags = door.flags?.stealthy;
-    if (!stealthyFlags) return true;
-
-    // Hidden doors can only be spotted if they are in range
-    const maxRange = stealthyFlags?.maxRange ?? Infinity;
-    const distance = canvas.grid.measurePath([
-      visionSource.object.center,
-      doorControl.center,
-    ]).distance;
-
-    if (distance > maxRange) return false;
-
-    // Now just compare the perception and the door's stealth
-    const stealthValue = stealthyFlags.stealth;
-    const perceptionFlag = this.getPerceptionFlag(visionSource.object.document);
-    const perceptionValue = this.getPerceptionValue(perceptionFlag);
-    return perceptionValue >= stealthValue;
-  }
-}
