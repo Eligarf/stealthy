@@ -225,7 +225,7 @@ export default class Engine {
     if (schemaVersion !== moduleVersion) {
       await this.migrate(moduleVersion, schemaVersion);
       ui.notifications.info(
-        `Updated Stealthy settings from ${moduleVersion} to ${moduleVersion}`,
+        `Updated Stealthy settings from ${schemaVersion} to ${moduleVersion}`,
       );
       await game.settings.set(Stealthy.MODULE_ID, "schema", moduleVersion);
     }
