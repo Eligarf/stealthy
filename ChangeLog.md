@@ -1,3 +1,7 @@
+# v13.0.0
+
+- Did another pass of v13/5.0 compatibility as some stuff changed since I last tested
+
 # v5.1.0
 
 - BREAKING CHANGE! Stealthy's Hidden Door feature is removed. Use the [Perceptive](https://foundryvtt.com/packages/perceptive) module for this feature.

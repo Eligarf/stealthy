@@ -10,7 +10,7 @@
       "ko-fi": "rule671908"
     }
   ],
-  "version": "5.0",
+  "version": "13.0.0",
   "compatibility": {
     "minimum": "12",
     "maximum": "13",
@@ -29,7 +29,7 @@
         "id": "dnd5e",
         "type": "system",
         "compatibility": {
-          "verified": "4.3"
+          "verified": "5.0"
         }
       },
       {

@@ -546,7 +546,8 @@ export default class Engine {
     else if (!stealthy[`${skill}ToActor`]) {
       let update = { _id: token.id };
       if (value === undefined) {
-        update[`flags.stealthy.-=${skill}`] = true;
+        const beforeV13 = Math.floor(game.version) < 13;
+        update[`flags.stealthy.-=${skill}`] = beforeV13 ? true : null;
       } else {
         update[`flags.stealthy.${skill}`] = value;
       }

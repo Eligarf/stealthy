@@ -86,6 +86,7 @@ class Engine5e extends Engine {
   setup() {
     super.setup();
 
+    const beforeV13 = Math.floor(game.version) < 13;
     const hiddenSource = game.settings.get(Stealthy.MODULE_ID, "hiddenSource");
 
     const hidingAvailable = CONFIG?.DND5E.statusEffects?.hiding.name;
@@ -93,15 +94,29 @@ class Engine5e extends Engine {
       this.hiding = game.i18n.localize(hidingAvailable);
     }
 
-    Hooks.on("dnd5e.rollSkill", async (actor, roll, skill) => {
-      if (skill === game.settings.get(Stealthy.MODULE_ID, "stealthKey")) {
-        await this.rollStealth(actor, roll);
-      } else if (
-        skill === game.settings.get(Stealthy.MODULE_ID, "perceptionKey")
-      ) {
-        await this.rollPerception(actor, roll);
-      }
-    });
+    if (beforeV13) {
+      Hooks.on("dnd5e.rollSkill", async (actor, roll, skill) => {
+        if (skill === game.settings.get(Stealthy.MODULE_ID, "stealthKey")) {
+          await this.rollStealth(actor, roll);
+        } else if (
+          skill === game.settings.get(Stealthy.MODULE_ID, "perceptionKey")
+        ) {
+          await this.rollPerception(actor, roll);
+        }
+      });
+    } else {
+      Hooks.on("dnd5e.rollSkill", async (roll, context) => {
+        const skill = context.skill;
+        const actor = context.subject;
+        if (skill === game.settings.get(Stealthy.MODULE_ID, "stealthKey")) {
+          await this.rollStealth(actor, roll);
+        } else if (
+          skill === game.settings.get(Stealthy.MODULE_ID, "perceptionKey")
+        ) {
+          await this.rollPerception(actor, roll);
+        }
+      });
+    }
 
     Hooks.on("renderSettingsConfig", (app, html, data) => {
       $("<div>")
