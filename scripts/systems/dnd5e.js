@@ -109,11 +109,11 @@ class Engine5e extends Engine {
         const skill = context.skill;
         const actor = context.subject;
         if (skill === game.settings.get(Stealthy.MODULE_ID, "stealthKey")) {
-          await this.rollStealth(actor, roll);
+          await this.rollStealth(actor, roll[0]);
         } else if (
           skill === game.settings.get(Stealthy.MODULE_ID, "perceptionKey")
         ) {
-          await this.rollPerception(actor, roll);
+          await this.rollPerception(actor, roll[0]);
         }
       });
     }

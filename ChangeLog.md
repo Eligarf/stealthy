@@ -1,6 +1,6 @@
 # v13.0.0
 
-- Did another pass of v13/5.0 compatibility as some stuff changed since I last tested
+- Added dnd5e 5.0 combatibility.
 
 # v5.1.0
 
