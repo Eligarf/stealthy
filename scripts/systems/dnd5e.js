@@ -86,7 +86,7 @@ class Engine5e extends Engine {
   setup() {
     super.setup();
 
-    const beforeV13 = Math.floor(game.version) < 13;
+    const beforeV5 = Math.floor(game.system.version) < 5;
     const hiddenSource = game.settings.get(Stealthy.MODULE_ID, "hiddenSource");
 
     const hidingAvailable = CONFIG?.DND5E.statusEffects?.hiding.name;
@@ -94,7 +94,7 @@ class Engine5e extends Engine {
       this.hiding = game.i18n.localize(hidingAvailable);
     }
 
-    if (beforeV13) {
+    if (beforeV5) {
       Hooks.on("dnd5e.rollSkill", async (actor, roll, skill) => {
         if (skill === game.settings.get(Stealthy.MODULE_ID, "stealthKey")) {
           await this.rollStealth(actor, roll);
