@@ -86,7 +86,7 @@ class Engine5e extends Engine {
   setup() {
     super.setup();
 
-    const beforeV5 = Math.floor(game.system.version) < 5;
+    const beforeV5 = Number(game.system.version.split(".")[0]) < 5;
     const hiddenSource = game.settings.get(Stealthy.MODULE_ID, "hiddenSource");
 
     const hidingAvailable = CONFIG?.DND5E.statusEffects?.hiding.name;
