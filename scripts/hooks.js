@@ -39,7 +39,7 @@ function appendExposure(html, engine, token) {
 Hooks.on("renderTokenHUD", (tokenHUD, html, app) => {
   const engine = stealthy.engine;
   const token = tokenHUD.object;
-  const beforeV13 = Math.floor(game.version) < 13;
+  const beforeV13 = Number(game.version.split(".")[0]) < 13;
   if (!beforeV13) html = $(html);
 
   if (game.settings.get(Stealthy.MODULE_ID, "exposure"))
@@ -109,7 +109,7 @@ Hooks.on("getSceneControlButtons", (controls) => {
       stealthy.socket.executeForEveryone("TogglePerceptionBanking", toggled);
     },
   };
-  const beforeV13 = Math.floor(game.version) < 13;
+  const beforeV13 = Number(game.version.split(".")[0]) < 13;
   if (beforeV13) {
     let tokenControls = controls.find((x) => x.name === "token");
     tokenControls.tools.push(tool);

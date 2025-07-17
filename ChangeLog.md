@@ -1,3 +1,7 @@
+# v13.0.1
+
+- Fixed a bad pattern being used to extract major version numbers (thanks dkniffin)
+
 # v13.0.0
 
 - Added dnd5e 5.0 combatibility.

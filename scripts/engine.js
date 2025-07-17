@@ -77,7 +77,7 @@ export default class Engine {
     const module = game.modules.get(Stealthy.MODULE_ID);
     const moduleVersion = module.version;
     const settings = this.getSettingsParameters(moduleVersion);
-    const beforeV13 = Math.floor(game.version) < 13;
+    const beforeV13 = Number(game.version.split(".")[0]) < 13;
 
     game.settings.registerMenu(Stealthy.MODULE_ID, "detectionModesMenu", {
       name: "stealthy.detectionModesMenu.name",
@@ -244,7 +244,7 @@ export default class Engine {
       );
     }
 
-    const beforeV13 = Math.floor(game.version) < 13;
+    const beforeV13 = Number(game.version.split(".")[0]) < 13;
     for (const [mode, setting] of Object.entries(allowedModes)) {
       if (!setting.enabled) continue;
       if (mode === "undefined" || !(mode in CONFIG.Canvas.detectionModes))
@@ -546,7 +546,7 @@ export default class Engine {
     else if (!stealthy[`${skill}ToActor`]) {
       let update = { _id: token.id };
       if (value === undefined) {
-        const beforeV13 = Math.floor(game.version) < 13;
+        const beforeV13 = Number(game.version.split(".")[0]) < 13;
         update[`flags.stealthy.-=${skill}`] = beforeV13 ? true : null;
       } else {
         update[`flags.stealthy.${skill}`] = value;
@@ -576,7 +576,7 @@ export default class Engine {
     if (effect) {
       flags = effect?.flags?.stealthy;
     } else {
-      const beforeV13 = Math.floor(game.version) < 13;
+      const beforeV13 = Number(game.version.split(".")[0]) < 13;
       const isToken = beforeV13
         ? token instanceof Token
         : token instanceof foundry.canvas.placeables.Token;
@@ -595,7 +595,7 @@ export default class Engine {
     if (effect) {
       flags = effect?.flags?.stealthy;
     } else {
-      const beforeV13 = Math.floor(game.version) < 13;
+      const beforeV13 = Number(game.version.split(".")[0]) < 13;
       const isToken = beforeV13
         ? token instanceof Token
         : token instanceof foundry.canvas.placeables.Token;
@@ -879,7 +879,7 @@ export default class Engine {
   }
 
   getLightExposure(token) {
-    const beforeV13 = Math.floor(game.version) < 13;
+    const beforeV13 = Number(game.version.split(".")[0]) < 13;
     const isToken = beforeV13
       ? token instanceof Token
       : token instanceof foundry.canvas.placeables.Token;
