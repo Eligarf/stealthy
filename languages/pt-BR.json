@@ -3,7 +3,7 @@
     "hidden": {
       "name": "Escondido",
       "description": "Acúmulo de rolagem de Furtividade.",
-      "source": "Origem Escondida",
+      "source": "Origem Escondido",
       "preloc": {
         "key": "Chave de Localização para Rótulo Escondido",
         "hint": "Esta string será enviada através de i18n.localize(). Mudar isso pode afetar a automação geral dos efeitos do Stealthy."
