@@ -1,3 +1,7 @@
+# v14.0.0
+
+- Foundry VTT v14 compatibility
+
 # v13.0.1
 
 - Fixed a bad pattern being used to extract major version numbers (thanks dkniffin)
