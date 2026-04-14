@@ -39,8 +39,7 @@ function appendExposure(html, engine, token) {
 Hooks.on("renderTokenHUD", (tokenHUD, html, app) => {
   const engine = stealthy.engine;
   const token = tokenHUD.object;
-  const beforeV13 = Number(game.version.split(".")[0]) < 13;
-  if (!beforeV13) html = $(html);
+  html = $(html);
 
   if (game.settings.get(Stealthy.MODULE_ID, "exposure"))
     appendExposure(html, engine, token);
@@ -98,24 +97,18 @@ Hooks.on("renderTokenHUD", (tokenHUD, html, app) => {
 
 Hooks.on("getSceneControlButtons", (controls) => {
   if (!game.user.isGM) return;
-  const tool = {
+  controls.tokens.tools.bankPerception = {
+    name: "bankPerception",
+    title: "stealthy.bankPerception",
     icon: "fa-solid fa-piggy-bank",
-    name: "stealthy-perception-toggle",
-    title: game.i18n.localize("stealthy.bankPerception"),
     toggle: true,
-    active: stealthy.bankingPerception,
-    onClick: async (toggled) => {
-      await game.settings.set(Stealthy.MODULE_ID, "activeSpot", toggled);
-      stealthy.socket.executeForEveryone("TogglePerceptionBanking", toggled);
+    active: game.settings.get(Stealthy.MODULE_ID, "activeSpot"),
+    onChange: (_event, active) => {
+      if (active === undefined) return;
+      game.settings.set(Stealthy.MODULE_ID, "activeSpot", active);
+      stealthy.socket.executeForEveryone("TogglePerceptionBanking", active);
     },
   };
-  const beforeV13 = Number(game.version.split(".")[0]) < 13;
-  if (beforeV13) {
-    let tokenControls = controls.find((x) => x.name === "token");
-    tokenControls.tools.push(tool);
-  } else {
-    controls.tokens.tools.stealthy = tool;
-  }
 });
 
 Hooks.on("renderSettingsConfig", (app, html, data) => {

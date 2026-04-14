@@ -1,6 +1,8 @@
 # v14.0.0
 
-- Foundry VTT v14 compatibility
+- BREAKING CHANGE: minimum supported Foundry VTT version is now v13
+- Added Foundry VTT v14 compatibility
+- Fixed `Bank Perception Roll` button behavior
 
 # v13.0.1
 

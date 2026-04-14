@@ -71,7 +71,10 @@ export class Stealthy {
       if (spot) {
         actor.deleteEmbeddedDocuments("ActiveEffect", [spot.id]);
       }
-      const tokenDoc = token instanceof Token ? token.document : token;
+      const tokenDoc =
+        token instanceof foundry.canvas.placeables.Token
+          ? token.document
+          : token;
       if (tokenDoc.flags?.stealthy?.perception) {
         let update = { _id: token.id };
         update["flags.stealthy.-=perception"] = true;

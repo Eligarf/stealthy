@@ -77,7 +77,6 @@ export default class Engine {
     const module = game.modules.get(Stealthy.MODULE_ID);
     const moduleVersion = module.version;
     const settings = this.getSettingsParameters(moduleVersion);
-    const beforeV13 = Number(game.version.split(".")[0]) < 13;
 
     game.settings.registerMenu(Stealthy.MODULE_ID, "detectionModesMenu", {
       name: "stealthy.detectionModesMenu.name",
@@ -244,7 +243,6 @@ export default class Engine {
       );
     }
 
-    const beforeV13 = Number(game.version.split(".")[0]) < 13;
     for (const [mode, setting] of Object.entries(allowedModes)) {
       if (!setting.enabled) continue;
       if (mode === "undefined" || !(mode in CONFIG.Canvas.detectionModes))
@@ -546,8 +544,7 @@ export default class Engine {
     else if (!stealthy[`${skill}ToActor`]) {
       let update = { _id: token.id };
       if (value === undefined) {
-        const beforeV13 = Number(game.version.split(".")[0]) < 13;
-        update[`flags.stealthy.-=${skill}`] = beforeV13 ? true : null;
+        update[`flags.stealthy.-=${skill}`] = null;
       } else {
         update[`flags.stealthy.${skill}`] = value;
       }
@@ -576,10 +573,7 @@ export default class Engine {
     if (effect) {
       flags = effect?.flags?.stealthy;
     } else {
-      const beforeV13 = Number(game.version.split(".")[0]) < 13;
-      const isToken = beforeV13
-        ? token instanceof Token
-        : token instanceof foundry.canvas.placeables.Token;
+      const isToken = token instanceof foundry.canvas.placeables.Token;
       const tokenDoc = isToken ? token.document : token;
       flags = tokenDoc.flags?.stealthy;
       if (!flags || !("stealth" in flags)) return undefined;
@@ -595,10 +589,7 @@ export default class Engine {
     if (effect) {
       flags = effect?.flags?.stealthy;
     } else {
-      const beforeV13 = Number(game.version.split(".")[0]) < 13;
-      const isToken = beforeV13
-        ? token instanceof Token
-        : token instanceof foundry.canvas.placeables.Token;
+      const isToken = token instanceof foundry.canvas.placeables.Token;
       const tokenDoc = isToken ? token.document : token;
       flags = tokenDoc.flags?.stealthy;
       if (!flags || !("perception" in flags)) return undefined;
@@ -670,7 +661,8 @@ export default class Engine {
 
   async clearStealth(token) {
     let value = undefined;
-    const tokenDoc = token instanceof Token ? token.document : token;
+    const tokenDoc =
+      token instanceof foundry.canvas.placeables.Token ? token.document : token;
     if (stealthy.stealthToActor) {
       const stealth = this.findStealthEffect(token.actor);
       if (!stealth) return;
@@ -690,7 +682,8 @@ export default class Engine {
 
   async clearPerception(token) {
     let value = undefined;
-    const tokenDoc = token instanceof Token ? token.document : token;
+    const tokenDoc =
+      token instanceof foundry.canvas.placeables.Token ? token.document : token;
     if (stealthy.perceptionToActor) {
       const perception = this.findPerceptionEffect(token.actor);
       if (!perception) return;
@@ -879,10 +872,7 @@ export default class Engine {
   }
 
   getLightExposure(token) {
-    const beforeV13 = Number(game.version.split(".")[0]) < 13;
-    const isToken = beforeV13
-      ? token instanceof Token
-      : token instanceof foundry.canvas.placeables.Token;
+    const isToken = token instanceof foundry.canvas.placeables.Token;
     const tokenDoc = isToken ? token.document : token;
     token = isToken ? token : token.object;
 
@@ -895,13 +885,11 @@ export default class Engine {
 
     const gl = scene.environment.globalLight;
     if (gl.enabled) {
-      const darkness = beforeV13
-        ? canvas.effects.getDarknessLevel(center, token.document.elevation)
-        : canvas.effects.getDarknessLevel({
-            x: center.x,
-            y: center.y,
-            elevation: token.document.elevation,
-          });
+      canvas.effects.getDarknessLevel({
+        x: center.x,
+        y: center.y,
+        elevation: token.document.elevation,
+      });
       if (darkness <= gl.darkness.max) {
         const factor = game.settings.get(Stealthy.MODULE_ID, "gIDimThreshold");
         exposure = darkness <= factor * gl.darkness.max ? "bright" : "dim";
