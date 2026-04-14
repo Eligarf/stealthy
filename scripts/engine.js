@@ -885,7 +885,7 @@ export default class Engine {
 
     const gl = scene.environment.globalLight;
     if (gl.enabled) {
-      canvas.effects.getDarknessLevel({
+      const darkness = canvas.effects.getDarknessLevel({
         x: center.x,
         y: center.y,
         elevation: token.document.elevation,
