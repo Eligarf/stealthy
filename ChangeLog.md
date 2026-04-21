@@ -1,3 +1,7 @@
+# v14.0.1
+
+- Fix deprecation warning about use of -= to remove object members.
+
 # v14.0.0
 
 - BREAKING CHANGE: minimum supported Foundry VTT version is now v13

@@ -77,7 +77,8 @@ export class Stealthy {
           : token;
       if (tokenDoc.flags?.stealthy?.perception) {
         let update = { _id: token.id };
-        update["flags.stealthy.-=perception"] = true;
+        if (_del !== undefined) update[`flags.stealthy.perception`] = _del;
+        else update["flags.stealthy.-=perception"] = true;
         updates.push(update);
       }
     }

@@ -544,7 +544,8 @@ export default class Engine {
     else if (!stealthy[`${skill}ToActor`]) {
       let update = { _id: token.id };
       if (value === undefined) {
-        update[`flags.stealthy.-=${skill}`] = null;
+        if (_del !== undefined) update[`flags.stealthy.${skill}`] = _del;
+        else update[`flags.stealthy.-=${skill}`] = true;
       } else {
         update[`flags.stealthy.${skill}`] = value;
       }
@@ -673,7 +674,8 @@ export default class Engine {
       value = tokenDoc.flags?.stealthy?.stealth;
       if (value === undefined) return;
       let update = { _id: token.id };
-      update["flags.stealthy.-=stealth"] = true;
+      if (_del !== undefined) update[`flags.stealthy.stealth`] = _del;
+      else update["flags.stealthy.-=stealth"] = true;
       await canvas.scene.updateEmbeddedDocuments("Token", [update]);
     }
 
@@ -696,7 +698,8 @@ export default class Engine {
       value = tokenDoc.flags?.stealthy?.perception;
       if (value === undefined) return;
       let update = { _id: token.id };
-      update["flags.stealthy.-=perception"] = true;
+      if (_del !== undefined) update[`flags.stealthy.perception`] = _del;
+      else update["flags.stealthy.-=perception"] = true;
       await canvas.scene.updateEmbeddedDocuments("Token", [update]);
     }
 
